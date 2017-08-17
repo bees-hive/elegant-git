@@ -5,9 +5,7 @@ docker:
 merge:
     fast-forward: only
     rebase: true
-    script: |-
-        bats $PWD
-        pdd --source=$(pwd) --verbose --file=/dev/null
+    script: ./run-tests
 release:
     script: |-
         echo "Release ${tag}"

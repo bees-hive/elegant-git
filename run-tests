@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+bats $PWD
+pdd --source=$(pwd) --verbose --file=/dev/null
