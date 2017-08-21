@@ -7,6 +7,17 @@ Allows easy handle git tasks.
 
 [![Rultor.com](http://www.rultor.com/b/extsoft/elegant-git)](http://www.rultor.com/p/extsoft/elegant-git)
 
+Installation
+============
+Manual
+------
+`curl https://raw.githubusercontent.com/extsoft/elegant-git/master/install.bash | $(which bash)`
+
+For development
+---------------
+1. clone the repository
+2. run `./install.bash dev`
+
 Usage
 =====
 ```bash
