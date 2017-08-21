@@ -1,0 +1,162 @@
+#!/bin/bash -e
+
+__red=`tput setaf 1`
+__green=`tput setaf 2`
+__magenta=`tput setaf 5`
+__reset=`tput sgr0`
+
+__gm() {
+    echo "${__green}$@${__reset}"
+}
+
+__rm() {
+    echo "${__red}$@${__reset}"
+}
+
+__mmn() {
+    echo -n "${__magenta}$@${__reset}"
+}
+
+MASTER="master"
+RMASTER="origin/master"
+
+__config=(
+    'user.name'
+    'user.email'
+)
+
+commands() {
+    echo "feature"
+    echo "pull"
+    echo "push"
+    echo "push-after-rebase"
+    echo "rebase"
+    echo "init"
+    echo "clone"
+    echo "add"
+    echo "clear-local"
+}
+
+_validate() {
+    if [ -z "$1" ]; then
+        __rm "'$2' is not set"
+        exit -1
+    fi
+}
+
+__branches() {
+    local branch_command="$1"; shift
+    local b=$(eval "$branch_command" | sed -e 's|[* ]||g')
+    echo ${b[@]}
+}
+
+__loop_ask() {
+    local c="$1"; shift
+    local m="$1"; shift
+    [ -z "$1" ] && return 0
+    for i in $@; do
+        __mmn "$m [$i] "
+        read answer
+        if [ -z "$answer" ]; then
+            eval "$c $i"
+        fi
+    done
+}
+
+__loop() {
+    local c="$1"; shift
+    [ -z "$1" ] && return 0
+    for i in $@; do
+        eval "$c $i"
+    done
+}
+
+__batch() {
+    local MM="$1"; shift
+    local AM="$1"; shift
+    local CM="$1"; shift
+    __mmn "$MM "
+    read answer
+    if [ -z "$answer" ]; then
+        __loop "$CM" $@
+    else
+        __loop_ask "$CM" "$AM" $@
+    fi
+}
+
+pull() {
+    _validate "$1" "Specify branch name"
+    git checkout "$1"
+    git fetch --tags
+    git pull
+}
+
+push() {
+    local BRANCH=$(__branches 'git branch | grep \*')
+    git push -u origin $BRANCH:$BRANCH
+}
+
+rebase() {
+    git fetch --tags
+    git rebase $RMASTER
+}
+
+push-after-rebase() {
+    rebase
+    push
+}
+
+feature() {
+    _validate "$1" "Specify feature name"
+    pull $MASTER
+    git checkout -b "$1"
+}
+
+_rewrite_config() {
+    for line in "${__config[@]}"
+    do
+        local BASE=$(git config --global "$line")
+        __mmn "$line [$BASE]: "
+        read value
+        local VAR_VALUE=${value:-$BASE}
+        git config --local $line "$VAR_VALUE"
+    done
+}
+
+init() {
+    git init
+    _rewrite_config
+}
+
+clone() {
+    _validate "$1" "Specify URL to clone"
+    git clone "$1"
+    cd $(basename -s .git $1)
+    _rewrite_config
+}
+
+add() {
+    local FILES=$(git ls-files -m)
+    __gm "There are candidates to be added to commit:"
+    __loop "__gm -" ${FILES[@]}
+    __batch "Do you want to add all of them?" "Add this?" "git add" ${FILES[@]}
+    git status
+}
+
+clear-local() {
+    pull $MASTER
+    local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
+    __loop "git branch -d" $(eval "$cmd") || \
+        (
+            __gm "There are unmerged branches:" && \
+            __loop "__gm -" $(eval "$cmd") && \
+            __batch "Do you want to delete all unmerged branches?" "Delete this?" "git branch -D" $(eval "$cmd")
+        )
+}
+
+
+FUNC=$1
+[ -z "$FUNC" ] && commands && exit -1
+shift
+eval '$FUNC $@'
+
