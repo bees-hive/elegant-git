@@ -13,6 +13,12 @@ Manual
 ------
 `curl https://raw.githubusercontent.com/extsoft/elegant-git/master/install.bash | $(which bash)`
 
+Homebrew
+--------
+`brew install extsoft/insight/elegant-git`
+
+To find out more [click here](https://github.com/extsoft/homebrew-insight).
+
 For development
 ---------------
 1. clone the repository
