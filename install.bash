@@ -45,11 +45,11 @@ install() {
     echo "#'elegant git' completion"
     echo "[ -f $INSTALL_PATH/completion/git-elegant-completion ] && . $INSTALL_PATH/completion/git-elegant-completion"
     echo ""
-    echo "Then please restart the terminal and enjoy the 'pem'!"
+    echo "Then please restart the terminal and enjoy the 'elegant git'!"
 }
 
 uninstall() {
-    echo "Uninstalling pem from $INSTALL_PATH"
+    echo "Uninstalling 'elegant git' from $INSTALL_PATH"
     run "rm -rfv $INSTALL_PATH"
 }
 
