@@ -1,4 +1,5 @@
 #!/bin/bash -e
 
-bats $PWD
+bats src/test
+rm -rf tmp/*
 pdd --source=$(pwd) --verbose --file=/dev/null
