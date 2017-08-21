@@ -9,4 +9,4 @@ merge:
 release:
     script: |-
         echo "Release ${tag}"
-        bats src/test
+        bats --tap src/test
