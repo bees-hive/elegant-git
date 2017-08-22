@@ -1,4 +1,8 @@
 #!/bin/bash -e
+set -e
+[  "$DEBUG" = "yes" ] && set -x
+
+BINS=$(dirname "$0")
 
 __red=`tput setaf 1`
 __green=`tput setaf 2`
@@ -123,11 +127,6 @@ _rewrite_config() {
     done
 }
 
-init() {
-    git init
-    _rewrite_config
-}
-
 clone() {
     _validate "$1" "Specify URL to clone"
     git clone "$1"
@@ -154,9 +153,31 @@ clear-local() {
         )
 }
 
+usage() {
+    echo "git elegant <command>"
+    commands
+    # @todo #6 Describe usage of git elegant
+}
 
-FUNC=$1
-[ -z "$FUNC" ] && commands && exit 10
-shift
-eval '$FUNC $@'
+main() {
+    local COMMAND
+    if [ -n "$1" ]; then
+        COMMAND="$1"; shift
+    fi
+    [ -z "$COMMAND" ] || [ "$COMMAND" = "help" ] && usage && exit 10
 
+    # @todo #6 Remove commands loading from main executable.
+    #  It will be possible when all commands will be migrated to separate executables.
+    if type "$COMMAND" >/dev/null 2>&1; then
+        eval '$COMMAND $@'
+        exit 0
+    fi
+
+    [ "$COMMAND" = "commands" ] && commands && exit 0
+    [ ! -e "$BINS/git-elegant-$COMMAND" ] && echo "Unknown command: git elegant $COMMAND" && usage && exit 2
+    . "$BINS/git-elegant-$COMMAND"
+
+    default "$@"
+}
+
+main "$@"
