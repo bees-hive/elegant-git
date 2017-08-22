@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-[  "$DEBUG" = "yes" ] && set -x
+[  -n "$GED" ] && set -x
 
 BINS=$(dirname "$0")
 

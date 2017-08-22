@@ -19,11 +19,6 @@ Homebrew
 
 To find out more [click here](https://github.com/extsoft/homebrew-insight).
 
-For development
----------------
-1. clone the repository
-2. run `./install.bash dev`
-
 Usage
 =====
 ```bash
@@ -38,3 +33,16 @@ clone
 add
 clear-local
 ```
+
+Development
+===========
+Installation
+---------------
+1. clone the repository
+2. run `./install.bash dev`
+
+Debug
+-----
+`export GED=1` to turn on the debug of `git elegant` execution.
+
+`unset GED` to turn off the debug of `git elegant` execution.
