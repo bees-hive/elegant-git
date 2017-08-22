@@ -168,7 +168,7 @@ main() {
 
     # @todo #6 Remove commands loading from main executable.
     #  It will be possible when all commands will be migrated to separate executables.
-    if type "$COMMAND" >/dev/null 2>&1; then
+    if type -t "$COMMAND" | grep -q '^function$' >/dev/null 2>&1 ; then
         eval '$COMMAND $@'
         exit 0
     fi
