@@ -39,6 +39,7 @@ commands() {
     echo "clone"
     echo "add"
     echo "clear-local"
+    echo "configure"
 }
 
 _validate() {
@@ -117,6 +118,7 @@ feature() {
 }
 
 _rewrite_config() {
+    # @todo #9 Move `user.name` and `user.email` configuration to the `git-elegant-configure` executable.
     for line in "${__config[@]}"
     do
         local BASE=$(git config --global "$line")

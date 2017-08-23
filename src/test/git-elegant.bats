@@ -13,6 +13,8 @@ load commons
   [[ "${lines[6]}" =~ "clone" ]]
   [[ "${lines[7]}" =~ "add" ]]
   [[ "${lines[8]}" =~ "clear-local" ]]
+  [[ "${lines[9]}" =~ "configure" ]]
+  [ ${#lines[@]} -eq 10 ]
 }
 
 

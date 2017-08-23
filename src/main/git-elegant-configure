@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -e
+
+_core_comment_char_default="|"
+_core_comment_char_key="core.commentChar"
+_core_comment_char_message="commit message won't start with"
+
+_configure() {
+    MODE=$1; shift
+    FUNCTIONS=$@
+    for f in ${FUNCTIONS[@]}; do
+        unset answer
+        while [ -z "$answer" ]; do
+            # ask a question
+            message=$(eval "echo -n \$${f}_message")
+            echo -n "$message"
+            default=$(eval "echo -n \$${f}_default")
+            if [ -n "$default" ]; then echo -n " [$default]"; fi
+            echo -n ": "
+            # run git config
+            read answer
+            answer=${answer:-$default}
+            if [ -n "${answer}" ]; then
+                git config $MODE $(eval "echo -n \$${f}_key") $answer
+            fi
+        done
+    done
+}
+
+GLOBALS=(_core_comment_char)
+LOCALS=(_core_comment_char)
+
+default() {
+    case "$1" in
+        --global)   _configure --global ${GLOBALS[@]} ;;
+        --local)    _configure --local ${LOCALS[@]}  ;;
+        *) exit 11 # @todo #9 Add usage message if mandatory argument is not set for `git-elegant configure`.
+    esac
+}
