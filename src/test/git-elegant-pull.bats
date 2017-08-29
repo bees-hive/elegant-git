@@ -1,20 +1,20 @@
-#!/usr/bin/env bats -ex
+#!/usr/bin/env bats
 
 load commons
-load fake-read
 
-setup() {
+@test "exit code is 0 when run 'git-elegant pull' without parameters" {
+    fake-pass git "fetch --tags"
+    fake-pass git pull
+
+    run git-elegant pull
+    [ "$status" -eq 0 ]
+}
+
+@test "exit code is 0 when run 'git-elegant pull' with parameter" {
     fake-pass git "checkout master"
     fake-pass git "fetch --tags"
     fake-pass git pull
-}
 
-@test "print message when run 'git-elegant pull'" {
-  run git-elegant pull
-  [[ "${lines[0]}" =~ "Branch name is not set"  ]]
-}
-
-@test "exit code is 0 when run 'git-elegant pull'" {
-  run git-elegant pull master
-  [ "$status" -eq 0 ]
+    run git-elegant pull master
+    [ "$status" -eq 0 ]
 }
