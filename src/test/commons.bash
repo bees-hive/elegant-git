@@ -42,7 +42,7 @@ fake-pass() {
 fake-fail() {
     # sample: fake-fail <command> <subcommand> <stderr>
     COMMAND="$1"; shift
-    SUBCOMMAND="$2"; shift
+    SUBCOMMAND="$1"; shift
     fake "$COMMAND" "$SUBCOMMAND" 100 " " "$@"
 }
 
