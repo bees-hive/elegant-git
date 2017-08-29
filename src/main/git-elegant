@@ -89,14 +89,6 @@ __batch() {
     fi
 }
 
-pull() {
-    if [ -n "$1" ]; then
-        git checkout "$1"
-    fi
-    git fetch --tags
-    git pull
-}
-
 push() {
     local BRANCH=$(__branches 'git branch | grep \*')
     git push -u origin $BRANCH:$BRANCH
@@ -114,7 +106,7 @@ push-after-rebase() {
 
 feature() {
     _validate "$1" "Feature name"
-    pull $MASTER
+    git-elegant pull $MASTER
     git checkout -b "$1"
 }
 
@@ -139,7 +131,7 @@ add() {
 }
 
 clear-local() {
-    pull $MASTER
+    git-elegant pull $MASTER
     local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
     __loop "git branch -d" $(eval "$cmd") || \
         (
