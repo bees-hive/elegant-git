@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    if [ -n "$1" ]; then
+        git checkout "$1"
+    fi
+    git fetch --tags
+    git pull
+}
