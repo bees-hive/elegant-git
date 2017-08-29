@@ -15,7 +15,7 @@ setup() {
 
 @test "print message when run 'git-elegant clone'" {
   run git-elegant clone
-  [[ "${lines[0]}" =~ "Specify URL to clone"  ]]
+  [[ "${lines[0]}" =~ "Clonable URL is not set"  ]]
 }
 
 @test "exit code is 0 when run 'git-elegant clone'" {

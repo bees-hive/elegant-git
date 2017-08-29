@@ -44,7 +44,7 @@ commands() {
 
 _validate() {
     if [ -z "$1" ]; then
-        __rm "'$2' is not set"
+        __rm "$2 is not set"
         exit -1
     fi
 }
@@ -90,7 +90,7 @@ __batch() {
 }
 
 pull() {
-    _validate "$1" "Specify branch name"
+    _validate "$1" "Branch name"
     git checkout "$1"
     git fetch --tags
     git pull
@@ -112,7 +112,7 @@ push-after-rebase() {
 }
 
 feature() {
-    _validate "$1" "Specify feature name"
+    _validate "$1" "Feature name"
     pull $MASTER
     git checkout -b "$1"
 }
@@ -130,7 +130,7 @@ _rewrite_config() {
 }
 
 clone() {
-    _validate "$1" "Specify URL to clone"
+    _validate "$1" "Clonable URL"
     git clone "$1"
     cd $(basename -s .git $1)
     _rewrite_config

@@ -11,7 +11,7 @@ setup() {
 
 @test "print message when run 'git-elegant pull'" {
   run git-elegant pull
-  [[ "${lines[0]}" =~ "Specify branch name"  ]]
+  [[ "${lines[0]}" =~ "Branch name is not set"  ]]
 }
 
 @test "exit code is 0 when run 'git-elegant pull'" {
