@@ -90,8 +90,9 @@ __batch() {
 }
 
 pull() {
-    _validate "$1" "Branch name"
-    git checkout "$1"
+    if [ -n "$1" ]; then
+        git checkout "$1"
+    fi
     git fetch --tags
     git pull
 }
