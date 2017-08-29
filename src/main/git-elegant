@@ -130,13 +130,6 @@ _rewrite_config() {
     done
 }
 
-clone() {
-    _validate "$1" "Clonable URL"
-    git clone "$1"
-    cd $(basename -s .git $1)
-    _rewrite_config
-}
-
 add() {
     local FILES=$(git ls-files -m)
     __gm "There are candidates to be added to commit:"
