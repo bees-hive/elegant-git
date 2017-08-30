@@ -14,7 +14,8 @@ load commons
   [[ "${lines[7]}" =~ "add" ]]
   [[ "${lines[8]}" =~ "clear-local" ]]
   [[ "${lines[9]}" =~ "configure" ]]
-  [ ${#lines[@]} -eq 10 ]
+  [[ "${lines[10]}" =~ "check" ]]
+  [ ${#lines[@]} -eq 11 ]
 }
 
 
