@@ -17,6 +17,10 @@ _git_elegant() {
         configure)
             COMPREPLY=($(compgen -W '--global --local' -- ${cur}) )
             return 0 ;;
+        check)
+            COMPREPLY=($(compgen -W '"--all" "--unstaged" "--staged"' -- ${cur}) )
+            return 0 ;;
+
         *) ;;
     esac
 
