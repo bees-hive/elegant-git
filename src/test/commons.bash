@@ -46,6 +46,13 @@ fake-fail() {
     fake "$COMMAND" "$SUBCOMMAND" 100 " " "$@"
 }
 
+teardown() {
+    #teardown for bats tests
+    if [ -d "$TMP_DIR" ]; then
+        rm -r "$TMP_DIR"
+    fi
+}
+
 export -f fake
 export -f fake-pass
 export -f fake-fail
