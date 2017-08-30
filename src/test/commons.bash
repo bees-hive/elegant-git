@@ -53,6 +53,3 @@ teardown() {
     fi
 }
 
-export -f fake
-export -f fake-pass
-export -f fake-fail
