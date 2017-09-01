@@ -6,6 +6,14 @@ load fake-read
 setup() {
     fake-pass git "config --global core.commentChar" "|"
     fake-pass git "config --local core.commentChar" "|"
+
+    fake-pass git "config --global user.name" "UserName"
+    fake-pass git "config --global user.email" "UserEmail"
+
+    fake-pass git "config --global user.name UserName"
+    fake-pass git "config --global user.email UserEmail"
+    fake-pass git "config --local user.name UserName"
+    fake-pass git "config --local user.email UserEmail"
 }
 
 @test "'configure': exit code is 11 when run without arguments" {
@@ -27,11 +35,15 @@ setup() {
 @test "'configure': sequence of the configuration is correct when run with '--global' argument" {
   run git-elegant configure --global
   [[ "${lines[0]}" =~ "commit message won't start with [|]:" ]]
-  [ ${#lines[@]} == 1 ]
+  [[ "${lines[1]}" =~ "your user name [UserName]:" ]]
+  [[ "${lines[2]}" =~ "your user email [UserEmail]:" ]]
+  [ ${#lines[@]} == 3 ]
 }
 
 @test "'configure': sequence of the configuration is correct when run with '--local' argument" {
   run git-elegant configure --local
   [[ "${lines[0]}" =~ "commit message won't start with [|]:" ]]
-  [ ${#lines[@]} == 1 ]
+  [[ "${lines[1]}" =~ "your user name [UserName]:" ]]
+  [[ "${lines[2]}" =~ "your user email [UserEmail]:" ]]
+  [ ${#lines[@]} == 3 ]
 }
