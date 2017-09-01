@@ -5,5 +5,5 @@ default() {
     _validate "$1" "Clonable URL"
     git clone "$1"
     cd $(basename -s .git $1)
-    _rewrite_config
+    git elegant configure --local
 }
