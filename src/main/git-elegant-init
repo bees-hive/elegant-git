@@ -3,5 +3,5 @@ set -e
 
 default() {
     git init
-    _rewrite_config
+    git elegant configure --local
 }
