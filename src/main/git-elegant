@@ -24,11 +24,6 @@ __mmn() {
 MASTER="master"
 RMASTER="origin/master"
 
-__config=(
-    'user.name'
-    'user.email'
-)
-
 commands() {
     echo "feature"
     echo "pull"
@@ -116,18 +111,6 @@ feature() {
     _validate "$1" "Feature name"
     pull $MASTER
     git checkout -b "$1"
-}
-
-_rewrite_config() {
-    # @todo #9 Move `user.name` and `user.email` configuration to the `git-elegant-configure` executable.
-    for line in "${__config[@]}"
-    do
-        local BASE=$(git config --global "$line")
-        __mmn "$line [$BASE]: "
-        read value
-        local VAR_VALUE=${value:-$BASE}
-        git config --local $line "$VAR_VALUE"
-    done
 }
 
 add() {
