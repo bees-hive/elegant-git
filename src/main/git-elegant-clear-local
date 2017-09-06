@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    git-elegant pull $MASTER
+    local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
+    __loop "git branch -d" $(eval "$cmd") || \
+        (
+            __gm "There are unmerged branches:" && \
+            __loop "__gm -" $(eval "$cmd") && \
+            __batch "Do you want to delete all unmerged branches?" "Delete this?" "git branch -D" $(eval "$cmd")
+        )
+}
