@@ -90,11 +90,6 @@ rebase() {
     git rebase $RMASTER
 }
 
-push-after-rebase() {
-    rebase
-    git-elegant push
-}
-
 feature() {
     _validate "$1" "Feature name"
     git-elegant pull $MASTER
