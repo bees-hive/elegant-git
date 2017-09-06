@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    local FILES=$(git ls-files -m)
+    __gm "There are candidates to be added to commit:"
+    __loop "__gm -" ${FILES[@]}
+    __batch "Do you want to add all of them?" "Add this?" "git add" ${FILES[@]}
+    git status
+}
