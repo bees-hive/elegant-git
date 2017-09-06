@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    local BRANCH=$(__branches 'git branch | grep \*')
+    git push -u origin $BRANCH:$BRANCH
+}
