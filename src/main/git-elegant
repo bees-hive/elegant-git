@@ -100,12 +100,6 @@ push-after-rebase() {
     push
 }
 
-feature() {
-    _validate "$1" "Feature name"
-    git-elegant pull $MASTER
-    git checkout -b "$1"
-}
-
 add() {
     local FILES=$(git ls-files -m)
     __gm "There are candidates to be added to commit:"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    _validate "$1" "Feature name"
+    git-elegant pull $MASTER
+    git checkout -b "$1"
+}
