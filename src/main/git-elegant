@@ -85,11 +85,6 @@ __batch() {
     fi
 }
 
-rebase() {
-    git fetch --tags
-    git rebase $RMASTER
-}
-
 feature() {
     _validate "$1" "Feature name"
     git-elegant pull $MASTER

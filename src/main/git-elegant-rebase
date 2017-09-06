@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    git fetch --tags
+    git rebase $RMASTER
+}
