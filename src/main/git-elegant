@@ -95,12 +95,21 @@ push-after-rebase() {
     git-elegant push
 }
 
-add() {
-    local FILES=$(git ls-files -m)
-    __gm "There are candidates to be added to commit:"
-    __loop "__gm -" ${FILES[@]}
-    __batch "Do you want to add all of them?" "Add this?" "git add" ${FILES[@]}
-    git status
+feature() {
+    _validate "$1" "Feature name"
+    git-elegant pull $MASTER
+    git checkout -b "$1"
+}
+
+clear-local() {
+    git-elegant pull $MASTER
+    local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
+    __loop "git branch -d" $(eval "$cmd") || \
+        (
+            __gm "There are unmerged branches:" && \
+            __loop "__gm -" $(eval "$cmd") && \
+            __batch "Do you want to delete all unmerged branches?" "Delete this?" "git branch -D" $(eval "$cmd")
+        )
 }
 
 usage() {
