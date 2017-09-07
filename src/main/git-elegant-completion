@@ -7,6 +7,10 @@ _git_elegant() {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     case "${prev}" in
+        elegant)
+            opts=($(git elegant commands))
+            COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cur}) )
+            return 0 ;;
         pull)
             local data=$(git branch | awk -F ' +' '! /\(no branch\)/ {print $2}')
             COMPREPLY=( $(compgen -W "${data}" ${cur}) )
@@ -20,10 +24,7 @@ _git_elegant() {
         check)
             COMPREPLY=($(compgen -W '"--all" "--unstaged" "--staged"' -- ${cur}) )
             return 0 ;;
-
-        *) ;;
+        *)
+            return 0 ;;
     esac
-
-    opts=($(git elegant commands))
-    COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cur}) )
 }
