@@ -24,20 +24,6 @@ __mmn() {
 MASTER="master"
 RMASTER="origin/master"
 
-commands() {
-    echo "feature"
-    echo "pull"
-    echo "push"
-    echo "push-after-rebase"
-    echo "rebase"
-    echo "init"
-    echo "clone"
-    echo "add"
-    echo "clear-local"
-    echo "configure"
-    echo "check"
-}
-
 _validate() {
     if [ -z "$1" ]; then
         __rm "$2 is not set"
@@ -87,7 +73,7 @@ __batch() {
 
 usage() {
     echo "git elegant <command>"
-    commands
+    git-elegant commands
     # @todo #6 Describe usage of git elegant
 }
 
@@ -105,7 +91,6 @@ main() {
         exit 0
     fi
 
-    [ "$COMMAND" = "commands" ] && commands && exit 0
     [ ! -e "$BINS/git-elegant-$COMMAND" ] && echo "Unknown command: git elegant $COMMAND" && usage && exit 2
     . "$BINS/git-elegant-$COMMAND"
 

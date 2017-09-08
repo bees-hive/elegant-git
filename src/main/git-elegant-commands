@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    echo "feature"
+    echo "pull"
+    echo "push"
+    echo "push-after-rebase"
+    echo "rebase"
+    echo "init"
+    echo "clone"
+    echo "add"
+    echo "clear-local"
+    echo "configure"
+    echo "check"
+}
