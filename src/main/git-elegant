@@ -83,14 +83,6 @@ main() {
         COMMAND="$1"; shift
     fi
     [ -z "$COMMAND" ] || [ "$COMMAND" = "help" ] && usage && exit 10
-
-    # @todo #6 Remove commands loading from main executable.
-    #  It will be possible when all commands will be migrated to separate executables.
-    if type -t "$COMMAND" | grep -q '^function$' >/dev/null 2>&1 ; then
-        eval '$COMMAND $@'
-        exit 0
-    fi
-
     [ ! -e "$BINS/git-elegant-$COMMAND" ] && echo "Unknown command: git elegant $COMMAND" && usage && exit 2
     . "$BINS/git-elegant-$COMMAND"
 
