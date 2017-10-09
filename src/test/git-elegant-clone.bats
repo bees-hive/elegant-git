@@ -7,7 +7,13 @@ load fake-cd
 setup() {
     fake-pass git clone
     fake-pass git "clone https://github.com/extsoft/elegant-git.git"
-    fake-pass git "elegant configure --local"
+
+    fake-pass git "config --global user.name" "UserName"
+    fake-pass git "config --global user.email" "UserEmail"
+
+    fake-pass git "config --local core.commentChar"
+    fake-pass git "config --local user.name UserName"
+    fake-pass git "config --local user.email UserEmail"
 }
 
 @test "print message when run 'git-elegant clone'" {
