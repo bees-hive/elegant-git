@@ -47,7 +47,7 @@ _configure() {
                 fi
             else
                 if [ -n "${answer}" ]; then
-                    git config $MODE $(eval "echo -n \$${f}_key") $answer
+                    git config $MODE $(eval "echo -n \$${f}_key") "$answer"
                 fi
             fi
         done
