@@ -2,7 +2,7 @@
 set -e
 
 default() {
-    git-elegant pull $MASTER
+    git elegant pull $MASTER
     local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
     __loop "git branch -d" $(eval "$cmd") || \
         (

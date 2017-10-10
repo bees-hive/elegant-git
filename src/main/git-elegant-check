@@ -13,7 +13,7 @@ default() {
         "-s" | "--staged")
             git diff --cached --check
             ;;
-        *) git-elegant check --all
+        *) git elegant check --all
             ;;
     esac
 }

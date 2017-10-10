@@ -73,7 +73,7 @@ __batch() {
 
 usage() {
     echo "git elegant <command>"
-    git-elegant commands
+    git elegant commands
     # @todo #6 Describe usage of git elegant
 }
 
