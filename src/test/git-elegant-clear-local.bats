@@ -5,9 +5,7 @@ load fake-read
 
 setup() {
     fake-pass git "branch -lvv" "first [gone]"
-    fake-pass git "checkout master"
-    fake-pass git "fetch --tags"
-    fake-pass git pull
+    fake-pass git "elegant pull master"
     fake-pass git "branch -d first"
 }
 

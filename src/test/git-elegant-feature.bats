@@ -3,12 +3,9 @@
 load commons
 
 setup() {
-    fake-pass git "checkout master"
-    fake-pass git "fetch --tags"
-    fake-pass git pull
+    fake-pass git "elegant pull master"
     fake-pass git "checkout -b test-feature"
     fake-pass git "stash save elegant-git"
-    fake-pass git "stash apply stash^{/elegant-git}"
 }
 
 @test "exit code is 0 when run 'git-elegant feature test-feature'" {
@@ -28,6 +25,7 @@ setup() {
 
 @test "exit code is 0 when run 'git-elegant feature' with changes" {
   fake-pass git "stash save elegant-git" "Saved working directory"
+  fake-pass git "stash apply stash^{/elegant-git}"
   fake-pass git "stash drop stash@{0}"
   run git-elegant feature test-feature
   [ "$status" -eq 0 ]
@@ -41,6 +39,7 @@ setup() {
 
 @test "exit code is 100 when run 'git-elegant feature' with error at 'git stash drop'" {
   fake-pass git "stash save elegant-git" "Saved working directory"
+  fake-pass git "stash apply stash^{/elegant-git}"
   fake-fail git "stash drop stash@{0}"
   run git-elegant feature test-feature
   [ "$status" -eq 100 ]

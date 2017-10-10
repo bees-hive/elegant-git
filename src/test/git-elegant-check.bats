@@ -5,6 +5,7 @@ load commons
 setup() {
     fake-pass git "diff --check"
     fake-pass git "diff --cached --check"
+    fake-pass git "elegant check --all"
 }
 
 @test "exit code is 0 when run 'git-elegant check -a'" {
