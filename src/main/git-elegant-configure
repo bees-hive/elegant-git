@@ -13,6 +13,10 @@ _user_email_key="user.email"
 _user_email_default=$(git config --global "$_user_email_key")
 _user_email_message="your user email"
 
+_apply_whitespace_key="apply.whitespace"
+_apply_whitespace_default="fix"
+_apply_whitespace_message="whitespace issues on patching"
+
 
 _configure() {
     MODE=$1; shift
@@ -36,8 +40,8 @@ _configure() {
     done
 }
 
-GLOBALS=(_core_comment_char _user_name _user_email)
-LOCALS=(_core_comment_char _user_name _user_email)
+GLOBALS=(_core_comment_char _user_name _user_email _apply_whitespace)
+LOCALS=(_core_comment_char _user_name _user_email _apply_whitespace)
 
 default() {
     case "$1" in
