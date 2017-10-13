@@ -17,6 +17,10 @@ _apply_whitespace_key="apply.whitespace"
 _apply_whitespace_default="fix"
 _apply_whitespace_message="whitespace issues on patching"
 
+_alias_key="alias."
+_alias_default="yes"
+_alias_message="add git aliases for all 'elegant git' commands"
+
 
 _configure() {
     MODE=$1; shift
@@ -33,14 +37,24 @@ _configure() {
             # run git config
             read answer
             answer=${answer:-$default}
-            if [ -n "${answer}" ]; then
-                git config $MODE $(eval "echo -n \$${f}_key") $answer
+            if [ "$f" = "_alias" ]; then
+                if [ "$answer" = "$_alias_default" ]; then
+                    for com in $(git elegant commands); do
+                        alias="e${com}"
+                        command="elegant $com"
+                        git config $MODE $(eval "echo -n \$${f}_key\$alias") "$command"
+                    done
+                fi
+            else
+                if [ -n "${answer}" ]; then
+                    git config $MODE $(eval "echo -n \$${f}_key") $answer
+                fi
             fi
         done
     done
 }
 
-GLOBALS=(_core_comment_char _user_name _user_email _apply_whitespace)
+GLOBALS=(_core_comment_char _user_name _user_email _apply_whitespace _alias)
 LOCALS=(_core_comment_char _user_name _user_email _apply_whitespace)
 
 default() {
