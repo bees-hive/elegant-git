@@ -4,6 +4,8 @@ load commons
 load fake-read
 
 setup() {
+    fake-pass git "elegant commands"
+
     fake-pass git "config --global user.name" "UserName"
     fake-pass git "config --global user.email" "UserEmail"
 
@@ -41,7 +43,8 @@ setup() {
   [ "${lines[1]}" = "your user name [UserName]: " ]
   [ "${lines[2]}" = "your user email [UserEmail]: " ]
   [ "${lines[3]}" = "whitespace issues on patching [fix]: " ]
-  [ ${#lines[@]} -eq 4 ]
+  [ "${lines[4]}" = "add git aliases for all 'elegant git' commands [yes]: " ]
+  [ ${#lines[@]} -eq 5 ]
 }
 
 @test "'configure': sequence of the configuration is correct when run with '--local' argument" {
