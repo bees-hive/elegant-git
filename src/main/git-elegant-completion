@@ -11,17 +11,17 @@ _git_elegant() {
             opts=($(git elegant commands))
             COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cur}) )
             return 0 ;;
-        pull)
+        pull|epull)
             local data=$(git branch | awk -F ' +' '! /\(no branch\)/ {print $2}')
             COMPREPLY=( $(compgen -W "${data}" ${cur}) )
             return 0 ;;
-        push) 
+        push|epush)
             COMPREPLY=( $(compgen -W "$(git branch | grep \* | cut -d ' ' -f2)" ${cur}) )
             return 0 ;;
-        configure)
+        configure|econfigure)
             COMPREPLY=($(compgen -W '--global --local' -- ${cur}) )
             return 0 ;;
-        check)
+        check|echeck)
             COMPREPLY=($(compgen -W '"--all" "--unstaged" "--staged"' -- ${cur}) )
             return 0 ;;
         *)
