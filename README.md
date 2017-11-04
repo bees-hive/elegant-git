@@ -36,13 +36,4 @@ clear-local
 
 Development
 ===========
-Installation
----------------
-1. clone the repository
-2. run `./install.bash dev`
-
-Debug
------
-`export GED=1` to turn on the debug of `git elegant` execution.
-
-`unset GED` to turn off the debug of `git elegant` execution.
+Please follow [CONTRIBUTING.md](CONTRIBUTING.md) when working with the code.

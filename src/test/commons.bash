@@ -6,8 +6,18 @@ BIN_DIR="$THIS/../../src/main"
 MOCK_DIR="$THIS/../../mock"
 export PATH=$MOCK_DIR:$BIN_DIR:$PATH
 
+check(){
+    run "$@"
+    echo "> Exit code: \$status=$status"
+    for line in ${lines[@]}; do
+        echo "> stdout+stderr: '$line'"
+     done
+}
 
+# @todo #89 Move 'fake's to separate addons file.
 fake() {
+    # @todo #89 Implement logging of commands execution like in addons-git.bash
+
     # sample: fake <command> <subcommand> <exit> <stdout> <stderr>
     BASENAME=$(basename $1)
     PROGRAM_PATH="$MOCK_DIR/$BASENAME-app"
@@ -47,6 +57,7 @@ fake-fail() {
 }
 
 teardown() {
+    # @todo #89 Use $BATS_TMPDIR instead of teardown methods for fakes deletion
     #teardown for bats tests
     if [ -d "$MOCK_DIR" ]; then
         rm -r "$MOCK_DIR"
