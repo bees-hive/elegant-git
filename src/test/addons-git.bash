@@ -18,11 +18,11 @@ init-repo() {
         _ex mkdir -p $GIT_REPO_DIR
         _ex cd $GIT_REPO_DIR
         _ex git init
-        _ex git config --local user.email "elegant-git@example.com"
-        _ex git config --local user.name "Elegant Git"
+        _ex git config --local user.email "\"elegant-git@example.com\""
+        _ex git config --local user.name "\"Elegant Git\""
         _ex touch $FILE_TO_MODIFY
         _ex git add .
-        _ex git commit -m "Add $FILE_TO_MODIFY"
+        _ex git commit -m "\"Add $FILE_TO_MODIFY\""
     else
         exit 1
     fi
