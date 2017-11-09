@@ -9,9 +9,10 @@ export PATH=$MOCK_DIR:$BIN_DIR:$PATH
 check(){
     run "$@"
     echo "> Exit code: \$status=$status"
+    local IFS=$'\n'
     for line in ${lines[@]}; do
         echo "> stdout+stderr: '$line'"
-     done
+    done
 }
 
 # @todo #89 Move 'fake's to separate addons file.
