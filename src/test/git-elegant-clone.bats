@@ -1,8 +1,8 @@
 #!/usr/bin/env bats -ex
 
-load commons
-load fake-read
-load fake-cd
+load addons-common
+load addons-read
+load addons-cd
 
 setup() {
     fake-pass git clone

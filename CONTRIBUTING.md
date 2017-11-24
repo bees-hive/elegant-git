@@ -15,12 +15,10 @@ Unit tests
 Addons
 ------
 Add the following line to the test file if the extension is required:
-- `load commons` to have the working test (**mandatory**)
+- `load addons-common` to have the working test (**mandatory**)
 - `load addons-git` to interact with real git repository (**optional**)
-- `load fake-cd` to fake `cd` unix command (**optional**)
-- `load fake-read` to fake `read` unix command (**optional**)
-
-@todo #89 Use some name template for the addons.
+- `load addons-cd` to fake `cd` unix command (**optional**)
+- `load addons-read` to fake `read` unix command (**optional**)
 
 Bats restrictions
 -----------------

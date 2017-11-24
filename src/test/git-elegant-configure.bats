@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-load commons
-load fake-read
+load addons-common
+load addons-read
 
 setup() {
     fake-pass git "elegant commands"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bats -ex
 
-load commons
-load fake-read
+load addons-common
+load addons-read
 
 setup() {
     fake-pass git "branch -lvv" "first [gone]"

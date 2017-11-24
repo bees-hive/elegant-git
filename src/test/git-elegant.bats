@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load commons
+load addons-common
 
 @test "print available commands when run 'git-elegant commands'" {
   run git-elegant commands

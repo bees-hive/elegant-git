@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-load commons
+load addons-common
 
 @test "exit code is 0 when run 'git-elegant pull' without parameters" {
     fake-pass git "fetch --tags"
