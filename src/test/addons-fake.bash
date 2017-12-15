@@ -5,9 +5,16 @@ MOCK_DIR="/tmp/elegant-git-mock"
 export PATH=$MOCK_DIR:$PATH
 
 
-fake() {
-    # @todo #89 Implement logging of commands execution like in addons-git.bash
+_log_fake(){
+    echo "$(basename ${BASH_SOURCE[0]}): $@"
+}
 
+_ex_fake() {
+    _log_fake "$@"
+    eval "$@"
+}
+
+fake() {
     # sample: fake <command> <subcommand> <exit> <stdout> <stderr>
     BASENAME=$(basename $1)
     PROGRAM_PATH="$MOCK_DIR/$BASENAME-app"
@@ -15,10 +22,10 @@ fake() {
     MOCK="$MOCK_DIR/$BASENAME"
 
     [ -d "$FIXTURE_HOME" ] && rm -r "$FIXTURE_HOME"
-    mkdir -p "$FIXTURE_HOME"
-    echo -e "$3" > "$FIXTURE_HOME/exit_code"
-    echo -e "$4" > "$FIXTURE_HOME/stdout"
-    echo -e "$5" > "$FIXTURE_HOME/stderr"
+    _ex_fake mkdir -p "$FIXTURE_HOME"
+    echo -e "$3" | tee -i "$FIXTURE_HOME/exit_code"
+    echo -e "$4" | tee -i "$FIXTURE_HOME/stdout"
+    echo -e "$5" | tee -i "$FIXTURE_HOME/stderr"
 
     [ -e "$MOCK" ] && rm -r "$MOCK"
     echo "#!/usr/bin/env bash
@@ -28,8 +35,8 @@ cat \"\$FIXTURE_HOME/stdout\"
 cat \"\$FIXTURE_HOME/stderr\" >&2
 read -r exit_code < \"\$FIXTURE_HOME/exit_code\"
 exit \$exit_code
-" > "$MOCK"
-    chmod +x "$MOCK"
+" | tee -i "$MOCK"
+    _ex_fake chmod +x "$MOCK"
 }
 
 fake-pass() {
