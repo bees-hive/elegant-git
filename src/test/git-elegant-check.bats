@@ -2,6 +2,8 @@
 
 load addons-common
 load addons-git
+load addons-fake
+
 
 preconditions() {
     fake-pass git "diff --check"

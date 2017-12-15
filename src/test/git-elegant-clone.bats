@@ -3,6 +3,7 @@
 load addons-common
 load addons-read
 load addons-cd
+load addons-fake
 
 setup() {
     fake-pass git clone

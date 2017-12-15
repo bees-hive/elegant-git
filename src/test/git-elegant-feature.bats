@@ -1,6 +1,7 @@
 #!/usr/bin/env bats -ex
 
 load addons-common
+load addons-fake
 
 setup() {
     fake-pass git "elegant pull master"

@@ -2,6 +2,7 @@
 
 load addons-common
 load addons-read
+load addons-fake
 
 setup() {
     fake-pass git "branch -lvv" "first [gone]"

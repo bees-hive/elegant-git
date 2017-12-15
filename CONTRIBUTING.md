@@ -17,8 +17,9 @@ Addons
 Add the following line to the test file if the extension is required:
 - `load addons-common` to have the working test (**mandatory**)
 - `load addons-git` to interact with real git repository (**optional**)
-- `load addons-cd` to fake `cd` unix command (**optional**)
-- `load addons-read` to fake `read` unix command (**optional**)
+- `load addons-fake` to fake a Linux command (**optional**)
+- `load addons-cd` to fake `cd` command (**optional**)
+- `load addons-read` to fake `read` command (**optional**)
 
 Bats restrictions
 -----------------

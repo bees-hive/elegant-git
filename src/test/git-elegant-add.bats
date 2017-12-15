@@ -2,6 +2,8 @@
 
 load addons-common
 load addons-read
+load addons-fake
+
 
 setup() {
     fake-pass git "ls-files -m" src/test/git-elegant

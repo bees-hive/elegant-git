@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
 load addons-common
+load addons-fake
 
 @test "print available commands when run 'git-elegant commands'" {
   run git-elegant commands

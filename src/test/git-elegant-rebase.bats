@@ -1,6 +1,7 @@
 #!/usr/bin/env bats
 
 load addons-common
+load addons-fake
 
 setup() {
     fake-pass git "fetch --tags"
