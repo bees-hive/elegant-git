@@ -9,6 +9,10 @@ setup() {
     fake-pass git "stash save elegant-git"
 }
 
+teardown() {
+    clean-fake
+}
+
 @test "exit code is 0 when run 'git-elegant feature test-feature'" {
   run git-elegant feature test-feature
   [ "$status" -eq 0 ]

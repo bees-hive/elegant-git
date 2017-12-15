@@ -21,10 +21,11 @@ Add the following line to the test file if the extension is required:
 - `load addons-cd` to fake `cd` command (**optional**)
 - `load addons-read` to fake `read` command (**optional**)
 
-Bats restrictions
------------------
-1. **Don't use `setup()` or `teardown()`** bats methods.
-2. Use **`check` instead of bats `run`** to execute a command to test.
+Writing tests
+-------------
+1. **Use `setup()` or `teardown()`** bats methods only in the tests.
+2. Use **`check` instead of bats `run`** to execute a command to be tested.
+3. If `addons-fake` or `addons-git` is used, call `clean-fake` or `clean-git` within a `teardown()` method.
 
 Assertions
 ----------

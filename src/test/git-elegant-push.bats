@@ -4,6 +4,10 @@ load addons-common
 load addons-read
 load addons-fake
 
+teardown() {
+    clean-fake
+}
+
 setup() {
     fake-pass git branch *master
     fake-pass git "push -u origin master:master"

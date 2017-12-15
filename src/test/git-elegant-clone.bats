@@ -11,6 +11,10 @@ setup() {
     fake-pass git "elegant configure --local"
 }
 
+teardown() {
+    clean-fake
+}
+
 @test "print message when run 'git-elegant clone'" {
   run git-elegant clone
   [[ "${lines[0]}" =~ "Clonable URL is not set"  ]]

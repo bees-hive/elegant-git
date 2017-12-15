@@ -3,6 +3,10 @@
 load addons-common
 load addons-fake
 
+teardown() {
+    clean-fake
+}
+
 @test "exit code is 0 when run 'git-elegant pull' without parameters" {
     fake-pass git "fetch --tags"
     fake-pass git pull

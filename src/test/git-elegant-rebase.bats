@@ -8,6 +8,10 @@ setup() {
     fake-pass git "rebase origin/master"
 }
 
+teardown() {
+    clean-fake
+}
+
 @test "exit code is 0 when run 'git-elegant rebase'" {
     run git-elegant rebase
     [ "$status" -eq 0 ]

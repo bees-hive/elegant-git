@@ -22,6 +22,10 @@ setup() {
     fake-pass git "config --local apply.whitespace fix"
 }
 
+teardown() {
+    clean-fake
+}
+
 @test "'configure': exit code is 11 when run without arguments" {
   run git-elegant configure
   [ "$status" -eq 11 ]

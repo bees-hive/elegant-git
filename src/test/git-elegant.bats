@@ -3,6 +3,10 @@
 load addons-common
 load addons-fake
 
+teardown() {
+    clean-fake
+}
+
 @test "print available commands when run 'git-elegant commands'" {
   run git-elegant commands
   [ "${lines[0]}" = "feature" ]

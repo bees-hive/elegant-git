@@ -4,6 +4,10 @@ load addons-common
 load addons-git
 load addons-fake
 
+teardown() {
+    clean-fake
+    clean-git
+}
 
 preconditions() {
     fake-pass git "diff --check"

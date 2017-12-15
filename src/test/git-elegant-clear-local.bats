@@ -10,6 +10,10 @@ setup() {
     fake-pass git "branch -d first"
 }
 
+teardown() {
+    clean-fake
+}
+
 @test "exit code is 0 when run 'git-elegant clear-local'" {
   run git-elegant clear-local
   [ "$status" -eq 0 ]

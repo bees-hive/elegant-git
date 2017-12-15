@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-GIT_REPO_DIR="$BATS_TMPDIR/mock-repo"
+GIT_REPO_DIR="/tmp/elegant-git-repo"
 FILE_TO_MODIFY=file
 
 _gilog(){
@@ -35,4 +35,10 @@ add-unst-change(){
 add-st-change(){
     add-unst-change "$@"
     _ex git add $FILE_TO_MODIFY
+}
+
+clean-git() {
+    if [ -d "$GIT_REPO_DIR" ]; then
+        rm -rf "$GIT_REPO_DIR"
+    fi
 }

@@ -53,9 +53,7 @@ fake-fail() {
     fake "$COMMAND" "$SUBCOMMAND" 100 " " "$@"
 }
 
-teardown() {
-    # @todo #89 Use $BATS_TMPDIR instead of teardown methods for fakes deletion
-    #teardown for bats tests
+clean-fake() {
     if [ -d "$MOCK_DIR" ]; then
         rm -r "$MOCK_DIR"
     fi
