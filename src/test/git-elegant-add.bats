@@ -14,7 +14,7 @@ setup() {
     fake-pass git status
 }
 
-@test "exit code is 0 when run 'git-elegant add'" {
+@test "'add': successful adding of modified file" {
     run git-elegant add
     [ "$status" -eq 0 ]
 }

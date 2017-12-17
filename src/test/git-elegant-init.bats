@@ -13,7 +13,7 @@ teardown() {
     clean-fake
 }
 
-@test "exit code is 0 when run 'git-elegant init'" {
+@test "'init': command is available" {
   run git-elegant init
   [ "$status" -eq 0 ]
 }

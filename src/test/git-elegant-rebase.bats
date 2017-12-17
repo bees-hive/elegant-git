@@ -12,7 +12,7 @@ teardown() {
     clean-fake
 }
 
-@test "exit code is 0 when run 'git-elegant rebase'" {
+@test "'rebase': command is available" {
     run git-elegant rebase
     [ "$status" -eq 0 ]
 }

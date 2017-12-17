@@ -14,7 +14,7 @@ teardown() {
     clean-fake
 }
 
-@test "exit code is 0 when run 'git-elegant clear-local'" {
+@test "'clear-local': command is available" {
   run git-elegant clear-local
   [ "$status" -eq 0 ]
 }

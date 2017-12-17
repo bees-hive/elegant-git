@@ -37,8 +37,6 @@ Test name template
 ------------------
 Use the following test name template - `'<command args>': <describe what will be tested>` like `'check -s': trailing spaces in the staged changes`.
 
-@todo #89 Apply test name template for all unit tests. Please update assertions if required.
-
 Run
 ---
 Use one of the following commands to run the unit tests:

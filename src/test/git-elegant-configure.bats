@@ -26,23 +26,23 @@ teardown() {
     clean-fake
 }
 
-@test "'configure': exit code is 11 when run without arguments" {
+@test "'configure': exit code is 11 when no arguments provided" {
   run git-elegant configure
   [ "$status" -eq 11 ]
 }
 
 
-@test "'configure': exit code is 0 when run with '--global' argument" {
+@test "'configure': '--global' option is available" {
   run git-elegant configure --global
   [ "$status" -eq 0 ]
 }
 
-@test "'configure': exit code is 0 when run with '--local' argument" {
+@test "'configure': '--local' option is available" {
   run git-elegant configure --local
   [ "$status" -eq 0 ]
 }
 
-@test "'configure': sequence of the configuration is correct when run with '--global' argument" {
+@test "'configure': sequence of the global git configuration is correct" {
   run git-elegant configure --global
   [ "${lines[0]}" = "commit message won't start with [|]: " ]
   [ "${lines[1]}" = "your user name [UserName]: " ]
@@ -52,7 +52,7 @@ teardown() {
   [ ${#lines[@]} -eq 5 ]
 }
 
-@test "'configure': sequence of the configuration is correct when run with '--local' argument" {
+@test "'configure': sequence of the local git configuration is correct" {
   run git-elegant configure --local
   [ "${lines[0]}" = "commit message won't start with [|]: " ]
   [ "${lines[1]}" = "your user name [UserName]: " ]

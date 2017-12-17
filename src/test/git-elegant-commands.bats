@@ -7,7 +7,7 @@ teardown() {
     clean-fake
 }
 
-@test "print available commands when run 'git-elegant commands'" {
+@test "'commands': print all available commands" {
   run git-elegant commands
   [ "${lines[0]}" = "feature" ]
   [ "${lines[1]}" = "pull" ]
@@ -23,15 +23,7 @@ teardown() {
   [ ${#lines[@]} -eq 11 ]
 }
 
-
-@test "exit code is 10 when run 'git-elegant'" {
-  fake-pass git "elegant commands"
-  run git-elegant
-  [ "$status" -eq 10 ]
-}
-
-
-@test "exit code is 0 when run 'git-elegant commands'" {
+@test "'commands': default exit code is 0" {
   run git-elegant commands
   [ "$status" -eq 0 ]
 }

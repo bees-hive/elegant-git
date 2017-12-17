@@ -7,7 +7,7 @@ teardown() {
     clean-fake
 }
 
-@test "exit code is 0 when run 'git-elegant pull' without parameters" {
+@test "'pull': current local branch is pulled successfully" {
     fake-pass git "fetch --tags"
     fake-pass git pull
 
@@ -15,7 +15,7 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 
-@test "exit code is 0 when run 'git-elegant pull' with parameter" {
+@test "'pull': provided local branch is pulled successfully" {
     fake-pass git "checkout master"
     fake-pass git "fetch --tags"
     fake-pass git pull
