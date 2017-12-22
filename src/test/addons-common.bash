@@ -9,6 +9,7 @@ check(){
     run "$@"
     echo "> Exit code: \$status=$status"
     local IFS=$'\n'
+    echo "> stdout+stderr size: ${#lines[@]}"
     for line in ${lines[@]}; do
         echo "> stdout+stderr: '$line'"
     done

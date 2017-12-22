@@ -3,7 +3,7 @@
 set -e
 
 read() {
-    sleep 0
+    echo ""
 }
 
 export -f read

@@ -33,8 +33,7 @@ PROGRAM_PATH=\"$MOCK_DIR/$BASENAME-app\"
 FIXTURE_HOME=\"\$PROGRAM_PATH/\$(echo \"\$@\" | sed 's/[^0-9a-zA-Z]*//g')\"
 cat \"\$FIXTURE_HOME/stdout\"
 cat \"\$FIXTURE_HOME/stderr\" >&2
-read -r exit_code < \"\$FIXTURE_HOME/exit_code\"
-exit \$exit_code
+exit \$(cat \"\$FIXTURE_HOME/exit_code\")
 " | tee -i "$MOCK"
     _ex_fake chmod +x "$MOCK"
 }
