@@ -11,7 +11,7 @@ teardown() {
     fake-pass git "fetch --tags"
     fake-pass git pull
 
-    run git-elegant pull
+    check git-elegant pull
     [ "$status" -eq 0 ]
 }
 
@@ -20,6 +20,6 @@ teardown() {
     fake-pass git "fetch --tags"
     fake-pass git pull
 
-    run git-elegant pull master
+    check git-elegant pull master
     [ "$status" -eq 0 ]
 }

@@ -15,6 +15,6 @@ teardown() {
 }
 
 @test "'clear-local': command is available" {
-  run git-elegant clear-local
+  check git-elegant clear-local
   [ "$status" -eq 0 ]
 }

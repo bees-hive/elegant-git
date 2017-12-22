@@ -14,6 +14,6 @@ setup() {
 }
 
 @test "'push': command is available" {
-  run git-elegant push
+  check git-elegant push
   [ "$status" -eq 0 ]
 }

@@ -14,6 +14,6 @@ teardown() {
 }
 
 @test "'init': command is available" {
-  run git-elegant init
+  check git-elegant init
   [ "$status" -eq 0 ]
 }

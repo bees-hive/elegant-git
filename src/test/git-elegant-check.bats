@@ -17,37 +17,37 @@ preconditions() {
 
 @test "'check': '-a' option is available" {
     preconditions
-    run git-elegant check -a
+    check git-elegant check -a
     [ "$status" -eq 0 ]
 }
 
 @test "'check': '--all' option is available" {
     preconditions
-    run git-elegant check --all
+    check git-elegant check --all
     [ "$status" -eq 0 ]
 }
 
 @test "'check': '-u' option is available" {
     preconditions
-    run git-elegant check -u
+    check git-elegant check -u
     [ "$status" -eq 0 ]
 }
 
 @test "'check': '--unstaged' option is available" {
     preconditions
-    run git-elegant check --unstaged
+    check git-elegant check --unstaged
     [ "$status" -eq 0 ]
 }
 
 @test "'check': '-s' option is available" {
     preconditions
-    run git-elegant check -s
+    check git-elegant check -s
     [ "$status" -eq 0 ]
 }
 
 @test "'check': '--staged' option is available" {
     preconditions
-    run git-elegant check --staged
+    check git-elegant check --staged
     [ "$status" -eq 0 ]
 }
 

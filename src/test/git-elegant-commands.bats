@@ -8,7 +8,7 @@ teardown() {
 }
 
 @test "'commands': print all available commands" {
-  run git-elegant commands
+  check git-elegant commands
   [ "${lines[0]}" = "feature" ]
   [ "${lines[1]}" = "pull" ]
   [ "${lines[2]}" = "push" ]
@@ -24,6 +24,6 @@ teardown() {
 }
 
 @test "'commands': default exit code is 0" {
-  run git-elegant commands
+  check git-elegant commands
   [ "$status" -eq 0 ]
 }

@@ -15,6 +15,6 @@ setup() {
 }
 
 @test "'add': successful adding of modified file" {
-    run git-elegant add
+    check git-elegant add
     [ "$status" -eq 0 ]
 }

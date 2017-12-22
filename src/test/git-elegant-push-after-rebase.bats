@@ -14,6 +14,6 @@ teardown() {
 }
 
 @test "'push-after-rebase': command is available" {
-  run git-elegant push-after-rebase
+  check git-elegant push-after-rebase
   [ "$status" -eq 0 ]
 }

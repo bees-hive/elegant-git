@@ -16,11 +16,11 @@ teardown() {
 }
 
 @test "'clone': raise an error if cloneable URL isn't set" {
-  run git-elegant clone
+  check git-elegant clone
   [[ "${lines[0]}" =~ "Cloneable URL is not set"  ]]
 }
 
 @test "'clone': clone the repo" {
-  run git-elegant clone https://github.com/extsoft/elegant-git.git
+  check git-elegant clone https://github.com/extsoft/elegant-git.git
   [ "$status" -eq 0 ]
 }

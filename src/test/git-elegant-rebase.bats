@@ -13,6 +13,6 @@ teardown() {
 }
 
 @test "'rebase': command is available" {
-    run git-elegant rebase
+    check git-elegant rebase
     [ "$status" -eq 0 ]
 }
