@@ -4,16 +4,16 @@ set -e
 default() {
     case "$1" in
         "-a" | "--all")
-            git diff --check
-            git diff --cached --check
+            boxtee git diff --check
+            boxtee git diff --cached --check
             ;;
         "-u" | "--unstaged")
-            git diff --check
+            boxtee git diff --check
             ;;
         "-s" | "--staged")
-            git diff --cached --check
+            boxtee git diff --cached --check
             ;;
-        *) git elegant check --all
+        *)  boxtee git elegant check --all
             ;;
     esac
 }

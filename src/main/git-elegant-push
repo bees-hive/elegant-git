@@ -3,5 +3,5 @@ set -e
 
 default() {
     local BRANCH=$(__branches 'git branch | grep \*')
-    git push -u origin $BRANCH:$BRANCH
+    boxtee git push -u origin $BRANCH:$BRANCH
 }

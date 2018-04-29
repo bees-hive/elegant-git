@@ -1,6 +1,8 @@
 Elegant git
 ===========
-Your `git` experience will be changed forever.
+`git elegant` is a `git` extension which allows simplifying of `git` interaction.
+
+`git elegant` always says which original git command will be executed.
 
 Philosophy
 ----------

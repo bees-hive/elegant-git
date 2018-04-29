@@ -42,12 +42,12 @@ _configure() {
                     for com in $(git elegant commands); do
                         alias="e${com}"
                         command="elegant $com"
-                        git config $MODE $(eval "echo -n \$${f}_key\$alias") "$command"
+                        boxtee git config $MODE $(eval "echo -n \$${f}_key\$alias") "$command"
                     done
                 fi
             else
                 if [ -n "${answer}" ]; then
-                    git config $MODE $(eval "echo -n \$${f}_key") "$answer"
+                    boxtee git config $MODE $(eval "echo -n \$${f}_key") "$answer"
                 fi
             fi
         done

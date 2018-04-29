@@ -3,12 +3,12 @@ set -e
 
 default() {
     _validate "$1" "Feature name"
-    status=$(git stash save elegant-git)
-    git elegant pull $MASTER
-    git checkout -b "$1"
+    status=$(boxtee git stash save elegant-git)
+    boxtee git elegant pull $MASTER
+    boxtee git checkout -b "$1"
 
     if [[ "$status" =~ "Saved working directory" ]]; then
-        git stash apply stash^{/elegant-git}
-        git stash drop stash@{0}
+        boxtee git stash apply stash^{/elegant-git}
+        boxtee git stash drop stash@{0}
     fi
 }

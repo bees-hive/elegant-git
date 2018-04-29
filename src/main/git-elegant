@@ -9,6 +9,19 @@ __green=`tput setaf 2`
 __magenta=`tput setaf 5`
 __reset=`tput sgr0`
 
+box(){
+    t="$@xxxxxx"
+    c=${replace:-=}
+    echo ${t//?/$c}
+    echo "$c$c $@ $c$c"
+    echo ${t//?/$c}
+}
+
+boxtee() {
+    box "$@"
+    "$@"
+}
+
 __gm() {
     echo "${__green}$@${__reset}"
 }

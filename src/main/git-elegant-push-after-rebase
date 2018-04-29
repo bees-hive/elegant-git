@@ -2,6 +2,6 @@
 set -e
 
 default() {
-    git elegant rebase
-    git elegant push
+    boxtee git elegant rebase
+    boxtee git elegant push
 }

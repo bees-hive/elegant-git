@@ -55,13 +55,13 @@ preconditions() {
     init-repo && add-st-change "no space"
     check git-elegant check -s
     [ "$status" -eq 0 ]
-    [ "${#lines[@]}" -eq 0 ]
+    [ "${#lines[@]}" -eq 3 ]
 }
 
 @test "'check': trailing spaces in the staged changes" {
     init-repo && add-st-change "the space "
     check git-elegant check -s
     [ "$status" -eq 2 ]
-    [ "${lines[1]}" = "+the space " ]
+    [ "${lines[4]}" = "+the space " ]
 
 }
