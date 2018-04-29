@@ -1,6 +1,6 @@
 sudo: required
 language: bash
 services: docker
-script: docker run -t --rm -v $PWD:/src -w /src extsoft/rultor-runtime:r24b04p0g2 ./run-tests
+script: docker run -t --rm -v $PWD:/eg extsoft/elegant-git-ci:1 ./run-tests
 notifications:
   email: false

@@ -36,4 +36,10 @@ Use the following test name template - `'<command args>': <describe what will be
 Use one of the following commands to run the unit tests:
 - `bats src/test`
 - `./run-tests`
-- `docker run -t --rm -v $PWD:/src -w /src extsoft/rultor-runtime:r24b04p0g2 ./run-tests`
+- `docker run -t --rm -v $PWD:/eg extsoft/elegant-git-ci:1 ./run-tests`
+
+# CI
+CI execution is automated using Docker. If some changes are required to the CI docker image, please follow next:
+- update `Dockerfile` (including `version` and and `description`)
+- `docker build -t extsoft/elegant-git-ci:<version> .`
+- `docker push extsoft/elegant-git-ci:<version>`
