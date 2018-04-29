@@ -1,4 +1,5 @@
-#!/usr/bin/env bash -e
+#!/usr/bin/env bash
+set -e
 
 [ -z "$INSTALL_PATH" ] && INSTALL_PATH="$HOME/.git-elegant"
 [ -z "$REPO_HOME" ] && REPO_HOME="https://github.com/extsoft/elegant-git.git"

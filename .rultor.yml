@@ -1,6 +1,6 @@
 architect: extsoft
 docker:
-    image: extsoft/rultor-runtime:r24b04p0g2
+    image: extsoft/elegant-git-ci:1
     as_root: true
 merge:
     fast-forward: only
