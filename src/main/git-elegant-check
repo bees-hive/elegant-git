@@ -13,7 +13,7 @@ default() {
         "-s" | "--staged")
             boxtee git diff --cached --check
             ;;
-        *)  boxtee git elegant check --all
+        *)  git elegant check --all
             ;;
     esac
 }

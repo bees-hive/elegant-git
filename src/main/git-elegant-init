@@ -3,5 +3,5 @@ set -e
 
 default() {
     boxtee git init
-    boxtee git elegant configure --local
+    git elegant configure --local
 }
