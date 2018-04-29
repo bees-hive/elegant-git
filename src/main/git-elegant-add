@@ -6,5 +6,5 @@ default() {
     __gm "There are candidates to be added to commit:"
     __loop "__gm -" ${FILES[@]}
     __batch "Do you want to add all of them?" "Add this?" "git add" ${FILES[@]}
-    git status
+    boxtee git status
 }

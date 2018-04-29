@@ -51,19 +51,19 @@ teardown() {
     fake-preconditions
     check git-elegant configure --global
     [ "${lines[0]}" = "your user name [UserName]: " ]
-    [ "${lines[1]}" = "your user email [UserEmail]: " ]
-    [ "${lines[2]}" = "commit message won't start with [|]: " ]
-    [ "${lines[3]}" = "whitespace issues on patching [fix]: " ]
-    [ "${lines[4]}" = "add git aliases for all 'elegant git' commands [yes]: " ]
-    [ ${#lines[@]} -eq 5 ]
+    [ "${lines[4]}" = "your user email [UserEmail]: " ]
+    [ "${lines[8]}" = "commit message won't start with [|]: " ]
+    [ "${lines[12]}" = "whitespace issues on patching [fix]: " ]
+    [ "${lines[16]}" = "add git aliases for all 'elegant git' commands [yes]: " ]
+    [ ${#lines[@]} -eq 17 ]
 }
 
 @test "'configure': sequence of the local git configuration is correct" {
     init-repo
     check git-elegant configure --local
     [ "${lines[0]}" = "your user name [Elegant Git]: " ]
-    [ "${lines[1]}" = "your user email [elegant-git@example.com]: " ]
-    [ "${lines[2]}" = "commit message won't start with [|]: " ]
-    [ "${lines[3]}" = "whitespace issues on patching [fix]: " ]
-    [ ${#lines[@]} -eq 4 ]
+    [ "${lines[4]}" = "your user email [elegant-git@example.com]: " ]
+    [ "${lines[8]}" = "commit message won't start with [|]: " ]
+    [ "${lines[12]}" = "whitespace issues on patching [fix]: " ]
+    [ ${#lines[@]} -eq 16 ]
 }

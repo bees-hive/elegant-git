@@ -3,7 +3,7 @@ set -e
 
 default() {
     _validate "$1" "Cloneable URL"
-    git clone "$1"
+    boxtee git clone "$1"
     cd $(basename -s .git $1)
     git elegant configure --local
 }

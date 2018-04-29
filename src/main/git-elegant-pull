@@ -3,8 +3,8 @@ set -e
 
 default() {
     if [ -n "$1" ]; then
-        git checkout "$1"
+        boxtee git checkout "$1"
     fi
-    git fetch --tags
-    git pull
+    boxtee git fetch --tags
+    boxtee git pull
 }

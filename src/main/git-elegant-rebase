@@ -2,6 +2,6 @@
 set -e
 
 default() {
-    git fetch --tags
-    git rebase $RMASTER
+    boxtee git fetch --tags
+    boxtee git rebase $RMASTER
 }
