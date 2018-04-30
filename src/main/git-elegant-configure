@@ -6,11 +6,11 @@ _core_comment_char_default="|"
 _core_comment_char_message="commit message won't start with"
 
 _user_name_key="user.name"
-_user_name_default=$(git config "$_user_name_key")
+_user_name_default=$(git config "$_user_name_key" || echo '')
 _user_name_message="your user name"
 
 _user_email_key="user.email"
-_user_email_default=$(git config "$_user_email_key")
+_user_email_default=$(git config "$_user_email_key" || echo '')
 _user_email_message="your user email"
 
 _apply_whitespace_key="apply.whitespace"

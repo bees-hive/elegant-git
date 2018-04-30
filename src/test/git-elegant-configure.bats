@@ -67,3 +67,11 @@ teardown() {
     [ "${lines[12]}" = "whitespace issues on patching [fix]: " ]
     [ ${#lines[@]} -eq 16 ]
 }
+
+@test "'configure': command works if both 'user.name' and 'user.email' are absent" {
+    # move to the directory without the ".git/"
+    cd /tmp
+    # force "11" exit code - means all internal vars are initialised (including 'user.name' and 'user.email')
+    check git-elegant configure
+    [ "$status" -eq 11 ]
+}
