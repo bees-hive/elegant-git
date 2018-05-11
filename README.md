@@ -21,18 +21,7 @@ To find out more [click here](https://github.com/bees-hive/homebrew-hive).
 
 Usage
 =====
-```bash
-$ git elegant 
-feature
-pull
-push
-push-after-rebase
-rebase
-init
-clone
-add
-clear-local
-```
+Run `git elegant` to see available commands.
 
 Development
 ===========
