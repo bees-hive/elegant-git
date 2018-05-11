@@ -2,10 +2,10 @@ elegant-git
 ===========
 Allows easy handle git tasks.
 
-[![Build Status](https://travis-ci.org/extsoft/elegant-git.svg?branch=master)](https://travis-ci.org/extsoft/elegant-git)
-[![PDD status](http://www.0pdd.com/svg?name=extsoft/elegant-git)](http://www.0pdd.com/p?name=extsoft/elegant-git)
+[![Build Status](https://travis-ci.org/bees-hive/elegant-git.svg?branch=master)](https://travis-ci.org/bees-hive/elegant-git)
+[![PDD status](http://www.0pdd.com/svg?name=bees-hive/elegant-git)](http://www.0pdd.com/p?name=bees-hive/elegant-git)
 
-[![Rultor.com](http://www.rultor.com/b/extsoft/elegant-git)](http://www.rultor.com/p/extsoft/elegant-git)
+[![Rultor.com](http://www.rultor.com/b/bees-hive/elegant-git)](http://www.rultor.com/p/bees-hive/elegant-git)
 
 Installation
 ============
