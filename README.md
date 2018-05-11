@@ -11,13 +11,13 @@ Installation
 ============
 Manual
 ------
-`curl https://raw.githubusercontent.com/extsoft/elegant-git/master/install.bash | $(which bash)`
+`curl https://raw.githubusercontent.com/bees-hive/elegant-git/master/install.bash | $(which bash)`
 
 Homebrew
 --------
-`brew install extsoft/insight/elegant-git`
+`brew install bees-hive/hive/elegant-git`
 
-To find out more [click here](https://github.com/extsoft/homebrew-insight).
+To find out more [click here](https://github.com/bees-hive/homebrew-hive).
 
 Usage
 =====
