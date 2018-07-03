@@ -3,5 +3,9 @@ set -e
 
 default() {
     local BRANCH=$(__branches 'git branch | grep \*')
+    if [ "$BRANCH" == "master" ]; then
+        box "No pushes to 'master' branch. Read more on $__site"
+        exit 81
+    fi
     boxtee git push -u origin $BRANCH:$BRANCH
 }
