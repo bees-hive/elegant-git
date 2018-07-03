@@ -8,6 +8,7 @@ __red=`tput setaf 1`
 __green=`tput setaf 2`
 __magenta=`tput setaf 5`
 __reset=`tput sgr0`
+__site="http://elegant-git.extsoft.pro"
 
 box(){
     t="$@xxxxxx"

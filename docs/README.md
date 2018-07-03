@@ -8,6 +8,7 @@ Philosophy
 ----------
 - declarative interaction
 - no merge commits
+- no pushes to `master` branch
 
 Limitations
 -----------
@@ -22,7 +23,7 @@ Creates a new branch based on `master`. If there are some uncommitted changes, t
 Downloads new updates for a local branch.
 
 ### push
-Upload current local branch to a remote one. If the remote branch is absent, it will be created.
+Upload current local branch to a remote one. If the remote branch is absent, it will be created. Pushing to remote `master` aren't allowed.
 
 ### rebase
 Reapplies commits on top of the latest `origin/master`.
@@ -51,3 +52,6 @@ Shows trailing whitespaces of uncommitted changes.
 ### commands
 Displays all available commands.
 
+Exit codes
+----------
+`81` - a philosophical constraint
