@@ -10,15 +10,15 @@ teardown() {
 
 @test "'push': by default name of remote branch is equal to local branch" {
     fake-pass git branch *feature1
-    fake-pass git "push -u origin feature1:feature1"
+    fake-pass git "push --set-upstream --force origin feature1:feature1"
     check git-elegant push
     [ "$status" -eq 0 ]
-    [ "${lines[1]}" = "== git push -u origin feature1:feature1 ==" ]
+    [ "${lines[1]}" = "== git push --set-upstream --force origin feature1:feature1 ==" ]
 }
 
 @test "'push': raise error #81 if current local branch is master" {
     fake-pass git branch *master
-    fake-pass git "push -u origin master:master"
+    fake-pass git "push --set-upstream --force origin master:master"
     check git-elegant push
     [ "$status" -eq 81 ]
     [ "${lines[1]}" = "== No pushes to 'master' branch. Read more on http://elegant-git.extsoft.pro ==" ]

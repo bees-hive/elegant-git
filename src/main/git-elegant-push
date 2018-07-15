@@ -7,5 +7,5 @@ default() {
         box "No pushes to 'master' branch. Read more on $__site"
         exit 81
     fi
-    boxtee git push -u origin $BRANCH:$BRANCH
+    boxtee git push --set-upstream --force origin $BRANCH:$BRANCH
 }

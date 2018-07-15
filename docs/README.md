@@ -23,7 +23,7 @@ Creates a new branch based on `master`. If there are some uncommitted changes, t
 Downloads new updates for a local branch.
 
 ### push
-Upload current local branch to a remote one. If the remote branch is absent, it will be created. Pushing to remote `master` aren't allowed.
+Upload current local branch to a remote one using `force` push. If the remote branch is absent, it will be created. Pushing to remote `master` isn't allowed.
 
 ### rebase
 Reapplies commits on top of the latest `origin/master`.
