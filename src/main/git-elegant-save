@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+default(){
+boxtee git add --interactive
+git elegant check # check for trailing spaces
+boxtee git commit
+}
