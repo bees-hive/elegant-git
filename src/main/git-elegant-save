@@ -2,6 +2,6 @@
 set -e
 default(){
 boxtee git add --interactive
-git elegant check # check for trailing spaces
+git elegant check
 boxtee git commit
 }
