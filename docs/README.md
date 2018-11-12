@@ -52,6 +52,9 @@ Shows trailing whitespaces of uncommitted changes.
 ### commands
 Displays all available commands.
 
+### save 
+Saves the changes to the current branch as a commit.
+
 Exit codes
 ----------
 `81` - a philosophical constraint
