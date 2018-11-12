@@ -13,4 +13,5 @@ default() {
     echo "clear-local"
     echo "configure"
     echo "check"
+    echo "save"
 }
