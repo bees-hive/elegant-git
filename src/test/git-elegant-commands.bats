@@ -20,7 +20,8 @@ teardown() {
   [ "${lines[8]}" = "clear-local" ]
   [ "${lines[9]}" = "configure" ]
   [ "${lines[10]}" = "check" ]
-  [ ${#lines[@]} -eq 11 ]
+  [ "${lines[11]}" = "save"  ]
+  [ ${#lines[@]} -eq 12 ]
 }
 
 @test "'commands': default exit code is 0" {

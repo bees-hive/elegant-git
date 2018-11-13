@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+default(){
+    boxtee git add --interactive
+    git elegant check --staged
+    boxtee git commit
+}
