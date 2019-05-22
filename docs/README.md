@@ -34,7 +34,7 @@ Executes [git elegant push](#push) after [git elegant rebase](#rebase).
 ### init
 Creates an empty Git repository or reinitialize an existing one. Then runs local repository configuration.
 
-### clone
+### acquire-repository
 Clone a repository into a new directory. Then runs local repository configuration.
 
 ### add

@@ -15,7 +15,7 @@ teardown() {
   [ "${lines[3]}" = "push-after-rebase" ]
   [ "${lines[4]}" = "rebase" ]
   [ "${lines[5]}" = "init" ]
-  [ "${lines[6]}" = "clone" ]
+  [ "${lines[6]}" = "acquire-repository" ]
   [ "${lines[7]}" = "add" ]
   [ "${lines[8]}" = "clear-local" ]
   [ "${lines[9]}" = "configure" ]

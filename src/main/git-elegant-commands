@@ -8,7 +8,7 @@ default() {
     echo "push-after-rebase"
     echo "rebase"
     echo "init"
-    echo "clone"
+    echo "acquire-repository"
     echo "add"
     echo "clear-local"
     echo "configure"
