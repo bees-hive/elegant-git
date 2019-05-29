@@ -11,7 +11,7 @@ default() {
     echo "acquire-repository"
     echo "add"
     echo "clear-local"
-    echo "configure"
+    echo "configure-repository"
     echo "check"
     echo "save"
 }

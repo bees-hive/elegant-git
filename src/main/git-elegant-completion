@@ -18,9 +18,6 @@ _git_elegant() {
         push|epush)
             COMPREPLY=( $(compgen -W "$(git branch | grep \* | cut -d ' ' -f2)" ${cur}) )
             return 0 ;;
-        configure|econfigure)
-            COMPREPLY=($(compgen -W '--global --local' -- ${cur}) )
-            return 0 ;;
         check|echeck)
             COMPREPLY=($(compgen -W '"--all" "--unstaged" "--staged"' -- ${cur}) )
             return 0 ;;

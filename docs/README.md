@@ -43,8 +43,8 @@ Adds file contents to the index interactively.
 ### clear-local
 Removes all local branches which don't have remote tracking branches.
 
-### configure
-Defines some settings for both _global_ and _local_ `git config`.
+### configure-repository
+Defines some settings for _local_ `git config`.
 
 ### check
 Shows trailing whitespaces of uncommitted changes.

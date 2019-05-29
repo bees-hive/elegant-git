@@ -23,7 +23,6 @@ _alias_message="add git aliases for all 'elegant git' commands"
 
 
 _configure() {
-    MODE=$1; shift
     FUNCTIONS=$@
     for f in ${FUNCTIONS[@]}; do
         unset answer
@@ -42,25 +41,18 @@ _configure() {
                     for com in $(git elegant commands); do
                         alias="e${com}"
                         command="elegant $com"
-                        boxtee git config $MODE $(eval "echo -n \$${f}_key\$alias") "$command"
+                        boxtee git config --local $(eval "echo -n \$${f}_key\$alias") "$command"
                     done
                 fi
             else
                 if [ -n "${answer}" ]; then
-                    boxtee git config $MODE $(eval "echo -n \$${f}_key") "$answer"
+                    boxtee git config --local $(eval "echo -n \$${f}_key") "$answer"
                 fi
             fi
         done
     done
 }
 
-GLOBALS=(_user_name _user_email _core_comment_char _apply_whitespace _alias)
-LOCALS=(_user_name _user_email _core_comment_char _apply_whitespace)
-
 default() {
-    case "$1" in
-        --global)   _configure --global ${GLOBALS[@]} ;;
-        --local)    _configure --local ${LOCALS[@]}  ;;
-        *) exit 11 # @todo #9 Add usage message if mandatory argument is not set for `git-elegant configure`.
-    esac
+      _configure _user_name _user_email _core_comment_char _apply_whitespace
 }

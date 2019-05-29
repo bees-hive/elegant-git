@@ -6,7 +6,7 @@ load addons-fake
 
 setup() {
     fake-pass git init
-    fake-pass git "elegant configure --local"
+    fake-pass git "elegant configure-repository"
 }
 
 teardown() {

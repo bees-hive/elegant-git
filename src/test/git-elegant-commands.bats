@@ -18,7 +18,7 @@ teardown() {
   [ "${lines[6]}" = "acquire-repository" ]
   [ "${lines[7]}" = "add" ]
   [ "${lines[8]}" = "clear-local" ]
-  [ "${lines[9]}" = "configure" ]
+  [ "${lines[9]}" = "configure-repository" ]
   [ "${lines[10]}" = "check" ]
   [ "${lines[11]}" = "save"  ]
   [ ${#lines[@]} -eq 12 ]
