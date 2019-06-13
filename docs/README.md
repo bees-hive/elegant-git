@@ -55,6 +55,9 @@ Displays all available commands.
 ### save 
 Saves the changes to the current branch as a commit.
 
+### amend
+Amend changes to the current branch as a commit.
+
 Exit codes
 ----------
 `81` - a philosophical constraint

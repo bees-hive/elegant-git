@@ -21,7 +21,8 @@ teardown() {
   [ "${lines[9]}" = "configure-repository" ]
   [ "${lines[10]}" = "check" ]
   [ "${lines[11]}" = "save"  ]
-  [ ${#lines[@]} -eq 12 ]
+  [ "${lines[12]}" = "amend"  ]
+  [ ${#lines[@]} -eq 13 ]
 }
 
 @test "'commands': default exit code is 0" {
