@@ -2,6 +2,7 @@ elegant-git
 ===========
 Allows easy handle git tasks.
 
+[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/bees-hive/elegant-git/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/bees-hive/elegant-git.svg?branch=master)](https://travis-ci.org/bees-hive/elegant-git)
 [![PDD status](http://www.0pdd.com/svg?name=bees-hive/elegant-git)](http://www.0pdd.com/p?name=bees-hive/elegant-git)
 
