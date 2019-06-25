@@ -1,23 +1,38 @@
 # Coding rules
+We enforce having a consistent implementation by following the next strict rules:
+- add `#!/usr/bin/env bash` at the beginning of each script
 - use `boxtee` to execute each original `git` command 
 
-# Usage
-## Installation
-Use `./install.bash dev` to get an installation from the current sources.
+# Debug mode
+You can enable debug mode by running `export GED=1` (the equivalent of `set -x` for `bash`). 
+Run `unset GED` to switch debug off. 
 
-## Debug mode
-Use `export GED=1` to switch on the debug of `git elegant` or `unset GED` to switch off. 
+# Testing procedure
+A testing procedure consists of 3 steps:
+1. unit testing using [bats](https://github.com/sstephenson/bats)
+2. installation testing
+3. validation of todo' correctness (for [0pdd](http://www.0pdd.com/p?name=bees-hive/elegant-git))
 
-# Unit tests
-[bats](https://github.com/sstephenson/bats) is used for unit testing. 
+All these steps can be executed by
+`docker run -it --rm -v $PWD:/eg extsoft/elegant-git-ci:2 ./run-tests`.
 
+`extsoft/elegant-git-ci` Docker image is also used on CI. If the image requires modifications,
+it has to be updated manually by the following instructions:
+1. update `Dockerfile` (including `version` and `description`)
+2. `docker build -t extsoft/elegant-git-ci:<version> .`
+3. `docker push extsoft/elegant-git-ci:<version>`
+
+# Unit testing
 ## Addons
-Add the following line to the test file if the extension is required:
-- `load addons-common` to have the working test (**mandatory**)
-- `load addons-git` to interact with real git repository (**optional**)
-- `load addons-fake` to fake a Linux command (**optional**)
-- `load addons-cd` to fake `cd` command (**optional**)
-- `load addons-read` to fake `read` command (**optional**)
+In order to have a working unit tests, you need to add `load addons-common` line to each `.bats`
+file. This addon configures right access to executables (`libexec` directory) and defines mandatory
+functions.
+
+Also, there are several optional addons which can be useful in some circumstances:
+- add `load addons-git`  to interact with real git repository
+- add `load addons-fake` to fake a Linux command
+- add `load addons-cd`   to fake `cd` command
+- add `load addons-read` to fake `read` command
 
 ## Writing tests
 1. **Use `setup()` or `teardown()`** bats methods only in the tests.
@@ -30,16 +45,5 @@ Add the following line to the test file if the extension is required:
 - `[ "${#lines[@]}" -eq 0 ]` for an empty command output
 
 ## Test name template
-Use the following test name template - `'<command args>': <describe what will be tested>` like `'check -s': trailing spaces in the staged changes`.
-
-## Run
-Use one of the following commands to run the unit tests:
-- `bats src/test`
-- `./run-tests`
-- `docker run -t --rm -v $PWD:/eg extsoft/elegant-git-ci:1 ./run-tests`
-
-# CI
-CI execution is automated using Docker. If some changes are required to the CI docker image, please follow next:
-- update `Dockerfile` (including `version` and and `description`)
-- `docker build -t extsoft/elegant-git-ci:<version> .`
-- `docker push extsoft/elegant-git-ci:<version>`
+Use the following test name template - `'<command args>': <describe what will be tested>` like
+`'acquire-repository': raise an error if cloneable URL isn't set`.

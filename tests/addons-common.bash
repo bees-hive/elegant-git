@@ -2,8 +2,8 @@
 set -e
 
 THIS="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-BIN_DIR="$THIS/../../src/main"
-export PATH=$BIN_DIR:$PATH
+BIN_DIR="$THIS/../libexec"
+export PATH=${BIN_DIR}:$PATH
 
 check(){
     run "$@"

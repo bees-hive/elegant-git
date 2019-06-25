@@ -1,6 +1,6 @@
 sudo: required
 language: bash
 services: docker
-script: docker run -t --rm -v $PWD:/eg extsoft/elegant-git-ci:1 ./run-tests
+script: docker run -t --rm -v $PWD:/eg extsoft/elegant-git-ci:2 ./run-tests
 notifications:
   email: false

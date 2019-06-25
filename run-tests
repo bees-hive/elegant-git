@@ -1,4 +1,18 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+# This script is destructive! That's why it will work only if a specific variable is set.
+# It's recommended to run it within a docker container only.
+set -e
 
-bats --tap src/test
-pdd --source=$(pwd) --verbose --file=/dev/null
+if [[ -z $EG_ENABLE_TESTING ]]; then
+    echo "Testing is disabled!"
+    exit 1
+fi
+
+fail() {
+    echo $@
+    exit 1
+}
+
+bats --tap tests                                  || fail "Unit tests are failed."
+./install.bash /usr/local src && git elegant help || fail "Installation test is failed."
+pdd --source=$(pwd) --verbose --file=/dev/null    || fail "Unreadable todo is identified."

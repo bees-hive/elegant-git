@@ -5,5 +5,6 @@ RUN apk update && \
     gem install pdd
 LABEL maintainer="Dmytro Serdiuk <dmytro.serdiuk@gmail.com>" \
       description="ruby:2.4.1 git:2.13.5 0pdd:0.20.3" \
-      version=1
+      version=2
 WORKDIR /eg
+ENV EG_ENABLE_TESTING true

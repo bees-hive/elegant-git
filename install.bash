@@ -1,62 +1,54 @@
 #!/usr/bin/env bash
+# Usage:
+#   ./install.bash                           installs to "${HOME}/.elegant-git" from remote git
+#   ./install.bash /installation/path        installs to "/installation/path" from remote git
+#   ./install.bash /installation/path src    installs to "installation/path" from local sources
 set -e
 
-[ -z "$INSTALL_PATH" ] && INSTALL_PATH="$HOME/.git-elegant"
-[ -z "$REPO_HOME" ] && REPO_HOME="https://github.com/extsoft/elegant-git.git"
+REPO_HOME="https://github.com/extsoft/elegant-git.git"
 
-man() {
-    echo "Usage: ./install.bash [remote|dev|uninstall]"
-    echo "  - remote - install from GitHub (default)"
-    echo "  - dev - install from local copy"
-    echo "  - uninstall - remove current installation"
-    echo ""
-    echo "Configuration:"
-    echo "  INSTALL_PATH=$INSTALL_PATH"
-    echo "  REPO_HOME=$REPO_HOME"
+copy(){
+    local FROM=${1}
+    local INTO=${2}
+    install -d -m 755 ${INTO}/{bin,libexec,completions}
+    install -m 755 ${FROM}/bin/* ${INTO}/bin
+    install -m 755 ${FROM}/libexec/* ${INTO}/libexec
+    install -m 644 ${FROM}/completions/* ${INTO}/completions
+    install -m 644 ${FROM}/LICENSE ${INTO}
+    install -m 644 ${FROM}/README.md ${INTO}
 }
 
-run() {
-    echo "$1"
-    eval "$1"
+next-steps() {
+    local INSTALL_PATH=${1}
+    local COMPLETION_FILE="${INSTALL_PATH}/completions/git-elegant.bash"
+    cat <<TEXT >&1
+Please add 3 highlighted lines to your "~/.bashrc" (or "~/.bash_profile"):
+--------------------------------------------------------------------------
+# elegant git: ${REPO_HOME}
+export PATH=${INSTALL_PATH}/bin:\$PATH
+[ -f ${COMPLETION_FILE} ] && . ${COMPLETION_FILE}
+--------------------------------------------------------------------------
+Then, please restart the terminal and enjoy the 'elegant git'!
+TEXT
 }
 
-install() {
-    echo "Installing 'elegant git' to $INSTALL_PATH"
-    run "rm -rfv $INSTALL_PATH"
-    run "mkdir -p $INSTALL_PATH"
-    if [ $1 = 'remote' ]; then
-        run "git clone --depth 1 $REPO_HOME $INSTALL_PATH"
-        cd "$INSTALL_PATH"
-        rm -rf .git
-    elif [ $1 = 'dev' ]; then
-        cp -rv $(dirname "$0")/* $INSTALL_PATH
-    else
-        echo "Unexpected mode: $1"
+main() {
+    if [[ -n ${1} ]]; then
+        INSTALL_PATH="${1}"
+        shift
     fi
-
-    run "mkdir -p $INSTALL_PATH/bin"
-    run "mkdir -p $INSTALL_PATH/completion"
-    run "mv $INSTALL_PATH/src/main/git-elegant-completion $INSTALL_PATH/completion"
-    run "mv $INSTALL_PATH/src/main/git-elegant* $INSTALL_PATH/bin"
-
-    echo ""
-    echo "Add the following to your .bash_profile to allow:"
-    echo "# extend 'git' with 'elegant git' commands"
-    echo "export PATH=$INSTALL_PATH/bin:\$PATH"
-    echo "#'elegant git' completion"
-    echo "[ -f $INSTALL_PATH/completion/git-elegant-completion ] && . $INSTALL_PATH/completion/git-elegant-completion"
-    echo ""
-    echo "Then please restart the terminal and enjoy the 'elegant git'!"
+    : ${INSTALL_PATH:="${HOME}/.elegant-git"}
+    # mode selection
+    if [[ -z ${1} ]]; then
+        local CODE="/tmp/elegant-git"
+        git clone --quiet --depth 1 ${REPO_HOME} ${CODE}
+        copy ${CODE} ${INSTALL_PATH}
+        rm -r ${CODE}
+    else
+        copy ${0%/*} ${INSTALL_PATH}
+    fi
+    echo "'elegant git' is installed to '${INSTALL_PATH}/bin/git-elegant'."
+    command -v git-elegant 1>/dev/null 2>&1 || next-steps ${INSTALL_PATH}
 }
 
-uninstall() {
-    echo "Uninstalling 'elegant git' from $INSTALL_PATH"
-    run "rm -rfv $INSTALL_PATH"
-}
-
-case "$1" in
-    uninstall)  uninstall                       ;;
-    help)       man                             ;;
-    dev)        uninstall && install dev        ;;
-    *)          uninstall && install remote     ;;
-esac
+main $@

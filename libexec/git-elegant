@@ -2,7 +2,10 @@
 set -e
 [  -n "$GED" ] && set -x
 
-BINS=$(dirname "$0")
+# Update PATH for a round of command execution.
+# It registers all "libexec" scripts.
+BINS=$(dirname ${0})
+export PATH=${BINS}:${PATH}
 
 __red=`tput setaf 1`
 __green=`tput setaf 2`
@@ -92,12 +95,10 @@ usage() {
 }
 
 main() {
-    local COMMAND
-    if [ -n "$1" ]; then
-        COMMAND="$1"; shift
-    fi
-    [ -z "$COMMAND" ] || [ "$COMMAND" = "help" ] && usage && exit 10
-    [ ! -e "$BINS/git-elegant-$COMMAND" ] && echo "Unknown command: git elegant $COMMAND" && usage && exit 2
+    local COMMAND="help"
+    [[ -n "$1" ]] && COMMAND="$1" && shift
+    [[ "$COMMAND" = "help" ]] && usage && exit 0
+    [[ ! -e "$BINS/git-elegant-$COMMAND" ]] && echo "Unknown command: git elegant $COMMAND" && usage && exit 2
     . "$BINS/git-elegant-$COMMAND"
 
     default "$@"

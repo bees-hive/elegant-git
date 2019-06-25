@@ -10,12 +10,16 @@ Allows easy handle git tasks.
 
 Installation
 ============
-Manual
-------
-`curl https://raw.githubusercontent.com/bees-hive/elegant-git/master/install.bash | $(which bash)`
+bash
+----
+Run `curl https://raw.githubusercontent.com/bees-hive/elegant-git/master/install.bash | $(which bash)`
+to install the tool.
+
+Run `rm -r ${HOME}/.elegant-git` if you need to remove the installation.
 
 Homebrew
 --------
+On macOS, you can install [Homebrew](https://brew.sh/) if you haven't already, then run:
 `brew install bees-hive/hive/elegant-git`
 
 To find out more [click here](https://github.com/bees-hive/homebrew-hive).
