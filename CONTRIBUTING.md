@@ -14,13 +14,13 @@ A testing procedure consists of 3 steps:
 3. validation of todo' correctness (for [0pdd](http://www.0pdd.com/p?name=bees-hive/elegant-git))
 
 All these steps can be executed by
-`docker run -it --rm -v $PWD:/eg extsoft/elegant-git-ci:2 ./run-tests`.
+`docker run -it --rm -v $PWD:/eg beeshive/elegant-git-ci:2 ./run-tests`.
 
-`extsoft/elegant-git-ci` Docker image is also used on CI. If the image requires modifications,
+`beeshive/elegant-git-ci` Docker image is also used on CI. If the image requires modifications,
 it has to be updated manually by the following instructions:
 1. update `Dockerfile` (including `version` and `description`)
-2. `docker build -t extsoft/elegant-git-ci:<version> .`
-3. `docker push extsoft/elegant-git-ci:<version>`
+2. `docker build -t beeshive/elegant-git-ci:<version> .`
+3. `docker push beeshive/elegant-git-ci:<version>`
 
 # Unit testing
 ## Addons

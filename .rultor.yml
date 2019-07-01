@@ -1,6 +1,6 @@
 architect: extsoft
 docker:
-    image: extsoft/elegant-git-ci:2
+    image: beeshive/elegant-git-ci:2
     as_root: true
 merge:
     fast-forward: only
