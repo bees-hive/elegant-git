@@ -1,0 +1,13 @@
+site_name: Elegant git
+site_url:
+site_description:
+site_author: Dmytro Serdiuk
+repo_url: https://github.com/bees-hive/elegant-git
+theme: readthedocs
+nav:
+  - Home: index.md
+  - License: licence.md
+
+copyright: Copyright &copy; 2019 <a href="https://extsoft.pro">Dmytro Serdiuk</a>, Maintained by <a href="https://github.com/bees-hive/elegant-git/graphs/contributors">project contributors</a>.
+plugins:
+    - search

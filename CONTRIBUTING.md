@@ -47,3 +47,7 @@ Also, there are several optional addons which can be useful in some circumstance
 ## Test name template
 Use the following test name template - `'<command args>': <describe what will be tested>` like
 `'acquire-repository': raise an error if cloneable URL isn't set`.
+
+# Documentation preview
+Please install required dependencies by `pip install -r docs/requirements.txt`. After, run `mkdocs serve`
+and open <http://127.0.0.1:8000/> in a browser. That's it!
