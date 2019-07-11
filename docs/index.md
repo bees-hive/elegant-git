@@ -1,60 +1,20 @@
-Elegant git
-===========
-`git elegant` is a `git` extension which allows simplifying of `git` interaction.
+# Overview
+"Elegant git" is an extension which simplifies daily routine with `git`. It encourages using of
+[GitHub flow](https://guides.github.com/introduction/flow/). However, you can try to apply it to
+your branching strategy as well.
 
-`git elegant` always says which original git command will be executed.
+# Philosophy
+- declarative interaction (usually each command consists of several `git` commands)
+- flat commits tree (no merge commits; `git rebase` instead of `git merge`) 
+- frozen main branch (disallow direct pushes to `master`)
 
-Philosophy
-----------
-- declarative interaction
-- no merge commits
-- no pushes to `master` branch
+In addition, "Elegant git" is always saying which original `git` commands were executed.
 
-Limitations
------------
+# Known limitations
 Support only one default remote - `origin`.
 
-Commands
---------
-### feature
-Creates a new branch based on `master`. If there are some uncommitted changes, they will be moved to the new branch.
+# Exit codes
+Usually "Elegant git" translates exit codes of original `git` commands. However, in some cases,
+it may face its own error and raises them as
 
-### pull
-Downloads new updates for a local branch.
-
-### push
-Upload current local branch to a remote one using `force` push. If the remote branch is absent, it will be created. Pushing to remote `master` isn't allowed.
-
-### rebase
-Reapplies commits on top of the latest `origin/master`.
-
-### push-after-rebase
-Executes [git elegant push](#push) after [git elegant rebase](#rebase).
-
-### init
-Creates an empty Git repository or reinitialize an existing one. Then runs local repository configuration.
-
-### acquire-repository
-Clone a repository into a new directory. Then runs local repository configuration.
-
-### add
-Adds file contents to the index interactively.
-
-### clear-local
-Removes all local branches which don't have remote tracking branches.
-
-### configure-repository
-Defines some settings for _local_ `git config`.
-
-### check
-Shows trailing whitespaces of uncommitted changes.
-
-### commands
-Displays all available commands.
-
-### save 
-Saves the changes to the current branch as a commit.
-
-Exit codes
-----------
-`81` - a philosophical constraint
+- `81` - a philosophical constraint
