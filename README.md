@@ -24,10 +24,11 @@ Run `unset GED` to switch debug off.
 A testing procedure consists of 3 steps:
 1. unit testing using [bats](https://github.com/sstephenson/bats)
 2. installation testing
-3. validation of todo' correctness (for [0pdd](http://www.0pdd.com/p?name=bees-hive/elegant-git))
+3. validation of documentation correctness
+4. validation of todo' correctness (for [0pdd](http://www.0pdd.com/p?name=bees-hive/elegant-git))
 
 All these steps can be executed by
-`docker run -it --rm -v $PWD:/eg beeshive/elegant-git-ci:2 ./run-tests`.
+`docker run -it --rm -v $PWD:/eg beeshive/elegant-git-ci:3 ./quality-pipeline.bash testing`.
 
 `beeshive/elegant-git-ci` Docker image is also used on CI. If the image requires modifications,
 it has to be updated manually by the following instructions:
