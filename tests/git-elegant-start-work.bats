@@ -13,39 +13,39 @@ teardown() {
     clean-fake
 }
 
-@test "'feature': branch with given name is created successfully" {
-  check git-elegant feature test-feature
+@test "'start-work': branch with given name is created successfully" {
+  check git-elegant start-work test-feature
   [ "$status" -eq 0 ]
 }
 
-@test "'feature': exit code is 255 when branch name isn't set" {
-  check git-elegant feature
+@test "'start-work': exit code is 255 when branch name isn't set" {
+  check git-elegant start-work
   [ "$status" -eq 255 ]
 }
 
-@test "'feature': print error message when branch name isn't set" {
-  check git-elegant feature
-  [[ "${lines[0]}" =~ "Feature name is not set" ]]
+@test "'start-work': print error message when branch name isn't set" {
+  check git-elegant start-work
+  [[ "${lines[0]}" =~ "Please give a name for the new branch." ]]
 }
 
-@test "'feature': use stash for available changes" {
+@test "'start-work': use stash for available changes" {
   fake-pass git "stash save elegant-git" "Saved working directory"
   fake-pass git "stash apply stash^{/elegant-git}"
   fake-pass git "stash drop stash@{0}"
-  check git-elegant feature test-feature
+  check git-elegant start-work test-feature
   [ "$status" -eq 0 ]
 }
 
-@test "'feature': ignore stash if there are no changes" {
+@test "'start-work': ignore stash if there are no changes" {
   fake-pass git "stash save elegant-git" "No local changes to save"
-  check git-elegant feature test-feature
+  check git-elegant start-work test-feature
   [ "$status" -eq 0 ]
 }
 
-@test "'feature': exit code is 100 when stash wasn't applied" {
+@test "'start-work': exit code is 100 when stash wasn't applied" {
   fake-pass git "stash save elegant-git" "Saved working directory"
   fake-pass git "stash apply stash^{/elegant-git}"
   fake-fail git "stash drop stash@{0}"
-  check git-elegant feature test-feature
+  check git-elegant start-work test-feature
   [ "$status" -eq 100 ]
 }

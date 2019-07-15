@@ -41,9 +41,10 @@ __mmn() {
 MASTER="master"
 RMASTER="origin/master"
 
-_validate() {
-    if [ -z "$1" ]; then
-        __rm "$2 is not set"
+_error-if-empty() {
+    # _error-if-empty <a value to check> <error message>
+    if [[ -z "$1" ]]; then
+        __rm "$2"
         exit -1
     fi
 }

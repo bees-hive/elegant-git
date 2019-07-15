@@ -2,7 +2,7 @@
 set -e
 
 default() {
-    _validate "$1" "Feature name"
+    _error-if-empty "$1" "Please give a name for the new branch."
     status=$(boxtee git stash save elegant-git)
     git elegant pull $MASTER
     boxtee git checkout -b "$1"

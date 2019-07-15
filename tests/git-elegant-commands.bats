@@ -9,7 +9,7 @@ teardown() {
 
 @test "'commands': print all available commands" {
   check git-elegant commands
-  [ "${lines[0]}" = "feature" ]
+  [ "${lines[0]}" = "start-work" ]
   [ "${lines[1]}" = "pull" ]
   [ "${lines[2]}" = "push" ]
   [ "${lines[3]}" = "push-after-rebase" ]

@@ -1,6 +1,6 @@
 `git elegant <command>` where `<command>` is one of
 
-- `feature`
+- `start-work`
 - `pull`
 - `push`
 - `push-after-rebase`
@@ -13,8 +13,21 @@
 - `check`
 - `save`
 
-# `feature`
-Creates a new branch based on `master`. If there are some uncommitted changes, they will be moved to the new branch.
+# `start-work`
+Creates a new local branch based on latest version of `master`. If there are some uncommitted
+changes, they will be moved to the new branch.
+
+```bash
+usage: git elegant start-work <branch-name>
+```
+
+A sequence of original `git` commands:
+```bash
+git checkout master
+git fetch --tags
+git pull
+git checkout -b <branch-name>
+```
 
 # `pull`
 Downloads new updates for a local branch.

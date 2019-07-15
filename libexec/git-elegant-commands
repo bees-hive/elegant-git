@@ -2,7 +2,7 @@
 set -e
 
 default() {
-    echo "feature"
+    echo "start-work"
     echo "pull"
     echo "push"
     echo "push-after-rebase"
