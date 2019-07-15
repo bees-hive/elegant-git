@@ -1,6 +1,6 @@
 sudo: required
 language: bash
 services: docker
-script: docker run -t --rm -v $PWD:/eg beeshive/elegant-git-ci:2 ./run-tests
+script: docker run -it --rm -v $PWD:/eg beeshive/elegant-git-ci:3 ./quality-pipeline.bash testing
 notifications:
   email: false

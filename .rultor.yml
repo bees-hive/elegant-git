@@ -1,12 +1,12 @@
 architect: extsoft
 docker:
-    image: beeshive/elegant-git-ci:2
+    image: beeshive/elegant-git-ci:3
     as_root: true
 merge:
     fast-forward: only
     rebase: true
-    script: ./run-tests
+    script: ./quality-pipeline.bash testing
 release:
     script: |-
+        ./quality-pipeline.bash testing
         echo "Release ${tag}"
-        bats --tap src/test
