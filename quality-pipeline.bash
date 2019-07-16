@@ -13,7 +13,12 @@ fail() {
 
 pipeline() {
     bats --tap tests                                  || fail "Unit tests are failed."
-    ./install.bash /usr/local src && git elegant help || fail "Installation test is failed."
+    (
+        echo "Installation...."
+        ./install.bash /usr/local src
+        echo "'Unknown command' testing..."
+        git elegant unknown-command | grep "Unknown command: git elegant unknown-command"
+    )                                                 || fail "Installation test is failed."
     mkdocs build --clean --strict                     || fail "Unable to build the documentation."
     pdd --exclude=.idea/**/* \
         --exclude=site/**/* \
