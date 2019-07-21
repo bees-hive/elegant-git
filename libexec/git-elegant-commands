@@ -3,6 +3,7 @@ set -e
 
 default() {
     echo "start-work"
+    echo "save-work"
     echo "accept-work"
     echo "pull"
     echo "push"
@@ -14,5 +15,4 @@ default() {
     echo "clear-local"
     echo "configure-repository"
     echo "check"
-    echo "save"
 }

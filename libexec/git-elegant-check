@@ -2,6 +2,7 @@
 set -e
 
 default() {
+    echo "This command is deprecated. It will be removed soon."
     case "$1" in
         "-a" | "--all")
             boxtee git diff --check

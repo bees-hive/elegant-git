@@ -11,11 +11,11 @@ teardown() {
 
 setup() {
     fake-pass git "add --interactive"
-    fake-pass git "elegant check --staged"
+    fake-pass git "diff --cached --check"
     fake-pass git commit
 }
 
-@test "'save': command is available" {
-    check git-elegant save   
+@test "'save-work': command is available" {
+    check git-elegant save-work
     [ "$status" -eq 0 ]
 }

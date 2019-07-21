@@ -30,6 +30,20 @@ git pull
 git checkout -b <branch-name>
 ```
 
+# `save-work`
+Saves available changes (or a part of them) making a `git` commit.
+
+```bash
+usage: git save-work
+```
+
+A sequence of original `git` commands:
+```bash
+git add --interactive
+git diff --cached --check
+git commit
+```
+
 # `accept-work`
 Accepts proposed work (remote work branch) on top of the fresh history of remote `master` (using
 `rebase`) and publishes work to `origin/master`. Also, it removes the remote work branch in case of
@@ -82,6 +96,3 @@ Shows trailing whitespaces of uncommitted changes.
 
 # `commands`
 Displays all available commands.
-
-# `save`
-Saves the changes to the current branch as a commit.

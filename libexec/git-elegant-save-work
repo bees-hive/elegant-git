@@ -3,6 +3,6 @@ set -e
 
 default(){
     boxtee git add --interactive
-    git elegant check --staged
+    boxtee git diff --cached --check
     boxtee git commit
 }
