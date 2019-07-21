@@ -21,6 +21,11 @@ _git_elegant() {
         check|echeck)
             COMPREPLY=($(compgen -W '"--all" "--unstaged" "--staged"' -- ${cur}) )
             return 0 ;;
+        accept-work)
+            COMPREPLY=(
+                $(compgen -W "$(git branch --remotes --list)" -- ${cur})
+            )
+            return 0 ;;
         *)
             return 0 ;;
     esac

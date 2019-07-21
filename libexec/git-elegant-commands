@@ -3,6 +3,7 @@ set -e
 
 default() {
     echo "start-work"
+    echo "accept-work"
     echo "pull"
     echo "push"
     echo "push-after-rebase"

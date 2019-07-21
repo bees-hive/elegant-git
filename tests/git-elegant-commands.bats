@@ -10,18 +10,19 @@ teardown() {
 @test "'commands': print all available commands" {
   check git-elegant commands
   [ "${lines[0]}" = "start-work" ]
-  [ "${lines[1]}" = "pull" ]
-  [ "${lines[2]}" = "push" ]
-  [ "${lines[3]}" = "push-after-rebase" ]
-  [ "${lines[4]}" = "rebase" ]
-  [ "${lines[5]}" = "init" ]
-  [ "${lines[6]}" = "acquire-repository" ]
-  [ "${lines[7]}" = "add" ]
-  [ "${lines[8]}" = "clear-local" ]
-  [ "${lines[9]}" = "configure-repository" ]
-  [ "${lines[10]}" = "check" ]
-  [ "${lines[11]}" = "save"  ]
-  [ ${#lines[@]} -eq 12 ]
+  [ "${lines[1]}" = "accept-work" ]
+  [ "${lines[2]}" = "pull" ]
+  [ "${lines[3]}" = "push" ]
+  [ "${lines[4]}" = "push-after-rebase" ]
+  [ "${lines[5]}" = "rebase" ]
+  [ "${lines[6]}" = "init" ]
+  [ "${lines[7]}" = "acquire-repository" ]
+  [ "${lines[8]}" = "add" ]
+  [ "${lines[9]}" = "clear-local" ]
+  [ "${lines[10]}" = "configure-repository" ]
+  [ "${lines[11]}" = "check" ]
+  [ "${lines[12]}" = "save"  ]
+  [ ${#lines[@]} -eq 13 ]
 }
 
 @test "'commands': default exit code is 0" {

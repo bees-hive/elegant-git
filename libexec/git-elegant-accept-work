@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -e
+
+
+default() {
+    _error-if-empty "${1}" "Please give a name of remote branch (like 'origin/123')."
+    local WORK_BRANCH="eg"
+    boxtee git fetch --all --tags --prune
+    boxtee git checkout -b ${WORK_BRANCH} ${RMASTER}
+    boxtee git rebase --merge --strategy ff-only ${1}
+    # @todo #137 Alternative flows of `accept-work`
+    #  If this command is executed with `${WORK_BRANCH}` and
+    #  1. `git rebase` is in progress, it has to run `git rebase --continue` prior working with
+    #  `${MASTER}` branch.
+    #  2. `git rebase` is completed (history of `${WORK_BRANCH}` and `${RMASTER}` are different),
+    #  just work with `${MASTER}` branch.
+    boxtee git checkout ${MASTER}
+    boxtee git merge --ff-only eg
+    boxtee git push ${REMOTE_NAME} ${MASTER}:${MASTER}
+    boxtee git branch --delete ${WORK_BRANCH}
+    boxtee git push ${REMOTE_NAME} --delete $(echo "${1}" | sed -e "s|${REMOTE_NAME}/||")
+}

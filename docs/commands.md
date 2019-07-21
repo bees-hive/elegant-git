@@ -1,6 +1,7 @@
 `git elegant <command>` where `<command>` is one of
 
 - `start-work`
+- `accept-work`
 - `pull`
 - `push`
 - `push-after-rebase`
@@ -27,6 +28,26 @@ git checkout master
 git fetch --tags
 git pull
 git checkout -b <branch-name>
+```
+
+# `accept-work`
+Accepts proposed work (remote work branch) on top of the fresh history of remote `master` (using
+`rebase`) and publishes work to `origin/master`. Also, it removes the remote work branch in case of
+successful work acceptance.
+
+```bash
+usage: git elegant accept-work <remote-branch>
+```
+A sequence of original `git` commands:
+```bash
+git fetch --all --tags --prune
+git checkout -b eg origin/master
+git rebase --merge --strategy ff-only <remote-branch-name>
+git checkout master
+git merge --ff-only eg
+git push origin master:master
+git branch -d eg
+git push origin --delete <remote-branch-name>
 ```
 
 # `pull`

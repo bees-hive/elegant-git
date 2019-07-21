@@ -39,7 +39,8 @@ __mmn() {
 }
 
 MASTER="master"
-RMASTER="origin/master"
+REMOTE_NAME="origin"
+RMASTER="${REMOTE_NAME}/master"
 
 _error-if-empty() {
     # _error-if-empty <a value to check> <error message>
