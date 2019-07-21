@@ -21,5 +21,5 @@ teardown() {
     fake-pass git "push --set-upstream --force origin master:master"
     check git-elegant push
     [ "$status" -eq 81 ]
-    [ "${lines[1]}" = "== No pushes to 'master' branch. Read more on http://elegant-git.extsoft.pro ==" ]
+    [ "${lines[1]}" = "== No pushes to 'master' branch. Read more on https://elegant-git.bees-hive.org ==" ]
 }
