@@ -10,7 +10,6 @@
 - `add`
 - `clear-local`
 - `configure-repository`
-- `save`
 
 # `clone-repository`
 Clones a repository into a new directory and runs its configuration.
