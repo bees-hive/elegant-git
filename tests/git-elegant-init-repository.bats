@@ -13,7 +13,7 @@ teardown() {
     clean-fake
 }
 
-@test "'init': command is available" {
-  check git-elegant init
+@test "'init-repository': command is available" {
+  check git-elegant init-repository
   [ "$status" -eq 0 ]
 }

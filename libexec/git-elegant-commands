@@ -3,12 +3,12 @@ set -e
 
 default() {
     echo "clone-repository"
+    echo "init-repository"
     echo "start-work"
     echo "save-work"
     echo "deliver-work"
     echo "accept-work"
     echo "pull"
-    echo "init"
     echo "add"
     echo "clear-local"
     echo "configure-repository"

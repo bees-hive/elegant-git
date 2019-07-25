@@ -10,12 +10,12 @@ teardown() {
 @test "'commands': print all available commands" {
     COMMANDS=(
         "clone-repository"
+        "init-repository"
         "start-work"
         "save-work"
         "deliver-work"
         "accept-work"
         "pull"
-        "init"
         "add"
         "clear-local"
         "configure-repository"

@@ -1,12 +1,12 @@
 `git elegant <command>` where `<command>` is one of
 
 - `clone-repository`
+- `init-repository`
 - `start-work`
 - `save-work`
 - `deliver-work`
 - `accept-work`
 - `pull`
-- `init`
 - `add`
 - `clear-local`
 - `configure-repository`
@@ -22,6 +22,19 @@ A sequence of original `git` commands:
 ```bash
 git clone <URL>
 cd <repo root directory>
+# execute commands provided by `git elegant configure-repository`
+```
+
+# `init-repository`
+Creates an empty Git repository (or reinitialize an existing one) and runs its configuration.
+
+```bash
+usage: git elegant init-repository
+```
+
+A sequence of original `git` commands:
+```bash
+git init
 # execute commands provided by `git elegant configure-repository`
 ```
 
@@ -91,9 +104,6 @@ git push origin --delete <remote-branch-name>
 
 # `pull`
 Downloads new updates for a local branch.
-
-# `init`
-Creates an empty Git repository or reinitialize an existing one. Then runs local repository configuration.
 
 # `add`
 Adds file contents to the index interactively.
