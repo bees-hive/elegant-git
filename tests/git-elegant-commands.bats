@@ -9,13 +9,13 @@ teardown() {
 
 @test "'commands': print all available commands" {
     COMMANDS=(
+        "clone-repository"
         "start-work"
         "save-work"
         "deliver-work"
         "accept-work"
         "pull"
         "init"
-        "acquire-repository"
         "add"
         "clear-local"
         "configure-repository"

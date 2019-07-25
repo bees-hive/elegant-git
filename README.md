@@ -60,7 +60,7 @@ Also, there are several optional addons which can be useful in some circumstance
 
 #### Test name template
 Use the following test name template - `'<command args>': <describe what will be tested>` like
-`'acquire-repository': raise an error if cloneable URL isn't set`.
+`'clone-repository': raise an error if cloneable URL isn't set`.
 
 ### Documentation preview
 In order to get the documentation preview locally, please install required dependencies with 
