@@ -5,7 +5,6 @@
 - `deliver-work`
 - `accept-work`
 - `pull`
-- `push`
 - `rebase`
 - `init`
 - `acquire-repository`
@@ -81,9 +80,6 @@ git push origin --delete <remote-branch-name>
 
 # `pull`
 Downloads new updates for a local branch.
-
-# `push`
-Upload current local branch to a remote one using `force` push. If the remote branch is absent, it will be created. Pushing to remote `master` isn't allowed.
 
 # `rebase`
 Reapplies commits on top of the latest `origin/master`.
