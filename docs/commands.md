@@ -1,6 +1,8 @@
 `git elegant <command>` where `<command>` is one of
 
 - `start-work`
+- `save-work`
+- `deliver-work`
 - `accept-work`
 - `pull`
 - `push`
@@ -42,6 +44,20 @@ A sequence of original `git` commands:
 git add --interactive
 git diff --cached --check
 git commit
+```
+
+# `deliver-work`
+Updates the current branch using the latest remote `master` and updates remote refs.
+
+```bash
+usage: git deliver-work
+```
+
+A sequence of original `git` commands:
+```bash
+git fetch
+git rebase origin/master
+git push --set-upstream --force origin {local branch name}:{local branch name}
 ```
 
 # `accept-work`

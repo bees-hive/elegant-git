@@ -11,6 +11,7 @@ teardown() {
     COMMANDS=(
         "start-work"
         "save-work"
+        "deliver-work"
         "accept-work"
         "pull"
         "push"

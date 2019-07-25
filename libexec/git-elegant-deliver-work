@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+
+default() {
+    local BRANCH=$(__branches 'git branch | grep \*')
+    if [[ "$BRANCH" == "master" ]]; then
+        box "No pushes to 'master' branch. Please read more on ${__site}"
+        exit 81
+    fi
+    boxtee git fetch
+    boxtee git rebase ${RMASTER}
+    boxtee git push --set-upstream --force origin ${BRANCH}:${BRANCH}
+}
