@@ -12,5 +12,4 @@ default() {
     echo "add"
     echo "clear-local"
     echo "configure-repository"
-    echo "check"
 }

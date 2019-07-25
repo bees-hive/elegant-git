@@ -10,7 +10,6 @@
 - `add`
 - `clear-local`
 - `configure-repository`
-- `check`
 - `save`
 
 # `clone-repository`
@@ -105,9 +104,6 @@ Removes all local branches which don't have remote tracking branches.
 
 # `configure-repository`
 Defines some settings for _local_ `git config`.
-
-# `check`
-Shows trailing whitespaces of uncommitted changes.
 
 # `commands`
 Displays all available commands.

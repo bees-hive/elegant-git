@@ -19,13 +19,12 @@ teardown() {
         "add"
         "clear-local"
         "configure-repository"
-        "check"
     )
     check git-elegant commands
     for command in {0..12}; do
         [ "${lines[$command]}" = "${COMMANDS[$command]}" ]
     done
-    [ ${#lines[@]} -eq 11 ]
+    [ ${#lines[@]} -eq 10 ]
 }
 
 @test "'commands': default exit code is 0" {
