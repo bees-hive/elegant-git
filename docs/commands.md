@@ -6,7 +6,6 @@
 - `accept-work`
 - `pull`
 - `push`
-- `push-after-rebase`
 - `rebase`
 - `init`
 - `acquire-repository`
@@ -88,9 +87,6 @@ Upload current local branch to a remote one using `force` push. If the remote br
 
 # `rebase`
 Reapplies commits on top of the latest `origin/master`.
-
-# `push-after-rebase`
-Executes [git elegant push](#push) after [git elegant rebase](#rebase).
 
 # `init`
 Creates an empty Git repository or reinitialize an existing one. Then runs local repository configuration.

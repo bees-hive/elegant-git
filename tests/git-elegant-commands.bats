@@ -15,7 +15,6 @@ teardown() {
         "accept-work"
         "pull"
         "push"
-        "push-after-rebase"
         "rebase"
         "init"
         "acquire-repository"
