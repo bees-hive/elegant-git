@@ -5,7 +5,6 @@
 - `deliver-work`
 - `accept-work`
 - `pull`
-- `rebase`
 - `init`
 - `acquire-repository`
 - `add`
@@ -80,9 +79,6 @@ git push origin --delete <remote-branch-name>
 
 # `pull`
 Downloads new updates for a local branch.
-
-# `rebase`
-Reapplies commits on top of the latest `origin/master`.
 
 # `init`
 Creates an empty Git repository or reinitialize an existing one. Then runs local repository configuration.

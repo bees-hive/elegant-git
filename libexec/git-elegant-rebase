@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-default() {
-    boxtee git fetch --tags
-    boxtee git rebase $RMASTER
-}

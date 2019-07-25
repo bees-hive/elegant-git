@@ -7,7 +7,6 @@ default() {
     echo "deliver-work"
     echo "accept-work"
     echo "pull"
-    echo "rebase"
     echo "init"
     echo "acquire-repository"
     echo "add"
