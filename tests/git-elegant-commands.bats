@@ -16,7 +16,6 @@ teardown() {
         "deliver-work"
         "accept-work"
         "pull"
-        "add"
         "clear-local"
         "configure-repository"
         "commands"
@@ -25,7 +24,7 @@ teardown() {
     for command in {0..12}; do
         [ "${lines[$command]}" = "${COMMANDS[$command]}" ]
     done
-    [ ${#lines[@]} -eq 11 ]
+    [ ${#lines[@]} -eq 10 ]
 }
 
 @test "'commands': default exit code is 0" {

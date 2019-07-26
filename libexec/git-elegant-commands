@@ -9,7 +9,6 @@ default() {
     echo "deliver-work"
     echo "accept-work"
     echo "pull"
-    echo "add"
     echo "clear-local"
     echo "configure-repository"
     echo "commands"

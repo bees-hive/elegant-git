@@ -7,7 +7,6 @@
 - `deliver-work`
 - `accept-work`
 - `pull`
-- `add`
 - `clear-local`
 - `configure-repository`
 
@@ -104,9 +103,6 @@ git push origin --delete <remote-branch-name>
 
 # `pull`
 Downloads new updates for a local branch.
-
-# `add`
-Adds file contents to the index interactively.
 
 # `clear-local`
 Removes all local branches which don't have remote tracking branches.
