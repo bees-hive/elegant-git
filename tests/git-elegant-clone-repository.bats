@@ -8,7 +8,7 @@ load addons-fake
 setup() {
     fake-pass git clone-repository
     fake-pass git "clone https://github.com/extsoft/elegant-git.git"
-    fake-pass git "elegant configure-repository"
+    fake-pass git "elegant acquire-repository"
 }
 
 teardown() {

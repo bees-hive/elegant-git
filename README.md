@@ -51,12 +51,14 @@ Also, there are several optional addons which can be useful in some circumstance
 #### Writing tests
 1. **Use `setup()` or `teardown()`** bats methods only in the tests.
 2. Use **`check` instead of bats `run`** to execute a command to be tested.
-3. If `addons-fake` or `addons-git` is used, call `clean-fake` or `clean-git` within a `teardown()` method.
+3. Use **`testtee`** to execute any real command within a test which should not be tested.
+4. If `addons-fake` or `addons-git` is used, call `clean-fake` or `clean-git` within a `teardown()` method.
 
 #### Assertions
-- `[ "${lines[0]}" = "+ the space " ]` for a output line (index starts from 0)
-- `[ "$status" -eq 2 ]` for a command status
-- `[ "${#lines[@]}" -eq 0 ]` for an empty command output
+- `[[ "${lines[0]}" = "+ the space " ]]` for an output line (index starts from 0)
+- `[[ "$status" -eq 2 ]]` for a command status
+- `[[ "${#lines[@]}" -eq 0 ]]` for a length of command output
+- `[[ "${lines[@]}" =~ "exact string" ]]` for an output line within whole output
 
 #### Test name template
 Use the following test name template - `'<command args>': <describe what will be tested>` like

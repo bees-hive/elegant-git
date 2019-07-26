@@ -1,5 +1,6 @@
 `git elegant <command>` where `<command>` is one of
 
+- `acquire-repository`
 - `clone-repository`
 - `init-repository`
 - `start-work`
@@ -8,7 +9,28 @@
 - `accept-work`
 - `pull`
 - `clear-local`
-- `configure-repository`
+
+# `acquire-repository`
+Configures current repository using `git config --local`. It includes:
+- defining a user identity (name and email)
+- applying git settings which are required for correct work of Elegant git
+- shortening Elegant git commands for `work`-related (`git elegant <command>` `=>` `git <command>`)
+
+```bash
+usage: git elegant acquire-repository
+```
+
+A sequence of original `git` commands:
+```bash
+git config --local user.name {provided name}
+git config --local user.email {provided email}
+# "|" char starts non-message lines while writing commit message
+git config --local core.commentChar |
+# Remove whitespaces when apply a patch
+git config --local apply.whitespace fix
+# Shortening Elegant git commands for work-related commands
+git config --local "alias.<command>" "elegant <command>"
+```
 
 # `clone-repository`
 Clones a repository into a new directory and runs its configuration.
@@ -21,7 +43,7 @@ A sequence of original `git` commands:
 ```bash
 git clone <URL>
 cd <repo root directory>
-# execute commands provided by `git elegant configure-repository`
+# execute commands provided by `git elegant acquire-repository`
 ```
 
 # `init-repository`
@@ -34,7 +56,7 @@ usage: git elegant init-repository
 A sequence of original `git` commands:
 ```bash
 git init
-# execute commands provided by `git elegant configure-repository`
+# execute commands provided by `git elegant acquire-repository`
 ```
 
 # `start-work`
@@ -106,9 +128,6 @@ Downloads new updates for a local branch.
 
 # `clear-local`
 Removes all local branches which don't have remote tracking branches.
-
-# `configure-repository`
-Defines some settings for _local_ `git config`.
 
 # `commands`
 Displays all available commands.

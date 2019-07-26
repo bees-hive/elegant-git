@@ -14,3 +14,13 @@ check(){
         echo "> stdout+stderr: '$line'"
     done
 }
+
+testtee() {
+    # Prints given command and executes it.
+    # It's useful as when a test is failed,
+    # then you can see a command in the log.
+    #
+    # usage: testtee [ags]...
+    echo "$(basename ${BASH_SOURCE[0]}): $@"
+    eval "$@"
+}

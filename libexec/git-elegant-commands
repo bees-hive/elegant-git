@@ -2,6 +2,7 @@
 set -e
 
 default() {
+    echo "acquire-repository"
     echo "clone-repository"
     echo "init-repository"
     echo "start-work"
@@ -10,6 +11,5 @@ default() {
     echo "accept-work"
     echo "pull"
     echo "clear-local"
-    echo "configure-repository"
     echo "commands"
 }

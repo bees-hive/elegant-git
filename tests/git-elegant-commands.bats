@@ -9,6 +9,7 @@ teardown() {
 
 @test "'commands': print all available commands" {
     COMMANDS=(
+        "acquire-repository"
         "clone-repository"
         "init-repository"
         "start-work"
@@ -17,7 +18,6 @@ teardown() {
         "accept-work"
         "pull"
         "clear-local"
-        "configure-repository"
         "commands"
     )
     check git-elegant commands

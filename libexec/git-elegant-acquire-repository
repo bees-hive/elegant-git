@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#set -e
+
+_user_name_key="user.name"
+_user_name_default=$(git config "$_user_name_key" || echo '')
+_user_name_message="What is your user name?"
+
+_user_email_key="user.email"
+_user_email_default=$(git config "$_user_email_key" || echo '')
+_user_email_message="What is your user email?"
+
+_core_comment_char_key="core.commentChar"
+_core_comment_char_default="|"
+
+_apply_whitespace_key="apply.whitespace"
+_apply_whitespace_default="fix"
+
+__ask_question() {
+    # usage: __ask_options <prefix>
+    # it makes available ANSWER available
+    message=$(eval "echo -n \$${1}_message")
+    echo -n "$message"
+    default=$(eval "echo -n \$${1}_default")
+    if [[ -n "$default" ]]; then echo -n " {$default}"; fi
+    echo -n ": "
+    read answer
+    export ANSWER=${answer:-$default}
+}
+
+__interactive-configuration() {
+    FUNCTIONS=$@
+    for f in ${FUNCTIONS[@]}; do
+        unset ANSWER
+        while [ -z "${ANSWER}" ]; do
+            __ask_question ${f}
+            if [[ -n "${ANSWER}" ]]; then
+                boxtee git config --local $(eval "echo -n \$${f}_key") "${ANSWER}"
+            fi
+        done
+    done
+}
+
+__mandatory-configuration() {
+    FUNCTIONS=$@
+    for config in ${FUNCTIONS[@]}; do
+        key=$(eval "echo -n \$${config}_key")
+        value=$(eval "echo -n \$${config}_default")
+        boxtee git config --local ${key} ${value}
+    done
+}
+__remove-old-aliases() {
+    old_aliases=($(git config --get-regexp ^alias\. | grep "elegant " | cut -f 1 -d " "))
+    if [[ ${#old_aliases[@]} -ne 0 ]]; then
+        for old in ${old_aliases[@]}; do
+            git config --local --unset ${old}
+        done
+        box "${#old_aliases[@]} git aliases were removed that contained 'elegant git' reference."
+    else
+        box "There are no git aliases which contain 'elegant git' reference."
+    fi
+}
+
+__aliases-configuration() {
+    for command in ${@}; do
+        local alias=${command}
+        local origin="elegant ${command}"
+        boxtee git config --local "alias.${alias}" "${origin}"
+    done
+}
+
+default() {
+      __interactive-configuration _user_name _user_email
+      __mandatory-configuration _core_comment_char _apply_whitespace
+      __remove-old-aliases
+      __aliases-configuration "pull" "clear-local" $(git elegant commands | grep work)
+}
