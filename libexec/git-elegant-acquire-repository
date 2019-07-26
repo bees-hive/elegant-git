@@ -1,19 +1,37 @@
 #!/usr/bin/env bash
-#set -e
+set -e
 
 _user_name_key="user.name"
-_user_name_default=$(git config "$_user_name_key" || echo '')
+_user_name_default=$(git config ${_user_name_key} || echo "")
 _user_name_message="What is your user name?"
 
 _user_email_key="user.email"
-_user_email_default=$(git config "$_user_email_key" || echo '')
+_user_email_default=$(git config ${_user_email_key} || echo "")
 _user_email_message="What is your user email?"
 
-_core_comment_char_key="core.commentChar"
-_core_comment_char_default="|"
+_core_editor_key="core.editor"
+_core_editor_default=$(git config "${_core_editor_key}" || echo "vim")
+_core_editor_message="Please specify a command to start the editor."
 
-_apply_whitespace_key="apply.whitespace"
-_apply_whitespace_default="fix"
+
+# mandatory
+_core_comment=("core.commentChar" "|")
+_apply_whitespace=("apply.whitespace" "fix")
+_fetch_prune=("fetch.prune" "true")
+_fetch_pruneTags=("fetch.pruneTags" "true")
+## Line endings
+## See https://help.github.com/en/articles/configuring-git-to-handle-line-endings
+### MAC/Linux
+_core_autocrlf_darwinlinux=("core.autocrlf" "input")
+### Windows
+_core_autocrlf_windows=("core.autocrlf" "true")
+## Pull
+_pull_rebase=("pull.rebase" "true")
+## Rebase
+_rebase_autoStash=("rebase.autoStash" "true")
+## Credentials, MAC only
+_credential_helper_darwin=("credential.helper" "osxkeychain")
+
 
 __ask_question() {
     # usage: __ask_options <prefix>
@@ -28,6 +46,7 @@ __ask_question() {
 }
 
 __interactive-configuration() {
+    box "Interactive configuration. Please hit enter if you wish {default value}."
     FUNCTIONS=$@
     for f in ${FUNCTIONS[@]}; do
         unset ANSWER
@@ -41,11 +60,19 @@ __interactive-configuration() {
 }
 
 __mandatory-configuration() {
-    FUNCTIONS=$@
-    for config in ${FUNCTIONS[@]}; do
-        key=$(eval "echo -n \$${config}_key")
-        value=$(eval "echo -n \$${config}_default")
-        boxtee git config --local ${key} ${value}
+    # usage: __mandatory-configuration <name of array> ...
+    for config in ${@}; do
+        local os=$(uname -s)
+        if [[ "Darwin Linux" =~ "${os}" ]]; then
+            [[ "${config}" =~ "windows" ]] && continue
+            [[ "${os}" = "Darwin" && ! "${config}" =~ "darwin" && "${config}" =~ "linux" ]] && continue
+            [[ "${os}" = "Linux" && ! "${config}" =~ "linux"  && "${config}" =~ "darwin" ]] && continue
+        fi
+        if [[ "Windows" = "${os}" ]]; then
+            [[ "${config}" =~ "darwin" || "${config}" =~ "linux" ]] && continue
+        fi
+        local data=($(eval "echo -n \${${config}[@]}"))
+        boxtee git config --local ${data[0]} ${data[1]}
     done
 }
 __remove-old-aliases() {
@@ -69,8 +96,11 @@ __aliases-configuration() {
 }
 
 default() {
-      __interactive-configuration _user_name _user_email
-      __mandatory-configuration _core_comment_char _apply_whitespace
+      __interactive-configuration _user_name _user_email _core_editor
+      __mandatory-configuration \
+        _core_comment _apply_whitespace _fetch_prune _fetch_pruneTags \
+        _core_autocrlf_darwinlinux _core_autocrlf_windows _pull_rebase \
+        _rebase_autoStash _credential_helper_darwin
       __remove-old-aliases
       __aliases-configuration "pull" "clear-local" $(git elegant commands | grep work)
 }

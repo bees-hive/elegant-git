@@ -11,6 +11,7 @@ init-repo() {
         testtee git init
         testtee git config --local user.email "\"elegant-git@example.com\""
         testtee git config --local user.name "\"Elegant Git\""
+        testtee git config --local core.editor "\"edi\""
         testtee touch $FILE_TO_MODIFY
         testtee git add .
         testtee git commit -m "\"Add $FILE_TO_MODIFY\""

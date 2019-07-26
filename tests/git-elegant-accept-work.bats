@@ -8,7 +8,7 @@ teardown() {
 }
 
 @test "'accept-work': a work is accepted successfully for given remote branch" {
-    fake-pass git "fetch --all --tags --prune"
+    fake-pass git "fetch --all --tags"
     fake-pass git "checkout -b eg origin/master"
     fake-pass git "rebase --merge --strategy ff-only origin/work"
     fake-pass git "checkout master"

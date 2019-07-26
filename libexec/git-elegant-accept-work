@@ -5,7 +5,7 @@ set -e
 default() {
     _error-if-empty "${1}" "Please give a name of remote branch (like 'origin/123')."
     local WORK_BRANCH="eg"
-    boxtee git fetch --all --tags --prune
+    boxtee git fetch --all --tags
     boxtee git checkout -b ${WORK_BRANCH} ${RMASTER}
     boxtee git rebase --merge --strategy ff-only ${1}
     # @todo #137 Alternative flows of `accept-work`

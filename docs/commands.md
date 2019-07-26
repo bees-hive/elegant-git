@@ -24,12 +24,31 @@ A sequence of original `git` commands:
 ```bash
 git config --local user.name {provided name}
 git config --local user.email {provided email}
+git config --local core.editor {provided editor}
 # "|" char starts non-message lines while writing commit message
 git config --local core.commentChar |
 # Remove whitespaces when apply a patch
 git config --local apply.whitespace fix
 # Shortening Elegant git commands for work-related commands
 git config --local "alias.<command>" "elegant <command>"
+# Keeping up-to-date with both branches and tags on the remote
+git config --local fetch.prune true
+git config --local fetch.pruneTags true
+# Rebase local changes while puling remotes refs
+git config --local fetch.prune true
+git config --local fetch.pruneTags
+# Line ending configuration
+## on MAC or Linux
+git config --local core.autocrlf input
+## on Windows
+git config --local core.autocrlf true
+# Always rebase when pull
+git config --local pull.rebase true
+# Always autostash if rebase
+git config --local rebase.autoStash true
+# Specify an external helper to be called when a username 
+# or password credential is needed (MAC only)
+git config --local credential.helper osxkeychain
 ```
 
 # `clone-repository`
@@ -113,7 +132,7 @@ usage: git elegant accept-work <remote-branch>
 ```
 A sequence of original `git` commands:
 ```bash
-git fetch --all --tags --prune
+git fetch --all --tags
 git checkout -b eg origin/master
 git rebase --merge --strategy ff-only <remote-branch-name>
 git checkout master
