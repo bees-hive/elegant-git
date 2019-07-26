@@ -15,13 +15,8 @@ _git_elegant() {
             local data=$(git branch | awk -F ' +' '! /\(no branch\)/ {print $2}')
             COMPREPLY=( $(compgen -W "${data}" ${cur}) )
             return 0 ;;
-        push|epush)
-            COMPREPLY=( $(compgen -W "$(git branch | grep \* | cut -d ' ' -f2)" ${cur}) )
-            return 0 ;;
-        check|echeck)
-            COMPREPLY=($(compgen -W '"--all" "--unstaged" "--staged"' -- ${cur}) )
-            return 0 ;;
         accept-work)
+            git fetch --all
             COMPREPLY=(
                 $(compgen -W "$(git branch --remotes --list)" -- ${cur})
             )
