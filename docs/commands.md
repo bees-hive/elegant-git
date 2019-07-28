@@ -1,20 +1,23 @@
-`git elegant <command>` where `<command>` is one of
+# `git elegant`
+Run `git elegant <command>` where `<command>` is one of
 
-- `acquire-repository`
-- `clone-repository`
-- `init-repository`
-- `start-work`
-- `save-work`
-- `deliver-work`
-- `accept-work`
-- `pull`
-- `clear-local`
+- [`acquire-repository`](#acquire-repository)
+- [`clone-repository`](#clone-repository)
+- [`init-repository`](#init-repository)
+- [`start-work`](#start-work)
+- [`save-work`](#save-work)
+- [`deliver-work`](#deliver-work)
+- [`accept-work`](#accept-work)
+- [`pull`](#pull)
+- [`clear-local`](#clear-local)
+- [`commands`](#commands)
 
 # `acquire-repository`
 Configures current repository using `git config --local`. It includes:
+    
 - defining a user identity (name and email)
-- applying git settings which are required for correct work of Elegant git
-- shortening Elegant git commands for `work`-related (`git elegant <command>` `=>` `git <command>`)
+- applying git settings which are required for correct work of Elegant Git
+- aliasing Elegant Git commands by making them available as Git commands
 
 ```bash
 usage: git elegant acquire-repository
@@ -29,7 +32,7 @@ git config --local core.editor {provided editor}
 git config --local core.commentChar |
 # Remove whitespaces when apply a patch
 git config --local apply.whitespace fix
-# Shortening Elegant git commands for work-related commands
+# Aliasing Elegant Git commands by making them available as Git commands
 git config --local "alias.<command>" "elegant <command>"
 # Keeping up-to-date with both branches and tags on the remote
 git config --local fetch.prune true
