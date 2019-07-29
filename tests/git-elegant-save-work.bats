@@ -3,19 +3,29 @@
 load addons-common
 load addons-fake
 load addons-read
+load addons-git
 
+setup() {
+    init-repo
+}
 
 teardown() {
     clean-fake
+    clean-git
 }
 
-setup() {
+@test "'save-work': command works as expected for non-master branch" {
     fake-pass git "add --interactive"
     fake-pass git "diff --cached --check"
-    fake-pass git commit
+    fake-pass git "commit"
+    gitrepo git checkout -b test
+    check git-elegant save-work
+    [[ "${status}" -eq 0 ]]
 }
 
-@test "'save-work': command is available" {
+@test "'save-work': exit code is 42 when current local branch is master" {
     check git-elegant save-work
-    [ "$status" -eq 0 ]
+    [[ "${status}" -eq 42 ]]
+    [[ "${lines[@]}" =~ "== No commits to 'master' branch. Please read more on https://elegant-git.bees-hive.org ==" ]]
+    [[ "${lines[@]}" =~ "== Try 'git elegant start-work' prior to retrying this command. ==" ]]
 }
