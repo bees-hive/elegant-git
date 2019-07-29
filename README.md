@@ -1,6 +1,6 @@
 # Elegant Git
 Elegant Git is an assistant who carefully makes routine work with Git. Please read user documentation on 
-<https://elegant-git.bees-hive .org/>.
+<https://elegant-git.bees-hive.org/>.
 
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/bees-hive/elegant-git/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/bees-hive/elegant-git.svg?branch=master)](https://travis-ci.org/bees-hive/elegant-git)
