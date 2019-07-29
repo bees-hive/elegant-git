@@ -16,7 +16,7 @@ default() {
     #  2. `git rebase` is completed (history of `${WORK_BRANCH}` and `${RMASTER}` are different),
     #  just work with `${MASTER}` branch.
     boxtee git checkout ${MASTER}
-    boxtee git merge --ff-only eg
+    boxtee git merge --ff-only ${WORK_BRANCH}
     boxtee git push ${REMOTE_NAME} ${MASTER}:${MASTER}
     boxtee git branch --delete ${WORK_BRANCH}
     boxtee git push ${REMOTE_NAME} --delete $(echo "${1}" | sed -e "s|${REMOTE_NAME}/||")
