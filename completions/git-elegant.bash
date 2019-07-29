@@ -16,9 +16,8 @@ _git_elegant() {
             COMPREPLY=( $(compgen -W "${data}" ${cur}) )
             return 0 ;;
         accept-work)
-            git fetch --all
             COMPREPLY=(
-                $(compgen -W "$(git branch --remotes --list)" -- ${cur})
+                $(compgen -W "$(git fetch --all &>/dev/null; git branch --remotes --list)" -- ${cur})
             )
             return 0 ;;
         *)
