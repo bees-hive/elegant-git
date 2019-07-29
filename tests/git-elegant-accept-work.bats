@@ -14,7 +14,7 @@ teardown() {
     fake-pass git "checkout master"
     fake-pass git "merge --ff-only __eg"
     fake-pass git "push origin master:master"
-    fake-pass git "branch --delete __eg"
+    fake-pass git "branch --delete --force __eg"
     fake-pass git "push origin --delete work"
     check git-elegant accept-work origin/work
     [[ "$status" -eq 0 ]]

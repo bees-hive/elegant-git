@@ -18,6 +18,6 @@ default() {
     boxtee git checkout ${MASTER}
     boxtee git merge --ff-only ${WORK_BRANCH}
     boxtee git push ${REMOTE_NAME} ${MASTER}:${MASTER}
-    boxtee git branch --delete ${WORK_BRANCH}
+    boxtee git branch --delete --force ${WORK_BRANCH}
     boxtee git push ${REMOTE_NAME} --delete $(echo "${1}" | sed -e "s|${REMOTE_NAME}/||")
 }

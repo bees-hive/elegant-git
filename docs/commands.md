@@ -141,7 +141,7 @@ git rebase origin/master
 git checkout master
 git merge --ff-only __eg
 git push origin master:master
-git branch -d __eg
+git branch --delete --force __eg
 git push origin --delete <remote-branch-name>
 ```
 
