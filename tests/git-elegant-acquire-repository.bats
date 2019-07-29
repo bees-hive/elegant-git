@@ -38,7 +38,7 @@ teardown() {
     [[ "${lines[@]}" =~ "== git config --local fetch.pruneTags true ==" ]]
     [[ "${lines[@]}" =~ "== git config --local core.autocrlf true ==" ]]
     [[ "${lines[@]}" =~ "== git config --local pull.rebase true ==" ]]
-    [[ "${lines[@]}" =~ "== git config --local rebase.autoStash true ==" ]]
+    [[ "${lines[@]}" =~ "== git config --local rebase.autoStash false ==" ]]
     # negative checks are used instead of checking commands size
     [[ ! "${lines[@]}" =~ "== git config --local credential.helper osxkeychain ==" ]]
     [[ ! "${lines[@]}" =~ "== git config --local core.autocrlf input ==" ]]
@@ -53,7 +53,7 @@ teardown() {
     [[ "${lines[@]}" =~ "== git config --local fetch.pruneTags true ==" ]]
     [[ "${lines[@]}" =~ "== git config --local core.autocrlf input ==" ]]
     [[ "${lines[@]}" =~ "== git config --local pull.rebase true ==" ]]
-    [[ "${lines[@]}" =~ "== git config --local rebase.autoStash true ==" ]]
+    [[ "${lines[@]}" =~ "== git config --local rebase.autoStash false ==" ]]
     # negative checks are used instead of checking commands size
     [[ ! "${lines[@]}" =~ "== git config --local credential.helper osxkeychain ==" ]]
     [[ ! "${lines[@]}" =~ "== git config --local core.autocrlf true ==" ]]
@@ -68,7 +68,7 @@ teardown() {
     [[ "${lines[@]}" =~ "== git config --local fetch.pruneTags true ==" ]]
     [[ "${lines[@]}" =~ "== git config --local core.autocrlf input ==" ]]
     [[ "${lines[@]}" =~ "== git config --local pull.rebase true ==" ]]
-    [[ "${lines[@]}" =~ "== git config --local rebase.autoStash true ==" ]]
+    [[ "${lines[@]}" =~ "== git config --local rebase.autoStash false ==" ]]
     [[ "${lines[@]}" =~ "== git config --local credential.helper osxkeychain ==" ]]
     # negative checks are used instead of checking commands size
     [[ ! "${lines[@]}" =~ "== git config --local core.autocrlf true ==" ]]

@@ -28,7 +28,7 @@ _core_autocrlf_windows=("core.autocrlf" "true")
 ## Pull
 _pull_rebase=("pull.rebase" "true")
 ## Rebase
-_rebase_autoStash=("rebase.autoStash" "true")
+_rebase_autoStash=("rebase.autoStash" "false")
 ## Credentials, MAC only
 _credential_helper_darwin=("credential.helper" "osxkeychain")
 

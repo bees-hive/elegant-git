@@ -47,8 +47,8 @@ git config --local core.autocrlf input
 git config --local core.autocrlf true
 # Always rebase when pull
 git config --local pull.rebase true
-# Always autostash if rebase
-git config --local rebase.autoStash true
+# Never autostash if rebase
+git config --local rebase.autoStash false
 # Specify an external helper to be called when a username 
 # or password credential is needed (MAC only)
 git config --local credential.helper osxkeychain
