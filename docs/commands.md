@@ -136,12 +136,12 @@ usage: git elegant accept-work <remote-branch>
 A sequence of original `git` commands:
 ```bash
 git fetch --all --tags
-git checkout -b eg origin/master
-git rebase --merge --strategy ff-only <remote-branch-name>
+git checkout -b __eg <remote-branch-name>
+git rebase origin/master
 git checkout master
-git merge --ff-only eg
+git merge --ff-only __eg
 git push origin master:master
-git branch -d eg
+git branch -d __eg
 git push origin --delete <remote-branch-name>
 ```
 
