@@ -29,6 +29,14 @@ add-st-change(){
     testtee git add $FILE_TO_MODIFY
 }
 
+gitrepo() {
+    # execute given arguments on real git repo
+    # usage: gitrepo <command and arguments>
+    testtee cd ${GIT_REPO_DIR}
+    testtee eval $@
+    testtee cd -
+}
+
 clean-git() {
     if [ -d "$GIT_REPO_DIR" ]; then
         rm -rf "$GIT_REPO_DIR"
