@@ -52,6 +52,10 @@ git config --local rebase.autoStash true
 # Specify an external helper to be called when a username 
 # or password credential is needed (MAC only)
 git config --local credential.helper osxkeychain
+# Remove local aliases which contain Elegant Git commands
+git config --local --unset <alias>
+# Add aliases for current commands
+git config --local alias.<command> "elegant <command>"
 ```
 
 # `clone-repository`

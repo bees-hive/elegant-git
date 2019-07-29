@@ -33,7 +33,7 @@ gitrepo() {
     # execute given arguments on real git repo
     # usage: gitrepo <command and arguments>
     testtee cd ${GIT_REPO_DIR}
-    testtee eval $@
+    testtee $@
     testtee cd -
 }
 

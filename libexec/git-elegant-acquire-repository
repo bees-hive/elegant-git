@@ -78,10 +78,13 @@ __mandatory-configuration() {
 __remove-old-aliases() {
     old_aliases=($(git config --get-regexp ^alias\. | grep "elegant " | cut -f 1 -d " "))
     if [[ ${#old_aliases[@]} -ne 0 ]]; then
+        local counter=0
         for old in ${old_aliases[@]}; do
-            git config --local --unset ${old}
+            boxtee git config --local --unset ${old} &&
+            counter=$((counter+1)) ||
+            box "Non-local alias! Remove it if needed using 'git config --global --unset ${old}'"
         done
-        box "${#old_aliases[@]} git aliases were removed that contained 'elegant git' reference."
+        box "${counter} git aliases were removed that contained 'elegant git' reference."
     else
         box "There are no git aliases which contain 'elegant git' reference."
     fi

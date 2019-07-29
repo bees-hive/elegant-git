@@ -82,12 +82,21 @@ teardown() {
     [[ "${lines[@]}" =~ "== git config --local alias.accept-work elegant accept-work ==" ]]
 }
 
-@test "'acquire-repository': removing existing git aliases works as expected when aliases available" {
-    testtee git config --local "alias.aaa" "\"elegant aaa\""
-    testtee git config --local "alias.bbb" "\"elegant bbb\""
+@test "'acquire-repository': local aliases are removed as expected" {
+    gitrepo git config --local "alias.aaa" "\"elegant aaa\""
+    gitrepo git config --local "alias.bbb" "\"elegant bbb\""
     check git-elegant acquire-repository
     [[ "$status" -eq 0 ]]
     [[ "${lines[@]}" =~ "== 2 git aliases were removed that contained 'elegant git' reference. ==" ]]
+}
+
+@test "'acquire-repository': global aliases aren't removed" {
+    gitrepo git config --global "alias.glb" "\"elegant glb\""
+    check git-elegant acquire-repository
+    gitrepo git config --global --unset "alias.glb"
+    [[ "$status" -eq 0 ]]
+    [[ "${lines[@]}" =~ "== Non-local alias! Remove it if needed using 'git config --global --unset alias.glb' ==" ]]
+    [[ "${lines[@]}" =~ "== 0 git aliases were removed that contained 'elegant git' reference. ==" ]]
 }
 
 @test "'acquire-repository': removing existing git aliases works as expected when aliases are absent" {
