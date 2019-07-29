@@ -23,4 +23,7 @@ Support only one default remote - `origin`.
 Usually, Elegant Git translates exit codes of original Git commands. However, in some cases,
 it may face its own errors and raises them as
 
-- `81` - a philosophical constraint
+- `0` - a successful execution
+- `42` - a philosophical constraint
+- `45` - a required parameter is empty
+- `46` - an unknown command

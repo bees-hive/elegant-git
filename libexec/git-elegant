@@ -46,7 +46,7 @@ _error-if-empty() {
     # _error-if-empty <a value to check> <error message>
     if [[ -z "$1" ]]; then
         __rm "$2"
-        exit -1
+        exit 45
     fi
 }
 
@@ -100,7 +100,7 @@ main() {
     local COMMAND="help"
     [[ -n "$1" ]] && COMMAND="$1" && shift
     [[ "$COMMAND" = "help" ]] && usage && exit 0
-    [[ ! -e "$BINS/git-elegant-$COMMAND" ]] && echo "Unknown command: git elegant $COMMAND" && usage && exit 2
+    [[ ! -e "$BINS/git-elegant-$COMMAND" ]] && echo "Unknown command: git elegant $COMMAND" && usage && exit 46
     . "$BINS/git-elegant-$COMMAND"
 
     default "$@"

@@ -20,9 +20,9 @@ teardown() {
     [ "$status" -eq 0 ]
 }
 
-@test "'accept-work': exit code is 255 when remote branch name isn't set" {
+@test "'accept-work': exit code is 45 when remote branch name isn't set" {
     check git-elegant accept-work
-    [ "$status" -eq 255 ]
+    [ "$status" -eq 45 ]
 }
 
 @test "'accept-work': print error message when remote branch name isn't set" {

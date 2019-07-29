@@ -5,7 +5,7 @@ default() {
     local BRANCH=$(__branches 'git branch | grep \*')
     if [[ "$BRANCH" == "master" ]]; then
         box "No pushes to 'master' branch. Please read more on ${__site}"
-        exit 81
+        exit 42
     fi
     boxtee git fetch
     boxtee git rebase ${RMASTER}
