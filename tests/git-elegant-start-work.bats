@@ -18,9 +18,9 @@ teardown() {
   [ "$status" -eq 0 ]
 }
 
-@test "'start-work': exit code is 255 when branch name isn't set" {
+@test "'start-work': exit code is 45 when branch name isn't set" {
   check git-elegant start-work
-  [ "$status" -eq 255 ]
+  [ "$status" -eq 45 ]
 }
 
 @test "'start-work': print error message when branch name isn't set" {
