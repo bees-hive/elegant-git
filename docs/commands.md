@@ -140,7 +140,7 @@ usage: git elegant accept-work <remote-branch>
 A sequence of original `git` commands:
 ```bash
 git fetch --all --tags
-git checkout -b __eg <remote-branch-name>
+git checkout --force -B __eg <remote-branch-name>
 git rebase origin/master
 git checkout master
 git merge --ff-only __eg
