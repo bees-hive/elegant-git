@@ -25,5 +25,6 @@ it may face its own errors and raises them as
 
 - `0` - a successful execution
 - `42` - a philosophical constraint
+- `43` - a logical constraint
 - `45` - a required parameter is empty
 - `46` - an unknown command

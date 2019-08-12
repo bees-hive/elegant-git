@@ -4,7 +4,7 @@ set -e
 default() {
     _error-if-empty "$1" "Please give a name for the new branch."
     status=$(boxtee git stash save elegant-git)
-    git elegant pull $MASTER
+    git elegant obtain-work ${MASTER}
     boxtee git checkout -b "$1"
 
     if [[ "$status" =~ "Saved working directory" ]]; then

@@ -9,7 +9,7 @@ default() {
     echo "save-work"
     echo "deliver-work"
     echo "accept-work"
-    echo "pull"
+    echo "obtain-work"
     echo "clear-local"
     echo "commands"
 }

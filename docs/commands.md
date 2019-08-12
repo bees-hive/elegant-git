@@ -150,8 +150,23 @@ git branch --delete --force __eg
 git push origin --delete <remote-branch-name>
 ```
 
-# `pull`
-Downloads new updates for a local branch.
+# `obtain-work`
+Checkouts a local or remote branch matching against a pattern. It looks for local branches first, then for remotes ones.
+If there are more then 1 matching branch, execution stops with a corresponding error message.
+
+```bash
+usage: git elegant obtain-work <pattern>
+```
+
+A sequence of original `git` commands:
+```bash
+# if a local branch matches a pattern
+git checkout <branch name>
+git pull
+# if no local matches, seek through remotes
+git fetch --all
+git checkout <branch name>
+```
 
 # `clear-local`
 Removes all local branches which don't have remote tracking branches.

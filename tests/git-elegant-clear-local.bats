@@ -6,7 +6,7 @@ load addons-fake
 
 setup() {
     fake-pass git "branch -lvv" "first [gone]"
-    fake-pass git "elegant pull master"
+    fake-pass git "elegant obtain-work master"
     fake-pass git "branch -d first"
 }
 

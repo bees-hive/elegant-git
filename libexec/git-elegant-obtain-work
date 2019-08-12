@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -e
+
+--up-to-one-branch(){
+    local BRANCHES=(${@})
+    if [[ ${#BRANCHES[@]} > 1 ]]; then
+        echo "The following branches are found:"
+        for branch in ${BRANCHES[@]}; do
+            echo " - ${branch}"
+        done
+        box "Please re-run the command with concrete branch name from the list above!"
+        exit 43
+    fi
+}
+
+default() {
+    local PATTERN=${1}
+    _error-if-empty "${PATTERN}" "Please provide a branch name or its part."
+    local LOCAL_BRANCHES=($(git for-each-ref --format='%(refname:strip=2)' refs/heads/* | grep "${PATTERN}"))
+    --up-to-one-branch ${LOCAL_BRANCHES[@]}
+    if [[ ${#LOCAL_BRANCHES[@]} = 1 ]]; then
+        boxtee git checkout ${LOCAL_BRANCHES[0]}
+        boxtee git pull
+    else
+        boxtee git fetch --all
+        local REMOTE_BRANCHES=($(git for-each-ref --format='%(refname:strip=3)' refs/remotes/** | grep "${PATTERN}"))
+        --up-to-one-branch ${REMOTE_BRANCHES[@]}
+        if [[ ${#REMOTE_BRANCHES[@]} = 1 ]]; then
+            boxtee git checkout ${REMOTE_BRANCHES[0]}
+        else
+            box "There are no either remove or local branches which match '${PATTERN}' pattern."
+            exit 43
+        fi
+    fi
+}

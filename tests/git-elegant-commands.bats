@@ -16,7 +16,7 @@ teardown() {
         "save-work"
         "deliver-work"
         "accept-work"
-        "pull"
+        "obtain-work"
         "clear-local"
         "commands"
     )

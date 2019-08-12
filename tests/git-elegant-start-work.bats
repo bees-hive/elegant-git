@@ -4,7 +4,7 @@ load addons-common
 load addons-fake
 
 setup() {
-    fake-pass git "elegant pull master"
+    fake-pass git "elegant obtain-work master"
     fake-pass git "checkout -b test-feature"
     fake-pass git "stash save elegant-git"
 }
