@@ -12,4 +12,5 @@ default() {
     echo "obtain-work"
     echo "clear-local"
     echo "commands"
+    echo "amend-work"
 }
