@@ -10,6 +10,7 @@ Run `git elegant <command>` where `<command>` is one of
 - [`accept-work`](#accept-work)
 - [`pull`](#pull)
 - [`clear-local`](#clear-local)
+- [`amend-work`](#amend-work)
 - [`commands`](#commands)
 
 # `acquire-repository`
@@ -166,6 +167,20 @@ git pull
 # if no local matches, seek through remotes
 git fetch --all
 git checkout <branch name>
+```
+
+# `amend-work`
+Updates the most recent commit by adding some changes.
+
+```bash
+usage: git amend-work
+```
+
+A sequence of original `git` commands:
+```bash
+git add --interactive
+git diff --cached --check
+git commit --amend
 ```
 
 # `clear-local`
