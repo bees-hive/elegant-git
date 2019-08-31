@@ -1,15 +1,59 @@
-# Elegant Git
-Elegant Git is an assistant who carefully makes routine work with Git. Please read user documentation on 
-<https://elegant-git.bees-hive.org/>.
+[sb]: https://img.shields.io/badge/Choose%20issue-simple-green
+[sl]: https://github.com/bees-hive/elegant-git/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22+sort%3Acomments-desc+no%3Aassignee
+[ab]: https://img.shields.io/badge/Choose%20issue-any-blue
+[al]: https://github.com/bees-hive/elegant-git/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+no%3Aassignee
+[cb]: https://img.shields.io/github/commits-since/bees-hive/elegant-git/latest?label=Commits%20for%20next%20release
+[cl]: https://github.com/bees-hive/elegant-git/commits/master
+[vb]: https://img.shields.io/github/v/tag/bees-hive/elegant-git?label=Last%20release
+[vl]: https://github.com/bees-hive/elegant-git/releases/latest
+[lb]: https://img.shields.io/github/license/bees-hive/elegant-git
+[0b]: http://www.0pdd.com/svg?name=bees-hive/elegant-git
+[0l]: http://www.0pdd.com/p?name=bees-hive/elegant-git
+[bb]: https://travis-ci.org/bees-hive/elegant-git.svg?branch=master
+[bl]: https://travis-ci.org/bees-hive/elegant-git
+[db]: https://readthedocs.org/projects/elegant-git/badge/?version=latest
+[dl]: https://elegant-git.bees-hive.org/en/latest/?badge=latest
 
-[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/bees-hive/elegant-git/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/bees-hive/elegant-git.svg?branch=master)](https://travis-ci.org/bees-hive/elegant-git)
-[![PDD status](http://www.0pdd.com/svg?name=bees-hive/elegant-git)](http://www.0pdd.com/p?name=bees-hive/elegant-git)
-[![Documentation Status](https://readthedocs.org/projects/elegant-git/badge/?version=latest)](https://elegant-git.bees-hive.org/en/latest/?badge=latest)
+# Elegant Git
+Elegant Git is an assistant who carefully makes routine work with Git.
+
+Please visit <https://elegant-git.bees-hive.org/> to get started with user documentation or continue
+reading to get the project's development details.
+
+---
+
+[![][vb]][vl] [![][cb]][cl]
+
+[![][sb]][sl] [![][ab]][al]
+
+[![][bb]][bl] [![][db]][dl] [![][0b]][0l]
 
 [![Rultor.com](http://www.rultor.com/b/bees-hive/elegant-git)](http://www.rultor.com/p/bees-hive/elegant-git)
 
-## Contributing
+---
+
+## The contribution process at a glance
+1. Everyone contributing is governed by the [Code of Conduct](CODE_OF_CONDUCT.md) - please read it
+2. After, please get familiar with project rules described in [CONTRIBUTING.md](CONTRIBUTING.md).
+3. Make a contribution
+
+:tada::tada::tada: That's all! :tada::tada::tada:
+
+## Hands-on development notes
+The information below guides you on different aspects of the development process. If you have
+something which should be quickly available, please propose changes here.
+
+**Table of contents**
+
+- [Coding rules](#coding-rules)
+- [Debug mode](#debug-mode)
+- [Testing procedure](#testing-procedure)
+- [Unit testing](#unit-testing)
+  - [Addons](#addons)
+  - [Writing tests](#writing-tests)
+  - [Assertions](#assertions)
+  - [Test name template](#test-name-template)
+- [Documentation preview](#documentation-preview)
 
 ### Coding rules
 We enforce having a consistent implementation by following the next strict rules:
