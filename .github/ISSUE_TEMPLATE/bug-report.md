@@ -7,19 +7,19 @@ assignees: ''
 
 ---
 
-**The bug**
+### The bug
 A clear and concise description of what the bug is.
 
-**Steps to reproduce**
+### Steps to reproduce
 1. ...
 2. ...
 3. ...
 4. ...
 
-**Expected behavior**
+### Expected behavior
 A clear and concise description of what you expected to happen.
 
-**My environment**
+### My environment
 - `git --version`:  ?
 - `bash --version`: ?
 -  OS: ?

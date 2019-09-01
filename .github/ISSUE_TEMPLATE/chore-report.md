@@ -7,8 +7,8 @@ assignees: ''
 
 ---
 
-**I want to improve ** _please replace with your idea and its benefits_
+### An item to improve
+Please replace with your idea and its benefits.
 
-**I propose this because ** _please replace with your motivation_
-
-**It can be done by ** _please replace this with action items_
+### Technical solution
+Please describe any ideas about the implementation as well as action plan if possible.
