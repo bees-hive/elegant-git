@@ -9,5 +9,9 @@ default() {
     fi
     boxtee git fetch
     boxtee git rebase ${RMASTER}
-    boxtee git push --set-upstream --force origin ${BRANCH}:${BRANCH}
+   if [[ ! -z "$REMOTE_BRANCH" ]]; then
+        boxtee git push --set-upstream --force origin :${REMOTE_BRANCH}${BRANCH}
+    else
+        boxtee git push --set-upstream --force origin ${BRANCH}:${BRANCH}
+    fi
 }

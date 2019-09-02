@@ -122,6 +122,13 @@ Updates the current branch using the latest remote `master` and updates remote r
 usage: git deliver-work
 ```
 
+If the name of the remote branch is different from the local one,
+you can pass a parameter with the name of the remote branch.
+
+```bash
+usage: git deliver-work 'YOUR_BRANCH'
+```
+
 A sequence of original `git` commands:
 ```bash
 git fetch
