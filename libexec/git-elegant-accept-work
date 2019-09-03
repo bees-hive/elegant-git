@@ -3,11 +3,8 @@ set -e
 
 
 default() {
-    local WORK=${1}
-    _error-if-empty "${WORK}" "Please give a name of remote branch (like 'origin/123')."
     local WORK_BRANCH="__eg"
-    boxtee git fetch --all --tags
-    boxtee git checkout --force -B ${WORK_BRANCH} ${WORK}
+    git elegant obtain-work "${1}" "${WORK_BRANCH}"
     boxtee git status
     boxtee git rebase ${RMASTER}
     # @todo #137 Alternative flows of `accept-work`
@@ -16,9 +13,10 @@ default() {
     #  `${MASTER}` branch.
     #  2. `git rebase` is completed (history of `${WORK_BRANCH}` and `${RMASTER}` are different),
     #  just work with `${MASTER}` branch.
+    local ACTUAL_REMOTE=$(git for-each-ref --format='%(upstream:short)' refs/heads/${WORK_BRANCH})
     boxtee git checkout ${MASTER}
     boxtee git merge --ff-only ${WORK_BRANCH}
     boxtee git push ${REMOTE_NAME} ${MASTER}:${MASTER}
     boxtee git branch --delete --force ${WORK_BRANCH}
-    boxtee git push ${REMOTE_NAME} --delete $(echo "${1}" | sed -e "s|${REMOTE_NAME}/||")
+    boxtee git push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${ACTUAL_REMOTE})
 }
