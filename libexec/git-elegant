@@ -90,6 +90,11 @@ __batch() {
     fi
 }
 
+branch-from-remote-reference() {
+    # usage: branch-from-remote-reference <full reference name>
+    echo ${1} | sed "s|^[a-zA-Z0-9_-]*/||g"
+}
+
 usage() {
     echo "git elegant <command>"
     git elegant commands

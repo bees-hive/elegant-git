@@ -8,7 +8,7 @@ Run `git elegant <command>` where `<command>` is one of
 - [`save-work`](#save-work)
 - [`deliver-work`](#deliver-work)
 - [`accept-work`](#accept-work)
-- [`pull`](#pull)
+- [`obtain-work`](#obtain-work)
 - [`clear-local`](#clear-local)
 - [`amend-work`](#amend-work)
 - [`commands`](#commands)
@@ -136,7 +136,7 @@ Accepts proposed work (remote work branch) on top of the fresh history of remote
 successful work acceptance.
 
 ```bash
-usage: git elegant accept-work <remote-branch>
+usage: git elegant accept-work <full/partial branch name>
 ```
 A sequence of original `git` commands:
 ```bash
@@ -152,21 +152,19 @@ git push origin --delete <remote-branch-name>
 ```
 
 # `obtain-work`
-Checkouts a local or remote branch matching against a pattern. It looks for local branches first, then for remotes ones.
-If there are more then 1 matching branch, execution stops with a corresponding error message.
+Checkouts a remote branch matching by a given full or partial name. If there are more then 1
+matching branch, execution stops with a corresponding error message. By default, the name of the
+local branch responds to the remote one. However, the name can be overridden by giving a second
+command argument.
 
 ```bash
-usage: git elegant obtain-work <pattern>
+usage: git elegant obtain-work <full/partial branch name> [local branch name]
 ```
 
 A sequence of original `git` commands:
 ```bash
-# if a local branch matches a pattern
-git checkout <branch name>
-git pull
-# if no local matches, seek through remotes
 git fetch --all
-git checkout <branch name>
+git checkout -B <local branch> <remote branch>
 ```
 
 # `amend-work`
