@@ -23,6 +23,12 @@ pipeline() {
     pdd --exclude=.idea/**/* \
         --exclude=site/**/* \
         --verbose --file=/dev/null                    || fail "Unreadable todo is identified."
+    (
+        ./.wf/docs-generation.bash
+        git update-index --refresh
+        git diff-index HEAD --
+    ) || fail "The documentation is not up to date. Please run './.wf/docs-generation.bash' and commit the changes"
+
 }
 
 say-version() {

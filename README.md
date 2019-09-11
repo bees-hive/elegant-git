@@ -54,7 +54,7 @@ something which should be quickly available, please propose changes here.
   - [Writing tests](#writing-tests)
   - [Assertions](#assertions)
   - [Test name template](#test-name-template)
-- [Documentation preview](#documentation-preview)
+- [Updating documentation](#updating-documentation)
 
 ### Architecture
 
@@ -131,7 +131,10 @@ Also, there are several optional addons which can be useful in some circumstance
 Use the following test name template - `'<command args>': <describe what will be tested>` like
 `'clone-repository': raise an error if cloneable URL isn't set`.
 
-### Documentation preview
+### Updating documentation
 In order to get the documentation preview locally, please install required dependencies with 
 `pip install -r docs/requirements.txt`. After, run `mkdocs serve` and open <http://127.0.0.1:8000/> 
 in a browser. That's it!
+
+The [docs/commands.md](docs/commands.md) generates by running `./.wf/docs-generation.bash` script.
+All other files in ["docs" directory](docs/) require manual corrections.
