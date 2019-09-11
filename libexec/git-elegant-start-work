@@ -1,6 +1,38 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Creates a new branch.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant start-work <name>
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Creates a new local branch based on the latest version of the default upstream
+branch. If there are some uncommitted changes, they will be moved to the new
+branch.
+
+Approximate commands flow is
+\`\`\`bash
+==> git elegant start-work task-123
+git stash save elegant-git
+git checkout master
+git fetch --tags
+git pull
+git checkout -b task-123
+git stash apply stash^{/elegant-git}
+git stash drop stash@{0}
+\`\`\`
+MESSAGE
+}
+
 default() {
     _error-if-empty "$1" "Please give a name for the new branch."
     status=$(boxtee git stash save elegant-git)

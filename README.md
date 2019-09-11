@@ -45,6 +45,7 @@ something which should be quickly available, please propose changes here.
 
 **Table of contents**
 
+- [Architecture](#architecture)
 - [Coding rules](#coding-rules)
 - [Debug mode](#debug-mode)
 - [Testing procedure](#testing-procedure)
@@ -55,10 +56,32 @@ something which should be quickly available, please propose changes here.
   - [Test name template](#test-name-template)
 - [Documentation preview](#documentation-preview)
 
+### Architecture
+
+The structure of directories:
+```text
+.
+├── bin           <- stores executable which is entry point
+├── completions   <- stores completion files
+├── docs          <- stores user documentation
+├── libexec       <- contains all commands
+└── tests         <- stores all tests along with additional test libraries
+```
+
+When you run `git elegant ...`, it initiates `bin/git-elegant` entry-point script. It calls
+`libexec/git-elegant` which is responsible for the execution of a given command by loading the code
+of a desired command (using a command file like `libexec/git-elegant-<command>`) and executing
+it. Each command file has to provide the following BASH functions:
+- `command-name` prints a command name (line length is limited to 50 characters)
+- `command-synopsis` prints a `usage` statement (line length is limited to 80 characters)
+- `command-description` prints a command description (line length is limited to 80 characters)
+- `default` executes given command
+
 ### Coding rules
 We enforce having a consistent implementation by following the next strict rules:
 - add `#!/usr/bin/env bash` at the beginning of each script
-- use `boxtee` to execute each original `git` command 
+- use `boxtee` to execute each original `git` command
+- a private function (a usage in the scope of current script) should be prefixed with `--`
 
 ### Debug mode
 You can enable debug mode by running `export GED=1` (the equivalent of `set -x` for `bash`). 

@@ -1,6 +1,34 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Checkouts a remote branch matching by a name.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant obtain-work <remote branch> [local branch]
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Seeks across all upstreams for a branch matching by a given full or partial
+name. If there are more then 1 matching branch, execution stops with a
+corresponding error message. By default, the name of the local branch responds
+to the remote one. However, it can be overridden by giving a second argument.
+
+Approximate commands flow is
+\`\`\`bash
+==> git elegant obtain-work new-feature task-133
+git fetch --all
+git checkout -B task-133 custom-remote/new-feature
+\`\`\`
+MESSAGE
+}
+
 default() {
     local PATTERN=${1}
     _error-if-empty "${PATTERN}" "Please provide a branch name or its part."

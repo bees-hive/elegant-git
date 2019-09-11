@@ -1,6 +1,41 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Applies a branch on top of upstream branch.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant accept-work <remote branch>
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Checkouts given branch using \`git elegant obtain-work\` into a temporary one.
+Then, it makes a rebase of the latest version of default upstream branch with
+current changes. The final index merges using fast-forward strategy into the
+default local branch and pushes into the default upstream branch. After a
+successful push, the given and temporary branches are removed.
+
+Approximate commands flow is
+\`\`\`bash
+==> git elegant accept-work task-123
+git fetch --all --tags
+git checkout --force -B __eg origin/task-123
+git status
+git rebase origin/master
+git checkout master
+git merge --ff-only __eg
+git push origin master:master
+git branch --delete --force __eg
+git push origin --delete task-123
+\`\`\`
+MESSAGE
+}
 
 default() {
     local WORK_BRANCH="__eg"

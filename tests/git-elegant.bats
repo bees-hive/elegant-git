@@ -13,3 +13,20 @@ load addons-common
     [[ "$status" -eq 46 ]]
     [[ "${lines[@]}" =~ "Unknown command: git elegant sdfsdfsd" ]]
 }
+
+@test "'git elegant': a help is provided for each available command" {
+    for COMMAND in $(git-elegant commands) ; do
+        echo "Check help for '${COMMAND}'"
+        check git-elegant ${COMMAND} -h
+        [[ "$status" -eq 0 ]]
+        [ ${#lines[@]} -gt 3 ]
+    done
+}
+
+@test "'git elegant': each command is included in main help message" {
+    check git-elegant --help
+    for COMMAND in $(git-elegant commands) ; do
+        echo "Check presence of '${COMMAND}'"
+        [[ "${lines[@]}" =~ "${COMMAND}" ]]
+    done
+}

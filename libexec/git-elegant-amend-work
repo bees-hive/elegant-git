@@ -1,6 +1,33 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Amends some changes to the most recent commit.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant amend-work
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Updates the most recent commit by adding some changes. The command will fail if
+you'll try to modify history of the default local branch.
+
+Approximate commands flow is
+\`\`\`bash
+==> git elegant amend-work
+git add --interactive
+git diff --cached --check
+git commit --amend
+\`\`\`
+MESSAGE
+}
+
 default(){
     local BRANCH=$(__branches 'git branch | grep \*')
     if [[ "$BRANCH" == "master" ]]; then

@@ -32,6 +32,67 @@ _rebase_autoStash=("rebase.autoStash" "false")
 ## Credentials, MAC only
 _credential_helper_darwin=("credential.helper" "osxkeychain")
 
+command-purpose() {
+    cat <<MESSAGE
+Configures current repository.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant acquire-repository
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+A bunch of git configuration applies to current repository using
+\`git config --local\`. The first part is an interactive configuration which
+aims to set all user-specific options (identity, editor, etc.). The second batch
+applies all options which are required for successful using of Elegant Git.
+Finally, the last part is aliasing Elegant Git commands by making them available
+as regular Git commands.
+
+Approximate commands flow is
+\`\`\`bash
+==> git elegant acquire-repository
+################ Part 1 ################
+git config --local user.name "Dmytro Serdiuk"
+git config --local user.email "dmytro.serdiuk@email.com"
+git config --local core.editor vim
+################ Part 2 ################
+# "|" char starts non-message lines while writing commit message
+git config --local core.commentChar |
+# Remove whitespaces when apply a patch
+git config --local apply.whitespace fix
+# Aliasing Elegant Git commands by making them available as Git commands
+git config --local "alias.<command>" "elegant <command>"
+# Keeping up-to-date with both branches and tags on the remote
+git config --local fetch.prune true
+git config --local fetch.pruneTags true
+# Rebase local changes while puling remotes refs
+git config --local fetch.prune true
+git config --local fetch.pruneTags
+# Line ending configuration
+## on MAC or Linux
+git config --local core.autocrlf input
+## on Windows
+git config --local core.autocrlf true
+# Always rebase when pull
+git config --local pull.rebase true
+# Never autostash if rebase
+git config --local rebase.autoStash false
+# Specify an external helper to be called when a username
+# or password credential is needed (MAC only)
+git config --local credential.helper osxkeychain
+################ Part 3 ################
+# Remove local aliases which contain Elegant Git commands
+git config --local --unset <alias>
+# Add aliases for current commands
+git config --local alias.<command> "elegant <command>"
+\`\`\`
+MESSAGE
+}
 
 __ask_question() {
     # usage: __ask_options <prefix>

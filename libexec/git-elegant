@@ -95,20 +95,74 @@ branch-from-remote-reference() {
     echo ${1} | sed "s|^[a-zA-Z0-9_-]*/||g"
 }
 
-usage() {
-    echo "git elegant <command>"
-    git elegant commands
-    # @todo #6 Describe usage of git elegant
+--print-command-in-usage() { (
+    source "${BINS}/git-elegant-${1}"
+    printf "    %-20s %s\n" "${1}" "$(command-purpose)"
+
+) }
+
+--usage() {
+    cat <<MESSAGE
+
+An assistant who carefully makes routine work with Git.
+
+usage: git elegant [-h|--help|help]
+   or: git elegant <command> [args]
+   or: git elegant <command> [-h|--help|help]
+
+
+There are commands used in various situations such as
+
+ act with a repository
+$(--print-command-in-usage clone-repository)
+$(--print-command-in-usage init-repository)
+$(--print-command-in-usage acquire-repository)
+$(--print-command-in-usage clear-local)
+
+ manage a personal work
+$(--print-command-in-usage start-work)
+$(--print-command-in-usage save-work)
+$(--print-command-in-usage amend-work)
+$(--print-command-in-usage deliver-work)
+
+ operate a flow of work management
+$(--print-command-in-usage obtain-work)
+$(--print-command-in-usage accept-work)
+
+ and others
+$(--print-command-in-usage commands)
+
+
+Please visit ${__site} to find out more.
+
+MESSAGE
+}
+
+--run-command() {
+    # usage: <command name> [arg]...
+    local COMMAND=${1}; shift
+    . "${BINS}/git-elegant-${COMMAND}" 2>/dev/null || {
+        echo "Unknown command: git elegant $COMMAND" && --usage && exit 46
+    }
+    case "${1}" in
+        -h|--help|help)
+            echo ""
+            command-synopsis
+            echo ""
+            command-description
+            echo ""
+            ;;
+        *)  default "$@" ;;
+    esac
 }
 
 main() {
-    local COMMAND="help"
+    local COMMAND="none"
     [[ -n "$1" ]] && COMMAND="$1" && shift
-    [[ "$COMMAND" = "help" ]] && usage && exit 0
-    [[ ! -e "$BINS/git-elegant-$COMMAND" ]] && echo "Unknown command: git elegant $COMMAND" && usage && exit 46
-    . "$BINS/git-elegant-$COMMAND"
-
-    default "$@"
+    case "${COMMAND}" in
+        none|-h|--help|help) --usage                       ;;
+        *)                   --run-command ${COMMAND} "$@" ;;
+    esac
 }
 
 main "$@"
