@@ -28,15 +28,8 @@ MESSAGE
 }
 
 default() {
-    echo "acquire-repository"
-    echo "clone-repository"
-    echo "init-repository"
-    echo "start-work"
-    echo "save-work"
-    echo "deliver-work"
-    echo "accept-work"
-    echo "obtain-work"
-    echo "clear-local"
-    echo "commands"
-    echo "amend-work"
+    local PREFIX="git-elegant-"
+    for FILE in $(ls -1 ${BINS}/${PREFIX}*); do
+        echo $(basename ${FILE} | sed "s/${PREFIX}//")
+    done
 }
