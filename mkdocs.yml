@@ -8,6 +8,7 @@ nav:
   - Home: index.md
   - Getting started: getting-started.md
   - Commands: commands.md
+  - Release notes: https://github.com/bees-hive/elegant-git/releases
   - License: licence.md
 
 copyright: Copyright &copy; 2019 <a href="https://extsoft.pro">Dmytro Serdiuk</a>, Maintained by <a href="https://github.com/bees-hive/elegant-git/graphs/contributors">project contributors</a>.
