@@ -120,6 +120,7 @@ Also, there are several optional addons which can be useful in some circumstance
 2. Use **`check` instead of bats `run`** to execute a command to be tested.
 3. Use **`testtee`** to execute any real command within a test which should not be tested.
 4. If `addons-fake` or `addons-git` is used, call `clean-fake` or `clean-git` within a `teardown()` method.
+5. Do not fake `git-elegant` commands within the tests.
 
 #### Assertions
 - `[[ "${lines[0]}" = "+ the space " ]]` for an output line (index starts from 0)

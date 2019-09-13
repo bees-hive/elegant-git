@@ -24,7 +24,6 @@ Approximate commands flow is
 ==> git elegant start-work task-123
 git stash save elegant-git
 git checkout master
-git fetch --tags
 git pull
 git checkout -b task-123
 git stash apply stash^{/elegant-git}
@@ -36,7 +35,8 @@ MESSAGE
 default() {
     _error-if-empty "$1" "Please give a name for the new branch."
     status=$(boxtee git stash save elegant-git)
-    git elegant obtain-work ${MASTER}
+    git checkout ${MASTER}
+    git pull
     boxtee git checkout -b "$1"
 
     if [[ "$status" =~ "Saved working directory" ]]; then

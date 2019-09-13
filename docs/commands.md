@@ -265,7 +265,6 @@ Approximate commands flow is
 ==> git elegant start-work task-123
 git stash save elegant-git
 git checkout master
-git fetch --tags
 git pull
 git checkout -b task-123
 git stash apply stash^{/elegant-git}
