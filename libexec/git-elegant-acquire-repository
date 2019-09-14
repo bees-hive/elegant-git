@@ -55,7 +55,7 @@ as regular Git commands.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant acquire-repository
+==>> git elegant acquire-repository
 ################ User-specific options ################
 git config --local user.name "Dmytro Serdiuk"
 git config --local user.email "dmytro.serdiuk@email.com"

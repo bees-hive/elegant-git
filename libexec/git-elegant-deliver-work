@@ -21,7 +21,7 @@ equal to the local one.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant deliver-work
+==>> git elegant deliver-work
 git fetch
 git rebase origin/master
 git push --set-upstream --force origin task-123:task-123

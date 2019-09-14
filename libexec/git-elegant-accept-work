@@ -23,7 +23,7 @@ successful push, the given and temporary branches are removed.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant accept-work task-123
+==>> git elegant accept-work task-123
 git fetch --all --tags
 git checkout --force -B __eg origin/task-123
 git status

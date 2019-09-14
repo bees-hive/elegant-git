@@ -20,7 +20,7 @@ as for other cases when you need iteration over the available commands.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant commands
+==>> git elegant commands
 echo <command>
 echo ...
 \`\`\`

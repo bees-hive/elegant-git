@@ -21,7 +21,7 @@ performed.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant save-work
+==>> git elegant save-work
 git add --interactive
 git diff --cached --check
 git commit

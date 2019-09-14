@@ -21,7 +21,7 @@ branch.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant start-work task-123
+==>> git elegant start-work task-123
 git stash save elegant-git
 git checkout master
 git pull

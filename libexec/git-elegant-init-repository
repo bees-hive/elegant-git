@@ -20,7 +20,7 @@ configuration.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant init-repository
+==>> git elegant init-repository
 git init
 git elegant acquire-repository
 \`\`\`

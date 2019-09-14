@@ -22,7 +22,7 @@ have to choose either batch or one-by-one deletion procedure using
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant clear-local
+==>> git elegant clear-local
 git branch -d task-24
 git branch -d 2349
 git branch -D task-1

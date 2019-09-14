@@ -48,7 +48,7 @@ successful push, the given and temporary branches are removed.
 
 Approximate commands flow is
 ```bash
-==> git elegant accept-work task-123
+==>> git elegant accept-work task-123
 git fetch --all --tags
 git checkout --force -B __eg origin/task-123
 git status
@@ -75,7 +75,7 @@ as regular Git commands.
 
 Approximate commands flow is
 ```bash
-==> git elegant acquire-repository
+==>> git elegant acquire-repository
 ################ User-specific options ################
 git config --local user.name "Dmytro Serdiuk"
 git config --local user.email "dmytro.serdiuk@email.com"
@@ -123,7 +123,7 @@ you'll try to modify history of the default local branch.
 
 Approximate commands flow is
 ```bash
-==> git elegant amend-work
+==>> git elegant amend-work
 git add --interactive
 git diff --cached --check
 git commit --amend
@@ -142,7 +142,7 @@ have to choose either batch or one-by-one deletion procedure using
 
 Approximate commands flow is
 ```bash
-==> git elegant clear-local
+==>> git elegant clear-local
 git branch -d task-24
 git branch -d 2349
 git branch -D task-1
@@ -158,7 +158,7 @@ Clones a repository into a new directory and runs its configuration.
 
 Approximate commands flow is
 ```bash
-==> git elegant clone-repository git@github.com:bees-hive/elegant-git.git
+==>> git elegant clone-repository git@github.com:bees-hive/elegant-git.git
 git clone git@github.com:bees-hive/elegant-git.git
 cd elegant-git
 git elegant acquire-repository
@@ -175,7 +175,7 @@ as for other cases when you need iteration over the available commands.
 
 Approximate commands flow is
 ```bash
-==> git elegant commands
+==>> git elegant commands
 echo <command>
 echo ...
 ```
@@ -192,7 +192,7 @@ equal to the local one.
 
 Approximate commands flow is
 ```bash
-==> git elegant deliver-work
+==>> git elegant deliver-work
 git fetch
 git rebase origin/master
 git push --set-upstream --force origin task-123:task-123
@@ -209,7 +209,7 @@ configuration.
 
 Approximate commands flow is
 ```bash
-==> git elegant init-repository
+==>> git elegant init-repository
 git init
 git elegant acquire-repository
 ```
@@ -227,7 +227,7 @@ to the remote one. However, it can be overridden by giving a second argument.
 
 Approximate commands flow is
 ```bash
-==> git elegant obtain-work new-feature task-133
+==>> git elegant obtain-work new-feature task-133
 git fetch --all
 git checkout -B task-133 custom-remote/new-feature
 ```
@@ -244,7 +244,7 @@ performed.
 
 Approximate commands flow is
 ```bash
-==> git elegant save-work
+==>> git elegant save-work
 git add --interactive
 git diff --cached --check
 git commit
@@ -262,7 +262,7 @@ branch.
 
 Approximate commands flow is
 ```bash
-==> git elegant start-work task-123
+==>> git elegant start-work task-123
 git stash save elegant-git
 git checkout master
 git pull

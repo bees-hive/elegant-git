@@ -20,7 +20,7 @@ you'll try to modify history of the default local branch.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant amend-work
+==>> git elegant amend-work
 git add --interactive
 git diff --cached --check
 git commit --amend

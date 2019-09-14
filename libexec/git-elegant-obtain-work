@@ -22,7 +22,7 @@ to the remote one. However, it can be overridden by giving a second argument.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant obtain-work new-feature task-133
+==>> git elegant obtain-work new-feature task-133
 git fetch --all
 git checkout -B task-133 custom-remote/new-feature
 \`\`\`

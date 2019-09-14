@@ -19,7 +19,7 @@ Clones a repository into a new directory and runs its configuration.
 
 Approximate commands flow is
 \`\`\`bash
-==> git elegant clone-repository git@github.com:bees-hive/elegant-git.git
+==>> git elegant clone-repository git@github.com:bees-hive/elegant-git.git
 git clone git@github.com:bees-hive/elegant-git.git
 cd elegant-git
 git elegant acquire-repository
