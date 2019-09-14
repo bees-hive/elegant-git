@@ -31,7 +31,7 @@ MESSAGE
 }
 
 default() {
-    git elegant obtain-work ${MASTER}
+    git-verbose checkout ${MASTER}
     local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
     __loop "git branch -d" $(eval "$cmd") || \
         (
