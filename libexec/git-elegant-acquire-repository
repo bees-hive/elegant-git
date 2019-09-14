@@ -18,7 +18,7 @@ _core_editor_message="Please specify a command to start the editor."
 _core_comment=("core.commentChar" "|")
 _apply_whitespace=("apply.whitespace" "fix")
 _fetch_prune=("fetch.prune" "true")
-_fetch_pruneTags=("fetch.pruneTags" "true")
+_fetch_pruneTags=("fetch.pruneTags" "false")
 ## Line endings
 ## See https://help.github.com/en/articles/configuring-git-to-handle-line-endings
 ### MAC/Linux
@@ -67,12 +67,10 @@ git config --local core.commentChar |
 git config --local apply.whitespace fix
 # Aliasing Elegant Git commands by making them available as Git commands
 git config --local "alias.<command>" "elegant <command>"
-# Keeping up-to-date with both branches and tags on the remote
+# Keep remote-tracking references up-to-date
 git config --local fetch.prune true
-git config --local fetch.pruneTags true
-# Rebase local changes while puling remotes refs
-git config --local fetch.prune true
-git config --local fetch.pruneTags
+# Don't prune tags by default
+git config --local fetch.pruneTags false
 # Line ending configuration
 ## on MAC or Linux
 git config --local core.autocrlf input

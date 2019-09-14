@@ -49,7 +49,7 @@ successful push, the given and temporary branches are removed.
 Approximate commands flow is
 ```bash
 ==>> git elegant accept-work task-123
-git fetch --all --tags
+git fetch --all
 git checkout --force -B __eg origin/task-123
 git status
 git rebase origin/master
@@ -87,9 +87,10 @@ git config --local core.commentChar |
 git config --local apply.whitespace fix
 # Aliasing Elegant Git commands by making them available as Git commands
 git config --local "alias.<command>" "elegant <command>"
-# Keeping up-to-date with both branches and tags on the remote
+# Keeping up-to-date branches
 git config --local fetch.prune true
-git config --local fetch.pruneTags true
+# Don't prune tags by default
+git config --local fetch.pruneTags false
 # Rebase local changes while puling remotes refs
 git config --local fetch.prune true
 git config --local fetch.pruneTags
