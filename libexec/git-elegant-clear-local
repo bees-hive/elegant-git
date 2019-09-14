@@ -33,10 +33,10 @@ MESSAGE
 default() {
     git-verbose checkout ${MASTER}
     local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
-    __loop "git branch -d" $(eval "$cmd") || \
+    __loop "git-verbose branch -d" $(eval "$cmd") || \
         (
             info-text "There are unmerged branches:" && \
             __loop "info-text -" $(eval "$cmd") && \
-            __batch "Do you want to delete all unmerged branches?" "Delete this?" "git branch -D" $(eval "$cmd")
+            __batch "Do you want to delete all unmerged branches?" "Delete this?" "git-verbose branch -D" $(eval "$cmd")
         )
 }
