@@ -37,9 +37,9 @@ default() {
             $(git for-each-ref --format='%(refname:strip=2)' refs/remotes/** | grep "${PATTERN}")
         )
     if [[ ${#REMOTE_BRANCHES[@]} > 1 ]]; then
-        echo "The following branches are found:"
+        info-text "The following branches are found:"
         for branch in ${REMOTE_BRANCHES[@]}; do
-            echo " - ${branch}"
+            info-text " - ${branch}"
         done
         error-box "Please re-run the command with concrete branch name from the list above!"
         exit 43

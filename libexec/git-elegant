@@ -39,9 +39,9 @@ __loop_ask() {
     local m="$1"; shift
     [ -z "$1" ] && return 0
     for i in $@; do
-        info-text "$m [$i] "
+        question-text "$m [$i] (y/n):"
         read answer
-        if [ -z "$answer" ]; then
+        if [[ "${answer}" == "y" ]]; then
             eval "$c $i"
         fi
     done
@@ -59,9 +59,9 @@ __batch() {
     local MM="$1"; shift
     local AM="$1"; shift
     local CM="$1"; shift
-    info-text "$MM "
+    question-text "$MM (y/n): "
     read answer
-    if [ -z "$answer" ]; then
+    if [[ "${answer}" == "y" ]]; then
         __loop "$CM" $@
     else
         __loop_ask "$CM" "$AM" $@

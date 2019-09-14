@@ -17,8 +17,8 @@ TEXT_FORMAT_BOLD=1
 TEXT_FORMAT_UNDERLINE=4
 TEXT_FORMAT_BLINKING=5
 
---colored-text() {
-    # usage: --colored-text <format> <color> <message>...
+--colored-line() {
+    # usage: --colored-line <format> <color> <message>...
     local COLOR=""
     local RESET=""
     if [[ -t 1 ]]; then
@@ -33,6 +33,11 @@ TEXT_FORMAT_BLINKING=5
         prefix=" "
     done
     printf "${RESET}"
+}
+
+--colored-text() {
+    # usage: --colored-text <format> <color> <message>...
+    --colored-line "$@"
     printf "\n"
 }
 
@@ -76,4 +81,9 @@ error-text() {
 error-box() {
     # Display an error message within a multi-line log
     --box-text error-text "$@"
+}
+
+question-text() {
+    # Display a question on current cursor's line
+    --colored-line ${TEXT_FORMAT_NORMAL} ${TEXT_COLOR_PURPLE} "$@"
 }

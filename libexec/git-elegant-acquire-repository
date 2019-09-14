@@ -56,11 +56,11 @@ as regular Git commands.
 Approximate commands flow is
 \`\`\`bash
 ==> git elegant acquire-repository
-################ Part 1 ################
+################ User-specific options ################
 git config --local user.name "Dmytro Serdiuk"
 git config --local user.email "dmytro.serdiuk@email.com"
 git config --local core.editor vim
-################ Part 2 ################
+################ Mandatory options ################
 # "|" char starts non-message lines while writing commit message
 git config --local core.commentChar |
 # Remove whitespaces when apply a patch
@@ -85,7 +85,7 @@ git config --local rebase.autoStash false
 # Specify an external helper to be called when a username
 # or password credential is needed (MAC only)
 git config --local credential.helper osxkeychain
-################ Part 3 ################
+################ Aliases ################
 # Remove local aliases which contain Elegant Git commands
 git config --local --unset <alias>
 # Add aliases for current commands
@@ -97,17 +97,17 @@ MESSAGE
 __ask_question() {
     # usage: __ask_options <prefix>
     # it makes available ANSWER available
-    message=$(eval "echo -n \$${1}_message")
-    echo -n "$message"
-    default=$(eval "echo -n \$${1}_default")
-    if [[ -n "$default" ]]; then echo -n " {$default}"; fi
-    echo -n ": "
+    local message=$(eval "echo -n \$${1}_message")
+    local default=$(eval "echo -n \$${1}_default")
+    if [[ -n "$default" ]]; then message="${message} {$default}"; fi
+    question-text "${message}: "
     read answer
     export ANSWER=${answer:-$default}
 }
 
 __interactive-configuration() {
-    info-box "Interactive configuration. Please hit enter if you wish {default value}."
+    info-box "Configuring user-specific options..."
+    info-text "Please hit enter if you wish {default value}."
     FUNCTIONS=$@
     for f in ${FUNCTIONS[@]}; do
         unset ANSWER
@@ -122,6 +122,7 @@ __interactive-configuration() {
 
 __mandatory-configuration() {
     # usage: __mandatory-configuration <name of array> ...
+    info-box "Configuring mandatory options..."
     for config in ${@}; do
         local os=$(uname -s)
         if [[ "Darwin Linux" =~ "${os}" ]]; then
@@ -137,21 +138,23 @@ __mandatory-configuration() {
     done
 }
 __remove-old-aliases() {
+    info-box "Removing old Git Elegant aliases..."
     old_aliases=($(git config --get-regexp ^alias\. | grep "elegant " | cut -f 1 -d " "))
     if [[ ${#old_aliases[@]} -ne 0 ]]; then
         local counter=0
         for old in ${old_aliases[@]}; do
             git-verbose config --local --unset ${old} &&
             counter=$((counter+1)) ||
-            info-box "Non-local alias! Remove it if needed using 'git config --global --unset ${old}'"
+            info-text "Non-local alias! Remove it if needed using 'git config --global --unset ${old}'"
         done
-        info-box "${counter} git aliases were removed that contained 'elegant git' reference."
+        info-text "${counter} git aliases were removed that contained 'elegant git' reference."
     else
-        info-box "There are no git aliases which contain 'elegant git' reference."
+        info-text "There are no git aliases which contain 'elegant git' reference."
     fi
 }
 
 __aliases-configuration() {
+    info-box "Configuring Elegant Git aliases..."
     for command in ${@}; do
         local alias=${command}
         local origin="elegant ${command}"

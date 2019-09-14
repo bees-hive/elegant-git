@@ -76,11 +76,11 @@ as regular Git commands.
 Approximate commands flow is
 ```bash
 ==> git elegant acquire-repository
-################ Part 1 ################
+################ User-specific options ################
 git config --local user.name "Dmytro Serdiuk"
 git config --local user.email "dmytro.serdiuk@email.com"
 git config --local core.editor vim
-################ Part 2 ################
+################ Mandatory options ################
 # "|" char starts non-message lines while writing commit message
 git config --local core.commentChar |
 # Remove whitespaces when apply a patch
@@ -105,7 +105,7 @@ git config --local rebase.autoStash false
 # Specify an external helper to be called when a username
 # or password credential is needed (MAC only)
 git config --local credential.helper osxkeychain
-################ Part 3 ################
+################ Aliases ################
 # Remove local aliases which contain Elegant Git commands
 git config --local --unset <alias>
 # Add aliases for current commands
