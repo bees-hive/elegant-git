@@ -32,7 +32,7 @@ MESSAGE
 default() {
     local PATTERN=${1}
     _error-if-empty "${PATTERN}" "Please provide a branch name or its part."
-    boxtee git fetch --all
+    git-verbose fetch --all
     local REMOTE_BRANCHES=(
             $(git for-each-ref --format='%(refname:strip=2)' refs/remotes/** | grep "${PATTERN}")
         )
@@ -41,7 +41,7 @@ default() {
         for branch in ${REMOTE_BRANCHES[@]}; do
             echo " - ${branch}"
         done
-        box "Please re-run the command with concrete branch name from the list above!"
+        error-box "Please re-run the command with concrete branch name from the list above!"
         exit 43
     fi
     if [[ ${#REMOTE_BRANCHES[@]} = 1 ]]; then
@@ -50,9 +50,9 @@ default() {
         if [[ -z ${LOCAL} ]]; then
             LOCAL=$(branch-from-remote-reference ${REMOTE})
         fi
-        boxtee git checkout -B ${LOCAL} ${REMOTE}
+        git-verbose checkout -B ${LOCAL} ${REMOTE}
     else
-        box "There is no branch that matches the '${PATTERN}' pattern."
+        error-box "There is no branch that matches the '${PATTERN}' pattern."
         exit 43
     fi
 }

@@ -40,8 +40,8 @@ MESSAGE
 default() {
     local WORK_BRANCH="__eg"
     git elegant obtain-work "${1}" "${WORK_BRANCH}"
-    boxtee git status
-    boxtee git rebase ${RMASTER}
+    git-verbose status
+    git-verbose rebase ${RMASTER}
     # @todo #137 Alternative flows of `accept-work`
     #  If this command is executed with `${WORK_BRANCH}` and
     #  1. `git rebase` is in progress, it has to run `git rebase --continue` prior working with
@@ -49,9 +49,9 @@ default() {
     #  2. `git rebase` is completed (history of `${WORK_BRANCH}` and `${RMASTER}` are different),
     #  just work with `${MASTER}` branch.
     local ACTUAL_REMOTE=$(git for-each-ref --format='%(upstream:short)' refs/heads/${WORK_BRANCH})
-    boxtee git checkout ${MASTER}
-    boxtee git merge --ff-only ${WORK_BRANCH}
-    boxtee git push ${REMOTE_NAME} ${MASTER}:${MASTER}
-    boxtee git branch --delete --force ${WORK_BRANCH}
-    boxtee git push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${ACTUAL_REMOTE})
+    git-verbose checkout ${MASTER}
+    git-verbose merge --ff-only ${WORK_BRANCH}
+    git-verbose push ${REMOTE_NAME} ${MASTER}:${MASTER}
+    git-verbose branch --delete --force ${WORK_BRANCH}
+    git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${ACTUAL_REMOTE})
 }

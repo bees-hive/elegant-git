@@ -80,8 +80,12 @@ it. Each command file has to provide the following BASH functions:
 ### Coding rules
 We enforce having a consistent implementation by following the next strict rules:
 - add `#!/usr/bin/env bash` at the beginning of each script
-- use `boxtee` to execute each original `git` command
+- use `git-verbose` instead of `git` if you need to print a `git`'s command to CLI
 - a private function (a usage in the scope of current script) should be prefixed with `--`
+
+If you need to write a message to the system output, please use public functions in
+[libexec/plugins/text](libexec/plugins/text). All help messages have to use `cat`
+for printing them.
 
 ### Debug mode
 You can enable debug mode by running `export GED=1` (the equivalent of `set -x` for `bash`). 

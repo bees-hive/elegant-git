@@ -107,14 +107,14 @@ __ask_question() {
 }
 
 __interactive-configuration() {
-    box "Interactive configuration. Please hit enter if you wish {default value}."
+    info-box "Interactive configuration. Please hit enter if you wish {default value}."
     FUNCTIONS=$@
     for f in ${FUNCTIONS[@]}; do
         unset ANSWER
         while [ -z "${ANSWER}" ]; do
             __ask_question ${f}
             if [[ -n "${ANSWER}" ]]; then
-                boxtee git config --local $(eval "echo -n \$${f}_key") "${ANSWER}"
+                git-verbose config --local $(eval "echo -n \$${f}_key") "${ANSWER}"
             fi
         done
     done
@@ -133,7 +133,7 @@ __mandatory-configuration() {
             [[ "${config}" =~ "darwin" || "${config}" =~ "linux" ]] && continue
         fi
         local data=($(eval "echo -n \${${config}[@]}"))
-        boxtee git config --local ${data[0]} ${data[1]}
+        git-verbose config --local ${data[0]} ${data[1]}
     done
 }
 __remove-old-aliases() {
@@ -141,13 +141,13 @@ __remove-old-aliases() {
     if [[ ${#old_aliases[@]} -ne 0 ]]; then
         local counter=0
         for old in ${old_aliases[@]}; do
-            boxtee git config --local --unset ${old} &&
+            git-verbose config --local --unset ${old} &&
             counter=$((counter+1)) ||
-            box "Non-local alias! Remove it if needed using 'git config --global --unset ${old}'"
+            info-box "Non-local alias! Remove it if needed using 'git config --global --unset ${old}'"
         done
-        box "${counter} git aliases were removed that contained 'elegant git' reference."
+        info-box "${counter} git aliases were removed that contained 'elegant git' reference."
     else
-        box "There are no git aliases which contain 'elegant git' reference."
+        info-box "There are no git aliases which contain 'elegant git' reference."
     fi
 }
 
@@ -155,7 +155,7 @@ __aliases-configuration() {
     for command in ${@}; do
         local alias=${command}
         local origin="elegant ${command}"
-        boxtee git config --local "alias.${alias}" "${origin}"
+        git-verbose config --local "alias.${alias}" "${origin}"
     done
 }
 

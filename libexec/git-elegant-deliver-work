@@ -32,10 +32,10 @@ MESSAGE
 default() {
     local BRANCH=$(__branches 'git branch | grep \*')
     if [[ "$BRANCH" == "master" ]]; then
-        box "No pushes to 'master' branch. Please read more on ${__site}"
+        error-box "No pushes to 'master' branch. Please read more on ${__site}"
         exit 42
     fi
-    boxtee git fetch
-    boxtee git rebase ${RMASTER}
-    boxtee git push --set-upstream --force origin ${BRANCH}:${BRANCH}
+    git-verbose fetch
+    git-verbose rebase ${RMASTER}
+    git-verbose push --set-upstream --force origin ${BRANCH}:${BRANCH}
 }

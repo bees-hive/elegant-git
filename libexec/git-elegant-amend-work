@@ -31,11 +31,11 @@ MESSAGE
 default(){
     local BRANCH=$(__branches 'git branch | grep \*')
     if [[ "$BRANCH" == "master" ]]; then
-        box "No commits to 'master' branch. Please read more on ${__site}"
-        box "Try 'git elegant start-work' prior to retrying this command."
+        error-box "No commits to 'master' branch. Please read more on ${__site}"
+        error-box "Try 'git elegant start-work' prior to retrying this command."
         exit 42
     fi
-    boxtee git add --interactive
-    boxtee git diff --cached --check
-    boxtee git commit --amend
+    git-verbose add --interactive
+    git-verbose diff --cached --check
+    git-verbose commit --amend
 }

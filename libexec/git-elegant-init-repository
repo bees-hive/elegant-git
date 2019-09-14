@@ -28,6 +28,6 @@ MESSAGE
 }
 
 default() {
-    boxtee git init
+    git-verbose init
     git elegant acquire-repository
 }

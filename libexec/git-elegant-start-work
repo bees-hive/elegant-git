@@ -34,13 +34,13 @@ MESSAGE
 
 default() {
     _error-if-empty "$1" "Please give a name for the new branch."
-    status=$(boxtee git stash save elegant-git)
-    git checkout ${MASTER}
-    git pull
-    boxtee git checkout -b "$1"
+    status=$(git-verbose stash save elegant-git)
+    git-verbose checkout ${MASTER}
+    git-verbose pull
+    git-verbose checkout -b "$1"
 
     if [[ "$status" =~ "Saved working directory" ]]; then
-        boxtee git stash apply stash^{/elegant-git}
-        boxtee git stash drop stash@{0}
+        git-verbose stash apply stash^{/elegant-git}
+        git-verbose stash drop stash@{0}
     fi
 }

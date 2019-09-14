@@ -6,36 +6,14 @@ set -e
 # It registers all "libexec" scripts.
 BINS=$(dirname ${0})
 export PATH=${BINS}:${PATH}
+source ${BINS}/plugins/text
 
-__red=`tput setaf 1`
-__green=`tput setaf 2`
-__magenta=`tput setaf 5`
-__reset=`tput sgr0`
 __site="https://elegant-git.bees-hive.org"
 
-box(){
-    t="$@xxxxxx"
-    c=${replace:-=}
-    echo ${t//?/$c}
-    echo "$c$c $@ $c$c"
-    echo ${t//?/$c}
-}
 
-boxtee() {
-    box "$@"
-    "$@"
-}
-
-__gm() {
-    echo "${__green}$@${__reset}"
-}
-
-__rm() {
-    echo "${__red}$@${__reset}"
-}
-
-__mmn() {
-    echo -n "${__magenta}$@${__reset}"
+git-verbose() {
+    command-text "git $@"
+    git "$@"
 }
 
 MASTER="master"
@@ -45,7 +23,7 @@ RMASTER="${REMOTE_NAME}/master"
 _error-if-empty() {
     # _error-if-empty <a value to check> <error message>
     if [[ -z "$1" ]]; then
-        __rm "$2"
+        error-text "$2"
         exit 45
     fi
 }
@@ -61,7 +39,7 @@ __loop_ask() {
     local m="$1"; shift
     [ -z "$1" ] && return 0
     for i in $@; do
-        __mmn "$m [$i] "
+        info-text "$m [$i] "
         read answer
         if [ -z "$answer" ]; then
             eval "$c $i"
@@ -81,7 +59,7 @@ __batch() {
     local MM="$1"; shift
     local AM="$1"; shift
     local CM="$1"; shift
-    __mmn "$MM "
+    info-text "$MM "
     read answer
     if [ -z "$answer" ]; then
         __loop "$CM" $@

@@ -11,8 +11,10 @@ copy(){
     local FROM=${1}
     local INTO=${2}
     install -d -m 755 ${INTO}/{bin,libexec,completions}
-    install -m 755 ${FROM}/bin/* ${INTO}/bin
-    install -m 755 ${FROM}/libexec/* ${INTO}/libexec
+    install -d -m 755 ${INTO}/libexec/plugins
+    install -m 755 ${FROM}/bin/git* ${INTO}/bin
+    install -m 755 ${FROM}/libexec/git* ${INTO}/libexec
+    install -m 755 ${FROM}/libexec/plugins/* ${INTO}/libexec/plugins
     install -m 644 ${FROM}/completions/* ${INTO}/completions
     install -m 644 ${FROM}/LICENSE ${INTO}
     install -m 644 ${FROM}/README.md ${INTO}

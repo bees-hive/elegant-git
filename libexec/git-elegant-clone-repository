@@ -29,7 +29,7 @@ MESSAGE
 
 default() {
     _error-if-empty "$1" "Cloneable URL is not set."
-    boxtee git clone "$1"
+    git-verbose clone "$1"
     cd $(basename -s .git $1)
     git elegant acquire-repository
 }
