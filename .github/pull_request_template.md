@@ -1,4 +1,4 @@
-The prosed changes appertain to #_.
+The proposed changes appertain to #_.
 
 The contribution:
 - [ ] updates all affected documentation
