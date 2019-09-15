@@ -26,7 +26,7 @@ pipeline() {
     (
         ./.wf/docs-generation.bash
         git update-index --refresh
-        git diff-index HEAD --
+        git diff-index --quiet HEAD --
     ) || fail "The documentation is not up to date. Please run './.wf/docs-generation.bash' and commit the changes"
 
 }
