@@ -87,13 +87,10 @@ git config --local core.commentChar |
 git config --local apply.whitespace fix
 # Aliasing Elegant Git commands by making them available as Git commands
 git config --local "alias.<command>" "elegant <command>"
-# Keeping up-to-date branches
+# Keep remote-tracking references up-to-date
 git config --local fetch.prune true
 # Don't prune tags by default
 git config --local fetch.pruneTags false
-# Rebase local changes while puling remotes refs
-git config --local fetch.prune true
-git config --local fetch.pruneTags
 # Line ending configuration
 ## on MAC or Linux
 git config --local core.autocrlf input
