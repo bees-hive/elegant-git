@@ -22,6 +22,7 @@ pipeline() {
     mkdocs build --clean --strict                     || fail "Unable to build the documentation."
     pdd --exclude=.idea/**/* \
         --exclude=site/**/* \
+        --exclude=docs/*.png \
         --verbose --file=/dev/null                    || fail "Unreadable todo is identified."
     (
         ./.wf/docs-generation.bash

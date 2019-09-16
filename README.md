@@ -17,8 +17,10 @@
 # Elegant Git
 Elegant Git is an assistant who carefully makes routine work with Git.
 
-Please visit <https://elegant-git.bees-hive.org/> to get started with user documentation or continue
-reading to get the project's development details.
+Please visit <https://elegant-git.bees-hive.org/> to get started with user documentation or
+click on the picture :point_down::point_down::point_down: to see a demo.
+
+[![Elegant Git Demo](docs/git-elegant-demo.png)](http://www.youtube.com/watch?v=Py6bpwJw30I)
 
 ---
 

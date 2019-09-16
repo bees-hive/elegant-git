@@ -12,6 +12,10 @@ Used philosophy
 > _Sounds interesting? Go to [getting started](getting-started.md) guide or take a look for
 available [commands](commands.md)._
 
+<center><iframe width="560" height="315" src="https://www.youtube.com/embed/Py6bpwJw30I"
+frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope;
+picture-in-picture" allowfullscreen></iframe></center>
+
 Elegant Git encourages using of
 [GitHub flow](https://guides.github.com/introduction/flow/). However, you can try to apply it to
 your branching strategy as well.
