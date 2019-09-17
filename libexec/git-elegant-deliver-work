@@ -37,5 +37,9 @@ default() {
     fi
     git-verbose fetch
     git-verbose rebase ${RMASTER}
-    git-verbose push --set-upstream --force origin ${BRANCH}:${BRANCH}
+    local REMOTE_BRANCH=${BRANCH}
+    if [ -n "${1}" ]; then
+        REMOTE_BRANCH=${1}
+    fi
+    boxtee git push --set-upstream --force origin ${BRANCH}:${REMOTE_BRANCH}
 }

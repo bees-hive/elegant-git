@@ -184,9 +184,14 @@ echo ...
 usage: git elegant deliver-work
 ```
 
+```bash
+usage: git elegant deliver-work 'remote-branch'
+```
+
 Updates the current branch by rebasing the default upstream branch. Then,
 it pushes HEAD to appropriate upstream branch. The name of remote branch is
-equal to the local one.
+equal to the local one (example 1). If the name of remote branch and the 
+local one is different you can pass the name of remote branch (example 2)
 
 Approximate commands flow is
 ```bash
