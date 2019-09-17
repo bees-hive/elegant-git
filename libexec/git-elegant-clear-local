@@ -1,13 +1,42 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Removes obsolete local branches.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant clear-local
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Identifies local branches for which remote branches were removed. Then, it
+removes them by invoking \`git branch -d\`. If there are unmerged branches, you
+have to choose either batch or one-by-one deletion procedure using
+\`git branch -D\`.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant clear-local
+git branch -d task-24
+git branch -d 2349
+git branch -D task-1
+\`\`\`
+MESSAGE
+}
+
 default() {
-    git elegant obtain-work ${MASTER}
+    git-verbose checkout ${MASTER}
     local cmd="git branch -lvv | grep gone | awk {'print \$1'}"
-    __loop "git branch -d" $(eval "$cmd") || \
+    __loop "git-verbose branch -d" $(eval "$cmd") || \
         (
-            __gm "There are unmerged branches:" && \
-            __loop "__gm -" $(eval "$cmd") && \
-            __batch "Do you want to delete all unmerged branches?" "Delete this?" "git branch -D" $(eval "$cmd")
+            info-text "There are unmerged branches:" && \
+            __loop "info-text -" $(eval "$cmd") && \
+            __batch "Do you want to delete all unmerged branches?" "Delete this?" "git-verbose branch -D" $(eval "$cmd")
         )
 }

@@ -18,7 +18,7 @@ _core_editor_message="Please specify a command to start the editor."
 _core_comment=("core.commentChar" "|")
 _apply_whitespace=("apply.whitespace" "fix")
 _fetch_prune=("fetch.prune" "true")
-_fetch_pruneTags=("fetch.pruneTags" "true")
+_fetch_pruneTags=("fetch.pruneTags" "false")
 ## Line endings
 ## See https://help.github.com/en/articles/configuring-git-to-handle-line-endings
 ### MAC/Linux
@@ -32,28 +32,87 @@ _rebase_autoStash=("rebase.autoStash" "false")
 ## Credentials, MAC only
 _credential_helper_darwin=("credential.helper" "osxkeychain")
 
+command-purpose() {
+    cat <<MESSAGE
+Configures current repository.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant acquire-repository
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+A bunch of git configuration applies to current repository using
+\`git config --local\`. The first part is an interactive configuration which
+aims to set all user-specific options (identity, editor, etc.). The second batch
+applies all options which are required for successful using of Elegant Git.
+Finally, the last part is aliasing Elegant Git commands by making them available
+as regular Git commands.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant acquire-repository
+################ User-specific options ################
+git config --local user.name "Dmytro Serdiuk"
+git config --local user.email "dmytro.serdiuk@email.com"
+git config --local core.editor vim
+################ Mandatory options ################
+# "|" char starts non-message lines while writing commit message
+git config --local core.commentChar |
+# Remove whitespaces when apply a patch
+git config --local apply.whitespace fix
+# Aliasing Elegant Git commands by making them available as Git commands
+git config --local "alias.<command>" "elegant <command>"
+# Keep remote-tracking references up-to-date
+git config --local fetch.prune true
+# Don't prune tags by default
+git config --local fetch.pruneTags false
+# Line ending configuration
+## on MAC or Linux
+git config --local core.autocrlf input
+## on Windows
+git config --local core.autocrlf true
+# Always rebase when pull
+git config --local pull.rebase true
+# Never autostash if rebase
+git config --local rebase.autoStash false
+# Specify an external helper to be called when a username
+# or password credential is needed (MAC only)
+git config --local credential.helper osxkeychain
+################ Aliases ################
+# Remove local aliases which contain Elegant Git commands
+git config --local --unset <alias>
+# Add aliases for current commands
+git config --local alias.<command> "elegant <command>"
+\`\`\`
+MESSAGE
+}
 
 __ask_question() {
     # usage: __ask_options <prefix>
     # it makes available ANSWER available
-    message=$(eval "echo -n \$${1}_message")
-    echo -n "$message"
-    default=$(eval "echo -n \$${1}_default")
-    if [[ -n "$default" ]]; then echo -n " {$default}"; fi
-    echo -n ": "
+    local message=$(eval "echo -n \$${1}_message")
+    local default=$(eval "echo -n \$${1}_default")
+    if [[ -n "$default" ]]; then message="${message} {$default}"; fi
+    question-text "${message}: "
     read answer
     export ANSWER=${answer:-$default}
 }
 
 __interactive-configuration() {
-    box "Interactive configuration. Please hit enter if you wish {default value}."
+    info-box "Configuring user-specific options..."
+    info-text "Please hit enter if you wish {default value}."
     FUNCTIONS=$@
     for f in ${FUNCTIONS[@]}; do
         unset ANSWER
         while [ -z "${ANSWER}" ]; do
             __ask_question ${f}
             if [[ -n "${ANSWER}" ]]; then
-                boxtee git config --local $(eval "echo -n \$${f}_key") "${ANSWER}"
+                git-verbose config --local $(eval "echo -n \$${f}_key") "${ANSWER}"
             fi
         done
     done
@@ -61,6 +120,7 @@ __interactive-configuration() {
 
 __mandatory-configuration() {
     # usage: __mandatory-configuration <name of array> ...
+    info-box "Configuring mandatory options..."
     for config in ${@}; do
         local os=$(uname -s)
         if [[ "Darwin Linux" =~ "${os}" ]]; then
@@ -72,29 +132,31 @@ __mandatory-configuration() {
             [[ "${config}" =~ "darwin" || "${config}" =~ "linux" ]] && continue
         fi
         local data=($(eval "echo -n \${${config}[@]}"))
-        boxtee git config --local ${data[0]} ${data[1]}
+        git-verbose config --local ${data[0]} ${data[1]}
     done
 }
 __remove-old-aliases() {
+    info-box "Removing old Git Elegant aliases..."
     old_aliases=($(git config --get-regexp ^alias\. | grep "elegant " | cut -f 1 -d " "))
     if [[ ${#old_aliases[@]} -ne 0 ]]; then
         local counter=0
         for old in ${old_aliases[@]}; do
-            boxtee git config --local --unset ${old} &&
+            git-verbose config --local --unset ${old} &&
             counter=$((counter+1)) ||
-            box "Non-local alias! Remove it if needed using 'git config --global --unset ${old}'"
+            info-text "Non-local alias! Remove it if needed using 'git config --global --unset ${old}'"
         done
-        box "${counter} git aliases were removed that contained 'elegant git' reference."
+        info-text "${counter} git aliases were removed that contained 'elegant git' reference."
     else
-        box "There are no git aliases which contain 'elegant git' reference."
+        info-text "There are no git aliases which contain 'elegant git' reference."
     fi
 }
 
 __aliases-configuration() {
+    info-box "Configuring Elegant Git aliases..."
     for command in ${@}; do
         local alias=${command}
         local origin="elegant ${command}"
-        boxtee git config --local "alias.${alias}" "${origin}"
+        git-verbose config --local "alias.${alias}" "${origin}"
     done
 }
 

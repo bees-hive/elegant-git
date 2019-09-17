@@ -11,8 +11,10 @@ copy(){
     local FROM=${1}
     local INTO=${2}
     install -d -m 755 ${INTO}/{bin,libexec,completions}
-    install -m 755 ${FROM}/bin/* ${INTO}/bin
-    install -m 755 ${FROM}/libexec/* ${INTO}/libexec
+    install -d -m 755 ${INTO}/libexec/plugins
+    install -m 755 ${FROM}/bin/git* ${INTO}/bin
+    install -m 755 ${FROM}/libexec/git* ${INTO}/libexec
+    install -m 755 ${FROM}/libexec/plugins/* ${INTO}/libexec/plugins
     install -m 644 ${FROM}/completions/* ${INTO}/completions
     install -m 644 ${FROM}/LICENSE ${INTO}
     install -m 644 ${FROM}/README.md ${INTO}
@@ -48,6 +50,15 @@ main() {
         copy ${0%/*} ${INSTALL_PATH}
     fi
     echo "'elegant git' is installed to '${INSTALL_PATH}/bin/git-elegant'."
+    echo "
+The final step after installation is to run
+    git elegant acquire-repository
+for each git repository where Elegant Git is going to be used.
+
+If this step is not completed, Elegant Git may behave unexpectedly
+since the desired Git configuration (relevant for the current version)
+is not applied.
+"
     command -v git-elegant 1>/dev/null 2>&1 || next-steps ${INSTALL_PATH}
 }
 

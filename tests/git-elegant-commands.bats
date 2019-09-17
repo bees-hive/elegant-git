@@ -22,10 +22,10 @@ teardown() {
         "amend-work"
     )
     check git-elegant commands
-    for command in {0..12}; do
-        [ "${lines[$command]}" = "${COMMANDS[$command]}" ]
+    [ ${#lines[@]} -eq ${#COMMANDS[@]} ]
+    for command in ${COMMANDS[@]}; do
+        [[ "${lines[@]}" =~ "${command}" ]]
     done
-    [ ${#lines[@]} -eq 11 ]
 }
 
 @test "'commands': default exit code is 0" {

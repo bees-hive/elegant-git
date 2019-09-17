@@ -6,36 +6,14 @@ set -e
 # It registers all "libexec" scripts.
 BINS=$(dirname ${0})
 export PATH=${BINS}:${PATH}
+source ${BINS}/plugins/text
 
-__red=`tput setaf 1`
-__green=`tput setaf 2`
-__magenta=`tput setaf 5`
-__reset=`tput sgr0`
 __site="https://elegant-git.bees-hive.org"
 
-box(){
-    t="$@xxxxxx"
-    c=${replace:-=}
-    echo ${t//?/$c}
-    echo "$c$c $@ $c$c"
-    echo ${t//?/$c}
-}
 
-boxtee() {
-    box "$@"
-    "$@"
-}
-
-__gm() {
-    echo "${__green}$@${__reset}"
-}
-
-__rm() {
-    echo "${__red}$@${__reset}"
-}
-
-__mmn() {
-    echo -n "${__magenta}$@${__reset}"
+git-verbose() {
+    command-text "git $@"
+    git "$@"
 }
 
 MASTER="master"
@@ -45,7 +23,7 @@ RMASTER="${REMOTE_NAME}/master"
 _error-if-empty() {
     # _error-if-empty <a value to check> <error message>
     if [[ -z "$1" ]]; then
-        __rm "$2"
+        error-text "$2"
         exit 45
     fi
 }
@@ -61,9 +39,9 @@ __loop_ask() {
     local m="$1"; shift
     [ -z "$1" ] && return 0
     for i in $@; do
-        __mmn "$m [$i] "
+        question-text "$m [$i] (y/n):"
         read answer
-        if [ -z "$answer" ]; then
+        if [[ "${answer}" == "y" ]]; then
             eval "$c $i"
         fi
     done
@@ -81,29 +59,88 @@ __batch() {
     local MM="$1"; shift
     local AM="$1"; shift
     local CM="$1"; shift
-    __mmn "$MM "
+    question-text "$MM (y/n): "
     read answer
-    if [ -z "$answer" ]; then
+    if [[ "${answer}" == "y" ]]; then
         __loop "$CM" $@
     else
         __loop_ask "$CM" "$AM" $@
     fi
 }
 
-usage() {
-    echo "git elegant <command>"
-    git elegant commands
-    # @todo #6 Describe usage of git elegant
+branch-from-remote-reference() {
+    # usage: branch-from-remote-reference <full reference name>
+    echo ${1} | sed "s|^[a-zA-Z0-9_-]*/||g"
+}
+
+--print-command-in-usage() { (
+    source "${BINS}/git-elegant-${1}"
+    printf "    %-20s %s\n" "${1}" "$(command-purpose)"
+
+) }
+
+--usage() {
+    cat <<MESSAGE
+
+An assistant who carefully makes routine work with Git.
+
+usage: git elegant [-h|--help|help]
+   or: git elegant <command> [args]
+   or: git elegant <command> [-h|--help|help]
+
+
+There are commands used in various situations such as
+
+ act with a repository
+$(--print-command-in-usage clone-repository)
+$(--print-command-in-usage init-repository)
+$(--print-command-in-usage acquire-repository)
+$(--print-command-in-usage clear-local)
+
+ manage a personal work
+$(--print-command-in-usage start-work)
+$(--print-command-in-usage save-work)
+$(--print-command-in-usage amend-work)
+$(--print-command-in-usage deliver-work)
+
+ operate a flow of work management
+$(--print-command-in-usage obtain-work)
+$(--print-command-in-usage accept-work)
+
+ and others
+$(--print-command-in-usage commands)
+
+
+Please visit ${__site} to find out more.
+
+MESSAGE
+}
+
+--run-command() {
+    # usage: <command name> [arg]...
+    local COMMAND=${1}; shift
+    . "${BINS}/git-elegant-${COMMAND}" 2>/dev/null || {
+        echo "Unknown command: git elegant $COMMAND" && --usage && exit 46
+    }
+    case "${1}" in
+        -h|--help|help)
+            echo ""
+            command-synopsis
+            echo ""
+            command-description
+            echo ""
+            ;;
+        *)  default "$@" ;;
+    esac
 }
 
 main() {
-    local COMMAND="help"
+    local COMMAND="none"
     [[ -n "$1" ]] && COMMAND="$1" && shift
-    [[ "$COMMAND" = "help" ]] && usage && exit 0
-    [[ ! -e "$BINS/git-elegant-$COMMAND" ]] && echo "Unknown command: git elegant $COMMAND" && usage && exit 46
-    . "$BINS/git-elegant-$COMMAND"
-
-    default "$@"
+    case "${COMMAND}" in
+        none|-h|--help|help) --usage                       ;;
+        *)                   --run-command ${COMMAND} "$@" ;;
+    esac
 }
 
 main "$@"

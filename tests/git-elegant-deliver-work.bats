@@ -15,7 +15,7 @@ teardown() {
     fake-pass git "push --set-upstream --force origin feature1:feature1"
     check git-elegant deliver-work
     [ "$status" -eq 0 ]
-    [ "${lines[7]}" = "== git push --set-upstream --force origin feature1:feature1 ==" ]
+    [[ "${lines[@]}" =~ "git push --set-upstream --force origin feature1:feature1" ]]
 }
 
 @test "'deliver-work': exit code is 42 when current local branch is master" {

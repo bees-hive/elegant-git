@@ -1,17 +1,41 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Publishes current branch to a remote repository.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant deliver-work
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Updates the current branch by rebasing the default upstream branch. Then,
+it pushes HEAD to appropriate upstream branch. The name of remote branch is
+equal to the local one.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant deliver-work
+git fetch
+git rebase origin/master
+git push --set-upstream --force origin task-123:task-123
+\`\`\`
+MESSAGE
+}
+
 default() {
     local BRANCH=$(__branches 'git branch | grep \*')
     if [[ "$BRANCH" == "master" ]]; then
-        box "No pushes to 'master' branch. Please read more on ${__site}"
+        error-box "No pushes to 'master' branch. Please read more on ${__site}"
         exit 42
     fi
-    boxtee git fetch
-    boxtee git rebase ${RMASTER}
-   if [[ ! -z "$REMOTE_BRANCH" ]]; then
-        boxtee git push --set-upstream --force origin :${REMOTE_BRANCH}${BRANCH}
-    else
-        boxtee git push --set-upstream --force origin ${BRANCH}:${BRANCH}
-    fi
+    git-verbose fetch
+    git-verbose rebase ${RMASTER}
+    git-verbose push --set-upstream --force origin ${BRANCH}:${BRANCH}
 }

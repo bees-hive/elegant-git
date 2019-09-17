@@ -1,7 +1,33 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Initializes a new repository and configures it.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant init-repository
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Creates an empty Git repository (or reinitialize an existing one) and runs its
+configuration.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant init-repository
+git init
+git elegant acquire-repository
+\`\`\`
+MESSAGE
+}
+
 default() {
-    boxtee git init
+    git-verbose init
     git elegant acquire-repository
 }

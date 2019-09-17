@@ -1,14 +1,42 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Commits current modifications.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant save-work
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Saves available changes as a new commit. You can choose which modifications
+should be added. If there are trailing whitespaces, the commit won't be
+performed.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant save-work
+git add --interactive
+git diff --cached --check
+git commit
+\`\`\`
+MESSAGE
+}
+
 default(){
     local BRANCH=$(__branches 'git branch | grep \*')
     if [[ "$BRANCH" == "master" ]]; then
-        box "No commits to 'master' branch. Please read more on ${__site}"
-        box "Try 'git elegant start-work' prior to retrying this command."
+        error-box "No commits to 'master' branch. Please read more on ${__site}"
+        error-box "Try 'git elegant start-work' prior to retrying this command."
         exit 42
     fi
-    boxtee git add --interactive
-    boxtee git diff --cached --check
-    boxtee git commit
+    git-verbose add --interactive
+    git-verbose diff --cached --check
+    git-verbose commit
 }

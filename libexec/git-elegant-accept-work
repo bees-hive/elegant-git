@@ -1,24 +1,57 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Applies a branch on top of upstream branch.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant accept-work <remote branch>
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Checkouts given branch using \`git elegant obtain-work\` into a temporary one.
+Then, it makes a rebase of the latest version of default upstream branch with
+current changes. The final index merges using fast-forward strategy into the
+default local branch and pushes into the default upstream branch. After a
+successful push, the given and temporary branches are removed.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant accept-work task-123
+git fetch --all
+git checkout --force -B __eg origin/task-123
+git status
+git rebase origin/master
+git checkout master
+git merge --ff-only __eg
+git push origin master:master
+git branch --delete --force __eg
+git push origin --delete task-123
+\`\`\`
+MESSAGE
+}
 
 default() {
-    local WORK=${1}
-    _error-if-empty "${WORK}" "Please give a name of remote branch (like 'origin/123')."
     local WORK_BRANCH="__eg"
-    boxtee git fetch --all --tags
-    boxtee git checkout --force -B ${WORK_BRANCH} ${WORK}
-    boxtee git status
-    boxtee git rebase ${RMASTER}
+    git elegant obtain-work "${1}" "${WORK_BRANCH}"
+    git-verbose status
+    git-verbose rebase ${RMASTER}
     # @todo #137 Alternative flows of `accept-work`
     #  If this command is executed with `${WORK_BRANCH}` and
     #  1. `git rebase` is in progress, it has to run `git rebase --continue` prior working with
     #  `${MASTER}` branch.
     #  2. `git rebase` is completed (history of `${WORK_BRANCH}` and `${RMASTER}` are different),
     #  just work with `${MASTER}` branch.
-    boxtee git checkout ${MASTER}
-    boxtee git merge --ff-only ${WORK_BRANCH}
-    boxtee git push ${REMOTE_NAME} ${MASTER}:${MASTER}
-    boxtee git branch --delete --force ${WORK_BRANCH}
-    boxtee git push ${REMOTE_NAME} --delete $(echo "${1}" | sed -e "s|${REMOTE_NAME}/||")
+    local ACTUAL_REMOTE=$(git for-each-ref --format='%(upstream:short)' refs/heads/${WORK_BRANCH})
+    git-verbose checkout ${MASTER}
+    git-verbose merge --ff-only ${WORK_BRANCH}
+    git-verbose push ${REMOTE_NAME} ${MASTER}:${MASTER}
+    git-verbose branch --delete --force ${WORK_BRANCH}
+    git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${ACTUAL_REMOTE})
 }

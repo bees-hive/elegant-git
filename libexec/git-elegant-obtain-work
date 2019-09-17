@@ -1,35 +1,58 @@
 #!/usr/bin/env bash
 set -e
 
---up-to-one-branch(){
-    local BRANCHES=(${@})
-    if [[ ${#BRANCHES[@]} > 1 ]]; then
-        echo "The following branches are found:"
-        for branch in ${BRANCHES[@]}; do
-            echo " - ${branch}"
-        done
-        box "Please re-run the command with concrete branch name from the list above!"
-        exit 43
-    fi
+command-purpose() {
+    cat <<MESSAGE
+Checkouts a remote branch matching by a name.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant obtain-work <remote branch> [local branch]
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Seeks across all upstreams for a branch matching by a given full or partial
+name. If there are more then 1 matching branch, execution stops with a
+corresponding error message. By default, the name of the local branch responds
+to the remote one. However, it can be overridden by giving a second argument.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant obtain-work new-feature task-133
+git fetch --all
+git checkout -B task-133 custom-remote/new-feature
+\`\`\`
+MESSAGE
 }
 
 default() {
     local PATTERN=${1}
     _error-if-empty "${PATTERN}" "Please provide a branch name or its part."
-    local LOCAL_BRANCHES=($(git for-each-ref --format='%(refname:strip=2)' refs/heads/* | grep "${PATTERN}"))
-    --up-to-one-branch ${LOCAL_BRANCHES[@]}
-    if [[ ${#LOCAL_BRANCHES[@]} = 1 ]]; then
-        boxtee git checkout ${LOCAL_BRANCHES[0]}
-        boxtee git pull
-    else
-        boxtee git fetch --all
-        local REMOTE_BRANCHES=($(git for-each-ref --format='%(refname:strip=3)' refs/remotes/** | grep "${PATTERN}"))
-        --up-to-one-branch ${REMOTE_BRANCHES[@]}
-        if [[ ${#REMOTE_BRANCHES[@]} = 1 ]]; then
-            boxtee git checkout ${REMOTE_BRANCHES[0]}
-        else
-            box "There are no either remove or local branches which match '${PATTERN}' pattern."
-            exit 43
+    git-verbose fetch --all
+    local REMOTE_BRANCHES=(
+            $(git for-each-ref --format='%(refname:strip=2)' refs/remotes/** | grep "${PATTERN}")
+        )
+    if [[ ${#REMOTE_BRANCHES[@]} > 1 ]]; then
+        info-text "The following branches are found:"
+        for branch in ${REMOTE_BRANCHES[@]}; do
+            info-text " - ${branch}"
+        done
+        error-box "Please re-run the command with concrete branch name from the list above!"
+        exit 43
+    fi
+    if [[ ${#REMOTE_BRANCHES[@]} = 1 ]]; then
+        local REMOTE=${REMOTE_BRANCHES[0]}
+        local LOCAL=${2}
+        if [[ -z ${LOCAL} ]]; then
+            LOCAL=$(branch-from-remote-reference ${REMOTE})
         fi
+        git-verbose checkout -B ${LOCAL} ${REMOTE}
+    else
+        error-box "There is no branch that matches the '${PATTERN}' pattern."
+        exit 43
     fi
 }

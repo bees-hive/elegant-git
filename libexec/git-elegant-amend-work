@@ -1,14 +1,41 @@
 #!/usr/bin/env bash
 set -e
 
+command-purpose() {
+    cat <<MESSAGE
+Amends some changes to the most recent commit.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant amend-work
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Updates the most recent commit by adding some changes. The command will fail if
+you'll try to modify history of the default local branch.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant amend-work
+git add --interactive
+git diff --cached --check
+git commit --amend
+\`\`\`
+MESSAGE
+}
+
 default(){
     local BRANCH=$(__branches 'git branch | grep \*')
     if [[ "$BRANCH" == "master" ]]; then
-        box "No commits to 'master' branch. Please read more on ${__site}"
-        box "Try 'git elegant start-work' prior to retrying this command."
+        error-box "No commits to 'master' branch. Please read more on ${__site}"
+        error-box "Try 'git elegant start-work' prior to retrying this command."
         exit 42
     fi
-    boxtee git add --interactive
-    boxtee git diff --cached --check
-    boxtee git commit --amend
+    git-verbose add --interactive
+    git-verbose diff --cached --check
+    git-verbose commit --amend
 }
