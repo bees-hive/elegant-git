@@ -18,6 +18,16 @@ teardown() {
     [[ "${lines[@]}" =~ "git push --set-upstream --force origin feature1:feature1" ]]
 }
 
+@test "'deliver-work': if branch name passed, a name of remote branch is different to local branch" {
+    fake-pass git branch *feature1
+    fake-pass git "fetch"
+    fake-pass git "rebase origin/master"
+    fake-pass git "push --set-upstream --force origin feature1:feature2"
+    check git-elegant deliver-work feature2
+    [ "$status" -eq 0 ]
+    [[ "${lines[@]}" =~ "git push --set-upstream --force origin feature1:feature2" ]]
+}
+
 @test "'deliver-work': exit code is 42 when current local branch is master" {
     fake-pass git branch *master
     fake-pass git "fetch"
