@@ -8,8 +8,8 @@ RUN apk update && \
 LABEL maintainer="Dmytro Serdiuk <dmytro.serdiuk@gmail.com>" \
       description="Run the image without arguments to get the desciption." \
       version=3
-COPY docs/requirements.txt entry.bash /
+COPY docs/requirements.txt /
 RUN pip install --no-cache -r requirements.txt && rm -r requirements.txt
 WORKDIR /eg
 ENV EG_ENABLE_TESTING true
-CMD ["./quality-pipeline.bash", "--version"]
+CMD [".workflows/ci-pipeline.bash", "--version"]

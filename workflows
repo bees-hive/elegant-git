@@ -1,32 +1,91 @@
 #!/usr/bin/env bash
-set -ex
+set -e
+
+source ./libexec/plugins/text
+
+WORKER_IMAGE="beeshive/elegant-git-ci:4"
 
 testing() {
-    docker run -it --rm -v $PWD:/eg beeshive/elegant-git-ci:3 ./.wf/tests-execution.bash $@
+    docker run -it --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/bats-pipeline.bash "$@"
+}
+
+documentation() {
+    .workflows/docs-generation.bash
 }
 
 repository() {
-    docker run -idt --rm --name repository --workdir /tmp/elegant-git-repo -v $PWD:/eg beeshive/elegant-git-ci:3 bash
+    info-text "Start container..."
+    docker run -idt --rm --name repository --workdir /tmp/elegant-git-repo -v $PWD:/eg ${WORKER_IMAGE} bash
+    info-text "Init repository..."
     docker exec -it repository bash -c "source /eg/tests/addons-git.bash;source /eg/tests/addons-common.bash; init-repo"
+    info-text "Install Elegant Git..."
+    docker exec -it repository bash -c "cd /eg; ./install.bash /usr/local src"
+    info-text "Ready! Enjoy experiments..."
     docker attach repository
 }
 
+ci() {
+    docker run --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/ci-pipeline.bash testing
+}
+
+prepare-worker() {
+    if [[ -z ${1} ]]; then
+        error-text "Please specify a tag for Docker image (like '2')"
+    fi
+    docker build --no-cache -t beeshive/elegant-git-ci:${1} .
+}
+
+publish-worker() {
+    if [[ -z ${1} ]]; then
+        error-text "Please specify a tag for Docker image (like '2')"
+    fi
+    docker push beeshive/elegant-git-ci:${1}
+}
+
+usage() {
+    cat <<MESSAGE
+usage: ${BASH_SOURCE[0]} [command] [arg]...
+
+Available commands:
+    help            prints this message
+    testing         runs bats tests; accepts a optional pattern for tests
+                    filtering ("${BASH_SOURCE[0]} testing work" run all tests
+                    which have the word in the test name)
+    repository      creates a git repository and installs Elegant Git within
+    documentation   generates fresh commands documentation bases on the latest
+                    changes
+    ci              runs CI quality assessment workflow
+    prepare-worker  builds a new worker image
+    publish-worker  pushes a new worker image
+MESSAGE
+}
+
 commands=(
+    usage
     testing
     repository
+    documentation
+    ci
+    prepare-worker
+    publish-worker
 )
 
 main() {
     local command=${1}
-    if [[ -z "${command}" ]]; then
+    if [[ -z ${command} ]]; then
+        question-text "Please select a command:"
+        echo ""
         select any in ${commands[@]}; do
             command=${any}
+            question-text "Please give the arguments: "
+            read args
             break
         done
     else
         shift
     fi
-    ${command} ${@}
+    info-box "Run:" ${command} ${args:-${@}}
+    ${command} ${args:-${@}}
 }
 
 main ${@}

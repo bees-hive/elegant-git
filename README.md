@@ -63,11 +63,13 @@ something which should be quickly available, please propose changes here.
 The structure of directories:
 ```text
 .
-├── bin           <- stores executable which is entry point
-├── completions   <- stores completion files
-├── docs          <- stores user documentation
-├── libexec       <- contains all commands
-└── tests         <- stores all tests along with additional test libraries
+├── .workflows/    <- stores development scripts
+├── bin/           <- stores executable which is entry point
+├── completions/   <- stores completion files
+├── docs/          <- stores user documentation
+├── libexec/       <- contains all commands
+├── tests/         <- stores all tests along with additional test libraries
+└── workflows      <- executes different development tasks
 ```
 
 When you run `git elegant ...`, it initiates `bin/git-elegant` entry-point script. It calls
@@ -100,14 +102,13 @@ A testing procedure consists of 3 steps:
 3. validation of documentation correctness
 4. validation of todo' correctness (for [0pdd](http://www.0pdd.com/p?name=bees-hive/elegant-git))
 
-All these steps can be executed by
-`docker run -it --rm -v $PWD:/eg beeshive/elegant-git-ci:3 ./quality-pipeline.bash testing`.
+All these steps can be executed by `./workflows ci` which runs a Docker container (based on
+`beeshive/elegant-git-ci` image) and calls all described checks. The image is also used on CI.
+If the image requires modifications, then
 
-`beeshive/elegant-git-ci` Docker image is also used on CI. If the image requires modifications,
-it has to be updated manually by the following instructions:
-1. update `Dockerfile` (including `version` and `description`)
-2. `docker build -t beeshive/elegant-git-ci:<version> .`
-3. `docker push beeshive/elegant-git-ci:<version>`
+1. run `./workflows prepare-worker <new tag>` to build a new image
+2. update `WORKER_IMAGE` in `./workflows` and test some workflow
+3. run `./workflows publich-worker <new tag>`  to push the image
 
 ### Unit testing
 #### Addons
@@ -143,5 +144,5 @@ In order to get the documentation preview locally, please install required depen
 `pip install -r docs/requirements.txt`. After, run `mkdocs serve` and open <http://127.0.0.1:8000/> 
 in a browser. That's it!
 
-The [docs/commands.md](docs/commands.md) generates by running `./.wf/docs-generation.bash` script.
+The [docs/commands.md](docs/commands.md) generates by running `./workflows documentation` script.
 All other files in ["docs" directory](docs/) require manual corrections.

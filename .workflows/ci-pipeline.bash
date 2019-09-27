@@ -2,8 +2,8 @@
 # This script is destructive! That's why it will work only if a specific variable is set.
 # It's recommended to run it within a docker container only.
 # Usage:
-#   ./quality-pipeline.bash              runs quality pipeline
-#   ./quality-pipeline.bash --version    prints tooling version
+#   ./ci-pipeline.bash              runs quality pipeline
+#   ./ci-pipeline.bash --version    prints tooling version
 set -e
 
 fail() {
@@ -12,7 +12,7 @@ fail() {
 }
 
 pipeline() {
-    bats --tap tests                                  || fail "Unit tests are failed."
+    .workflows/bats-pipeline.bash                     || fail "Unit tests are failed."
     (
         echo "Installation...."
         ./install.bash /usr/local src
@@ -25,10 +25,10 @@ pipeline() {
         --exclude=docs/*.png \
         --verbose --file=/dev/null                    || fail "Unreadable todo is identified."
     (
-        ./.wf/docs-generation.bash
+        .workflows/docs-generation.bash
         git update-index --refresh
         git diff-index --quiet HEAD --
-    ) || fail "The documentation is not up to date. Please run './.wf/docs-generation.bash' and commit the changes"
+    ) || fail "The documentation is not up to date. Please run './.workflows/docs-generation.bash' and commit the changes"
 
 }
 
