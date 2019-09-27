@@ -29,7 +29,7 @@ MESSAGE
 }
 
 default(){
-    local BRANCH=$(__branches 'git branch | grep \*')
+    local BRANCH=$(git rev-parse --abbrev-ref HEAD)
     if [[ "$BRANCH" == "master" ]]; then
         error-box "No commits to 'master' branch. Please read more on ${__site}"
         error-box "Try 'git elegant start-work' prior to retrying this command."

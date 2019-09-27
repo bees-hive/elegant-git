@@ -6,6 +6,7 @@ set -e
 # It registers all "libexec" scripts.
 BINS=$(dirname ${0})
 export PATH=${BINS}:${PATH}
+source ${BINS}/plugins/pipe
 source ${BINS}/plugins/text
 
 __site="https://elegant-git.bees-hive.org"
@@ -26,12 +27,6 @@ _error-if-empty() {
         error-text "$2"
         exit 45
     fi
-}
-
-__branches() {
-    local branch_command="$1"; shift
-    local b=$(eval "$branch_command" | sed -e 's|[* ]||g')
-    echo ${b[@]}
 }
 
 __loop_ask() {

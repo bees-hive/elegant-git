@@ -32,15 +32,13 @@ git stash drop stash@{0}
 MESSAGE
 }
 
-default() {
-    _error-if-empty "$1" "Please give a name for the new branch."
-    status=$(git-verbose stash save elegant-git)
+--start-work-logic(){
     git-verbose checkout ${MASTER}
     git-verbose pull
     git-verbose checkout -b "$1"
+}
 
-    if [[ "$status" =~ "Saved working directory" ]]; then
-        git-verbose stash apply stash^{/elegant-git}
-        git-verbose stash drop stash@{0}
-    fi
+default() {
+    _error-if-empty "$1" "Please give a name for the new branch."
+    stash-pipe --start-work-logic "${@}"
 }

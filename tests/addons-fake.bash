@@ -45,7 +45,7 @@ if [[ -e "\${FIXTURE_HOME}" ]]; then
     cat "\${FIXTURE_HOME}/stderr" >&2
     exit \$(cat "\${FIXTURE_HOME}/exit_code")
 else
-    ${ORIGIN_BINARY} \$@
+    ${ORIGIN_BINARY} "\$@"
 fi
 MOCK
     fi

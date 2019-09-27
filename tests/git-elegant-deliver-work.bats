@@ -9,7 +9,7 @@ teardown() {
 }
 
 @test "'deliver-work': by default, a name of remote branch is equal to local branch" {
-    fake-pass git branch *feature1
+    fake-pass git "rev-parse --abbrev-ref HEAD" feature1
     fake-pass git "fetch"
     fake-pass git "rebase origin/master"
     fake-pass git "push --set-upstream --force origin feature1:feature1"
@@ -19,7 +19,7 @@ teardown() {
 }
 
 @test "'deliver-work': if branch name passed, a name of remote branch is different to local branch" {
-    fake-pass git branch *feature1
+    fake-pass git "rev-parse --abbrev-ref HEAD" feature1
     fake-pass git "fetch"
     fake-pass git "rebase origin/master"
     fake-pass git "push --set-upstream --force origin feature1:feature2"
@@ -29,7 +29,7 @@ teardown() {
 }
 
 @test "'deliver-work': exit code is 42 when current local branch is master" {
-    fake-pass git branch *master
+    fake-pass git "rev-parse --abbrev-ref HEAD" master
     fake-pass git "fetch"
     fake-pass git "rebase origin/master"
     fake-pass git "push --set-upstream --force origin master:master"
