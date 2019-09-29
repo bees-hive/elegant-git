@@ -142,6 +142,10 @@ removes them by invoking `git branch -d`. If there are unmerged branches, you
 have to choose either batch or one-by-one deletion procedure using
 `git branch -D`.
 
+Prior to the execution, a current state is saved (a branch with modifications).
+After the successful accepting a work, the state will be restored. In the case
+of a failure, you need to go to the desired branch and apply a stash if needed.
+
 Approximate commands flow is
 ```bash
 ==>> git elegant clear-local

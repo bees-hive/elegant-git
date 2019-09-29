@@ -20,3 +20,13 @@ teardown() {
     check git-elegant clear-local
     [[ "${status}" -eq 0 ]]
 }
+
+@test "'clear-local': save WIP prior cleaning and restore after it" {
+    gitrepo "git checkout -b other"
+    gitrepo "echo stash >> ${FILE_TO_MODIFY}"
+    check git-elegant clear-local
+    [[ "${status}" -eq 0 ]]
+    [[ "${lines[@]}" =~ "git stash push" ]]
+    [[ "${lines[@]}" =~ "git stash pop" ]]
+    [[ "${lines[@]}" =~ "git checkout other" ]]
+}
