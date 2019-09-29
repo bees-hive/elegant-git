@@ -3,9 +3,15 @@
 load addons-common
 load addons-read
 load addons-fake
+load addons-git
+
+setup() {
+    init-repo
+}
 
 teardown() {
     clean-fake
+    clean-git
 }
 
 @test "'deliver-work': by default, a name of remote branch is equal to local branch" {
@@ -36,4 +42,13 @@ teardown() {
     check git-elegant deliver-work
     [ "$status" -eq 42 ]
     [ "${lines[1]}" = "== No pushes to 'master' branch. Please read more on https://elegant-git.bees-hive.org ==" ]
+}
+
+@test "'deliver-work': use stash pipe if there are uncommitted changes" {
+    fake-pass git pull
+    gitrepo "echo stash >> ${FILE_TO_MODIFY}"
+    check git-elegant start-work test-feature
+    [[ "$status" -eq 0 ]]
+    [[ "${lines[@]}" =~ "git stash push" ]]
+    [[ "${lines[@]}" =~ "git stash pop" ]]
 }

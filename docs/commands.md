@@ -189,6 +189,10 @@ it pushes HEAD to appropriate upstream branch. By default, the name of remote
 branch is equal to the local one. Also, you can give a custom name of
 the remote branch if needed.
 
+If there are uncommitted changes, they will be stashed prior to the command
+execution and un-stashed after its successful completion. This is useful if you
+need to deliver only sub-set of the changes.
+
 Approximate commands flow is
 ```bash
 ==>> git elegant deliver-work
