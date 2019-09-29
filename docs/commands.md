@@ -46,6 +46,10 @@ current changes. The final index merges using fast-forward strategy into the
 default local branch and pushes into the default upstream branch. After a
 successful push, the given and temporary branches are removed.
 
+Prior to the execution, a current state is saved (a branch with modifications).
+After the successful accepting a work, the state will be restored. In the case
+of a failure, you need to go to the desired branch and apply a stash if needed.
+
 Approximate commands flow is
 ```bash
 ==>> git elegant accept-work task-123

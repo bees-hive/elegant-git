@@ -21,3 +21,14 @@ stash-pipe() {
         git-verbose stash pop $(git stash list --grep="${message}" --format="%gd")
     fi
 }
+
+branch-pipe() {
+    # Moves to the current branch after a command execution
+    # usage: branch-pipe <command> [args]...
+    local to=$(git rev-parse --abbrev-ref HEAD)
+    "${@}"
+    local now=$(git rev-parse --abbrev-ref HEAD)
+    if ! ${to} == ${now}; then
+        git-verbose checkout ${to}
+    fi
+}
