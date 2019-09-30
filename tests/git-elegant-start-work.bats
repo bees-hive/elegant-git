@@ -6,11 +6,11 @@ load addons-git
 
 setup() {
     init-repo
-    fake-pass git "pull"
+    fake-pass "git pull"
 }
 
 teardown() {
-    clean-fake
+    fake-clean
     clean-git
 }
 
@@ -38,14 +38,14 @@ teardown() {
 }
 
 @test "'start-work': ignore stash pipe if there are uncommitted changes" {
-    fake-pass git "stash save elegant-git" "No local changes to save"
+    fake-pass "git stash save elegant-git" "No local changes to save"
     check git-elegant start-work test-feature
     [ "$status" -eq 0 ]
 }
 
 @test "'start-work': exit code is 100 when stash pipe wasn't applied" {
     gitrepo "echo stash >> ${FILE_TO_MODIFY}"
-    fake-fail git "stash pop stash@{0}"
+    fake-fail "git stash pop stash@{0}"
     check git-elegant start-work test-feature
     [[ "$status" -eq 100 ]]
 }

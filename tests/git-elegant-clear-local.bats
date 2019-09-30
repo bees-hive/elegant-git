@@ -8,11 +8,11 @@ load addons-git
 setup() {
     init-repo
     gitrepo git branch --force first
-    fake-pass git "branch -lvv" "first [gone]"
+    fake-pass "git branch -lvv" "first [gone]"
 }
 
 teardown() {
-    clean-fake
+    fake-clean
     clean-git
 }
 

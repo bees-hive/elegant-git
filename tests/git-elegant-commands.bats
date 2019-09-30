@@ -4,7 +4,7 @@ load addons-common
 load addons-fake
 
 teardown() {
-    clean-fake
+    fake-clean
 }
 
 @test "'commands': print all available commands" {

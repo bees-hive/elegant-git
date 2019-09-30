@@ -10,7 +10,7 @@ setup() {
 }
 
 teardown() {
-    clean-fake
+    fake-clean
     clean-git
 }
 
@@ -30,7 +30,7 @@ teardown() {
 }
 
 @test "'acquire-repository': mandatory configuration works as expected on Windows" {
-    fake-pass uname -s Windows
+    fake-pass "uname -s" Windows
     check git-elegant acquire-repository
     [[ "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
     [[ "${lines[@]}" =~ "==>> git config --local apply.whitespace fix" ]]
@@ -45,7 +45,7 @@ teardown() {
 }
 
 @test "'acquire-repository': mandatory configuration works as expected on Linux" {
-    fake-pass uname -s Linux
+    fake-pass "uname -s" Linux
     check git-elegant acquire-repository
     [[ "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
     [[ "${lines[@]}" =~ "==>> git config --local apply.whitespace fix" ]]
@@ -60,7 +60,7 @@ teardown() {
 }
 
 @test "'acquire-repository': mandatory configuration works as expected on Darwin" {
-    fake-pass uname -s Darwin
+    fake-pass "uname -s" Darwin
     check git-elegant acquire-repository
     [[ "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
     [[ "${lines[@]}" =~ "==>> git config --local apply.whitespace fix" ]]

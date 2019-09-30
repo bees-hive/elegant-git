@@ -5,12 +5,12 @@ load addons-read
 load addons-fake
 
 setup() {
-    fake-pass git init
-    fake-pass git "elegant acquire-repository"
+    fake-pass "git init"
+    fake-pass "git elegant acquire-repository"
 }
 
 teardown() {
-    clean-fake
+    fake-clean
 }
 
 @test "'init-repository': command is available" {

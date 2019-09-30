@@ -10,14 +10,14 @@ setup() {
 }
 
 teardown() {
-    clean-fake
+    fake-clean
     clean-git
 }
 
 @test "'amend-work': command works as expected for non-master branch" {
-    fake-pass git "add --interactive"
-    fake-pass git "diff --cached --check"
-    fake-pass git "commit --amend"
+    fake-pass "git add --interactive"
+    fake-pass "git diff --cached --check"
+    fake-pass "git commit --amend"
     gitrepo git checkout -b test
     check git-elegant amend-work
     [[ "${status}" -eq 0 ]]

@@ -6,13 +6,13 @@ load addons-cd
 load addons-fake
 
 setup() {
-    fake-pass git clone-repository
-    fake-pass git "clone https://github.com/extsoft/elegant-git.git"
-    fake-pass git "elegant acquire-repository"
+    fake-pass "git clone-repository"
+    fake-pass "git clone https://github.com/extsoft/elegant-git.git"
+    fake-pass "git elegant acquire-repository"
 }
 
 teardown() {
-    clean-fake
+    fake-clean
 }
 
 @test "'clone-repository': raise an error if cloneable URL isn't set" {

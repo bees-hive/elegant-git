@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-MOCK_DIR="/tmp/elegant-git-mock"
-export PATH=$MOCK_DIR:$PATH
-
+FAKES_DIRECTORY="/tmp/elegant-git-fakes"
+export PATH=${FAKES_DIRECTORY}:${PATH}
 
 _log_fake(){
     echo "$(basename ${BASH_SOURCE[0]}): $@"
@@ -15,58 +14,57 @@ _ex_fake() {
 }
 
 fake() {
-    # sample: fake <command> <subcommand> <exit> <stdout> <stderr>
-    BASENAME=$(basename $1)
-    PROGRAM_PATH="$MOCK_DIR/$BASENAME-app"
-    FIXTURE_HOME="$PROGRAM_PATH/$(echo "$2" | sed 's/[^0-9a-zA-Z]*//g')"
-    MOCK="$MOCK_DIR/$BASENAME"
+    # sample: fake <command> <exit> <stdout> <stderr>
+    local executable=$(basename ${1%% *})
+    local fake_directory="${FAKES_DIRECTORY}/${executable}-app"
+    local command_directory="${fake_directory}/$(echo "${1}" | sed 's/[^0-9a-zA-Z]*//g')"
+    local fake="${FAKES_DIRECTORY}/${executable}"
 
-    if [[ ! -e "${MOCK}" ]]; then
+    if [[ ! -e "${fake}" ]]; then
+        mkdir -p ${FAKES_DIRECTORY}
         echo ""
-        echo "==>> Creating fake executable: ${MOCK}"
-        ORIGIN_BINARY=$(which ${BASENAME})
-        cat <<MOCK | tee -i ${MOCK} && _ex_fake chmod +x "$MOCK"
+        echo "==>> Creating fake executable: ${fake}"
+        local origin_binary=$(which ${executable})
+        cat <<FAKE | tee -i ${fake} && _ex_fake chmod +x "${fake}"
 #!/usr/bin/env bash
-# This is an alternative executable for "${BASENAME}".
+# This is an alternative executable for "${executable}".
 # It's purpose is to use a mock, if available, otherwise,
 # run original executable.
-PROGRAM_PATH="${MOCK_DIR}/${BASENAME}-app"
-FIXTURE_HOME="\${PROGRAM_PATH}/\$(echo "\$@" | sed 's/[^0-9a-zA-Z]*//g')"
-if [[ -e "\${FIXTURE_HOME}" ]]; then
-    cat "\${FIXTURE_HOME}/stdout"
-    cat "\${FIXTURE_HOME}/stderr" >&2
-    exit \$(cat "\${FIXTURE_HOME}/exit_code")
+root_directory=${fake_directory}
+command_directory="\${root_directory}/\$(echo "${executable} \${@}" | sed 's/[^0-9a-zA-Z]*//g')"
+if [[ -e "\${command_directory}" ]]; then
+    cat "\${command_directory}/stdout"
+    cat "\${command_directory}/stderr" >&2
+    exit \$(cat "\${command_directory}/exit_code")
 else
-    ${ORIGIN_BINARY} "\$@"
+    ${origin_binary} "\$@"
 fi
-MOCK
+FAKE
     fi
 
-    [[ -d "$FIXTURE_HOME" ]] && rm -r "$FIXTURE_HOME"
+    [[ -d "${command_directory}" ]] && rm -r "${command_directory}"
     echo ""
-    echo "==>> Creating fake command: ${FIXTURE_HOME}"
-    _ex_fake mkdir -p "$FIXTURE_HOME"
-    echo -e "$3" | tee -i "$FIXTURE_HOME/exit_code"
-    echo -e "$4" | tee -i "$FIXTURE_HOME/stdout"
-    echo -e "$5" | tee -i "$FIXTURE_HOME/stderr"
+    echo "==>> Creating fake command: ${command_directory}"
+    _ex_fake mkdir -p "${command_directory}"
+    echo -e "${2}" | tee -i "${command_directory}/exit_code"
+    echo -e "${3}" | tee -i "${command_directory}/stdout"
+    echo -e "${4}" | tee -i "${command_directory}/stderr"
 }
 
 fake-pass() {
-    # sample: fake-pass <command> <subcommand> <stdout>
-    COMMAND="$1"; shift
-    SUBCOMMAND="$1"; shift
-    fake "$COMMAND" "$SUBCOMMAND" 0 "$@"
+    # sample: fake-pass <command> <stdout>
+    local command="${1}"; shift
+    fake "${command}" 0 "$@"
 }
 
 fake-fail() {
-    # sample: fake-fail <command> <subcommand> <stderr>
-    COMMAND="$1"; shift
-    SUBCOMMAND="$1"; shift
-    fake "$COMMAND" "$SUBCOMMAND" 100 " " "$@"
+    # sample: fake-fail <command> <stderr>
+    local command="${1}"; shift
+    fake "${command}" 100 " " "$@"
 }
 
-clean-fake() {
-    if [ -d "$MOCK_DIR" ]; then
-        rm -r "$MOCK_DIR"
+fake-clean() {
+    if [[ -d "${FAKES_DIRECTORY}" ]]; then
+        rm -r "${FAKES_DIRECTORY}"
     fi
 }
