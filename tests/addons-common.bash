@@ -4,6 +4,8 @@ set -e
 THIS="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BIN_DIR="$THIS/../libexec"
 export PATH=${BIN_DIR}:$PATH
+# By default, all execution should work here.
+cd /tmp
 
 check(){
     run "$@"
