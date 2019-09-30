@@ -17,7 +17,7 @@ fake() {
     # sample: fake <command> <exit> <stdout> <stderr>
     local executable=$(basename ${1%% *})
     local fake_directory="${FAKES_DIRECTORY}/${executable}-app"
-    local command_directory="${fake_directory}/$(echo "${1}" | sed 's/[^0-9a-zA-Z]*//g')"
+    local command_directory="${fake_directory}/$(echo "${1}" | sed 's/[^0-9a-zA-Z_-]*//g')"
     local fake="${FAKES_DIRECTORY}/${executable}"
 
     if [[ ! -e "${fake}" ]]; then
@@ -31,7 +31,7 @@ fake() {
 # It's purpose is to use a mock, if available, otherwise,
 # run original executable.
 root_directory=${fake_directory}
-command_directory="\${root_directory}/\$(echo "${executable} \${@}" | sed 's/[^0-9a-zA-Z]*//g')"
+command_directory="\${root_directory}/\$(echo "${executable} \${@}" | sed 's/[^0-9a-zA-Z_-]*//g')"
 if [[ -e "\${command_directory}" ]]; then
     cat "\${command_directory}/stdout"
     cat "\${command_directory}/stderr" >&2
