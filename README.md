@@ -125,7 +125,7 @@ Also, there are several optional addons which can be useful in some circumstance
 #### Writing tests
 1. **Use `setup()` or `teardown()`** bats methods only in the tests.
 2. Use **`check` instead of bats `run`** to execute a command to be tested.
-3. Use **`testtee`** to execute any real command within a test which should not be tested.
+3. Use **`perform-verbose`** to execute any real command within a test which should not be tested.
 4. If `addons-fake` or `addons-repo` is used, call `fake-clean` or `repo-clean` within a `teardown()` method.
 5. Do not fake `git-elegant` commands within the tests.
 

@@ -17,12 +17,12 @@ check(){
     done
 }
 
-testtee() {
+perform-verbose() {
     # Prints given command and executes it.
     # It's useful as when a test is failed,
     # then you can see a command in the log.
     #
-    # usage: testtee [ags]...
+    # usage: perform-verbose [ags]...
     echo "$(basename ${BASH_SOURCE[0]}): $@"
     eval "$@"
 }
