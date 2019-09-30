@@ -2,16 +2,16 @@
 
 load addons-common
 load addons-fake
-load addons-git
+load addons-repo
 
 setup() {
-    init-repo
+    repo-new
     fake-pass "git pull"
 }
 
 teardown() {
     fake-clean
-    clean-git
+    repo-clean
 }
 
 @test "'start-work': branch with given name is created successfully" {
@@ -30,7 +30,7 @@ teardown() {
 }
 
 @test "'start-work': use stash pipe if there are uncommitted changes" {
-    gitrepo "echo stash >> ${FILE_TO_MODIFY}"
+    repo-non-staged-change "A new line..."
     check git-elegant start-work test-feature
     [[ "$status" -eq 0 ]]
     [[ "${lines[@]}" =~ "stash push" ]]
@@ -44,7 +44,7 @@ teardown() {
 }
 
 @test "'start-work': exit code is 100 when stash pipe wasn't applied" {
-    gitrepo "echo stash >> ${FILE_TO_MODIFY}"
+    repo-non-staged-change "A new line..."
     fake-fail "git stash pop stash@{0}"
     check git-elegant start-work test-feature
     [[ "$status" -eq 100 ]]

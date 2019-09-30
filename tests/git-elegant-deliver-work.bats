@@ -3,15 +3,15 @@
 load addons-common
 load addons-read
 load addons-fake
-load addons-git
+load addons-repo
 
 setup() {
-    init-repo
+    repo-new
 }
 
 teardown() {
     fake-clean
-    clean-git
+    repo-clean
 }
 
 @test "'deliver-work': by default, a name of remote branch is equal to local branch" {
@@ -46,7 +46,7 @@ teardown() {
 
 @test "'deliver-work': use stash pipe if there are uncommitted changes" {
     fake-pass "git pull"
-    gitrepo "echo stash >> ${FILE_TO_MODIFY}"
+    repo-non-staged-change "A new line..."
     check git-elegant start-work test-feature
     [[ "$status" -eq 0 ]]
     [[ "${lines[@]}" =~ "git stash push" ]]

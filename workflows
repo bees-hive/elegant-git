@@ -17,7 +17,7 @@ repository() {
     info-text "Start container..."
     docker run -idt --rm --name repository --workdir /tmp/elegant-git-repo -v $PWD:/eg ${WORKER_IMAGE} bash
     info-text "Init repository..."
-    docker exec -it repository bash -c "source /eg/tests/addons-git.bash;source /eg/tests/addons-common.bash; init-repo"
+    docker exec -it repository bash -c "source /eg/tests/addons-repo.bash;source /eg/tests/addons-common.bash; repo-new"
     info-text "Install Elegant Git..."
     docker exec -it repository bash -c "cd /eg; ./install.bash /usr/local src"
     info-text "Ready! Enjoy experiments..."

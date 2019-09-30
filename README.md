@@ -117,7 +117,7 @@ file. This addon configures right access to executables (`libexec` directory) an
 functions.
 
 Also, there are several optional addons which can be useful in some circumstances:
-- add `load addons-git`  to interact with real git repository
+- add `load addons-repo` to interact with real git repository
 - add `load addons-fake` to fake a Linux command
 - add `load addons-cd`   to fake `cd` command
 - add `load addons-read` to fake `read` command
@@ -126,7 +126,7 @@ Also, there are several optional addons which can be useful in some circumstance
 1. **Use `setup()` or `teardown()`** bats methods only in the tests.
 2. Use **`check` instead of bats `run`** to execute a command to be tested.
 3. Use **`testtee`** to execute any real command within a test which should not be tested.
-4. If `addons-fake` or `addons-git` is used, call `fake-clean` or `clean-git` within a `teardown()` method.
+4. If `addons-fake` or `addons-repo` is used, call `fake-clean` or `repo-clean` within a `teardown()` method.
 5. Do not fake `git-elegant` commands within the tests.
 
 #### Assertions

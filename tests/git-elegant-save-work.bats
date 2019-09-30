@@ -3,22 +3,22 @@
 load addons-common
 load addons-fake
 load addons-read
-load addons-git
+load addons-repo
 
 setup() {
-    init-repo
+    repo-new
 }
 
 teardown() {
     fake-clean
-    clean-git
+    repo-clean
 }
 
 @test "'save-work': command works as expected for non-master branch" {
     fake-pass "git add --interactive"
     fake-pass "git diff --cached --check"
     fake-pass "git commit"
-    gitrepo git checkout -b test
+    repo git checkout -b test
     check git-elegant save-work
     [[ "${status}" -eq 0 ]]
 }

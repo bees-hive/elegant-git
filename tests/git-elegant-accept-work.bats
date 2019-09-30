@@ -2,10 +2,10 @@
 
 load addons-common
 load addons-fake
-load addons-git
+load addons-repo
 
 setup() {
-    init-repo
+    repo-new
     fake-pass "git elegant obtain-work test-feature __eg"
     fake-pass "git rebase origin/master"
     fake-pass "git fetch --all"
@@ -17,7 +17,7 @@ setup() {
 }
 
 teardown() {
-    clean-git
+    repo-clean
     fake-clean
 }
 
@@ -32,8 +32,8 @@ teardown() {
 }
 
 @test "'accept-work': save WIP prior accepting and restore after it" {
-    gitrepo "git checkout -b other"
-    gitrepo "echo stash >> ${FILE_TO_MODIFY}"
+    repo "git checkout -b other"
+    repo-non-staged-change "A new line..."
     check git-elegant accept-work test-feature
     [[ "${status}" -eq 0 ]]
     [[ "${lines[@]}" =~ "git stash push" ]]

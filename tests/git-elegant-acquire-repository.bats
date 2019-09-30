@@ -3,15 +3,15 @@
 load addons-common
 load addons-read
 load addons-fake
-load addons-git
+load addons-repo
 
 setup() {
-    init-repo
+    repo-new
 }
 
 teardown() {
     fake-clean
-    clean-git
+    repo-clean
 }
 
 @test "'acquire-repository': all configurations work as expected" {
@@ -83,17 +83,17 @@ teardown() {
 }
 
 @test "'acquire-repository': local aliases are removed as expected" {
-    gitrepo git config --local "alias.aaa" "\"elegant aaa\""
-    gitrepo git config --local "alias.bbb" "\"elegant bbb\""
+    repo git config --local "alias.aaa" "\"elegant aaa\""
+    repo git config --local "alias.bbb" "\"elegant bbb\""
     check git-elegant acquire-repository
     [[ "$status" -eq 0 ]]
     [[ "${lines[@]}" =~ "2 git aliases were removed that contained 'elegant git' reference." ]]
 }
 
 @test "'acquire-repository': global aliases aren't removed" {
-    gitrepo git config --global "alias.glb" "\"elegant glb\""
+    repo git config --global "alias.glb" "\"elegant glb\""
     check git-elegant acquire-repository
-    gitrepo git config --global --unset "alias.glb"
+    repo git config --global --unset "alias.glb"
     [[ "$status" -eq 0 ]]
     [[ "${lines[@]}" =~ "Non-local alias! Remove it if needed using 'git config --global --unset alias.glb'" ]]
     [[ "${lines[@]}" =~ "0 git aliases were removed that contained 'elegant git' reference." ]]

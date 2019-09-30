@@ -3,17 +3,17 @@
 load addons-common
 load addons-read
 load addons-fake
-load addons-git
+load addons-repo
 
 setup() {
-    init-repo
-    gitrepo git branch --force first
+    repo-new
+    repo git branch --force first
     fake-pass "git branch -lvv" "first [gone]"
 }
 
 teardown() {
     fake-clean
-    clean-git
+    repo-clean
 }
 
 @test "'clear-local': command is available" {
@@ -22,8 +22,8 @@ teardown() {
 }
 
 @test "'clear-local': save WIP prior cleaning and restore after it" {
-    gitrepo "git checkout -b other"
-    gitrepo "echo stash >> ${FILE_TO_MODIFY}"
+    repo "git checkout -b other"
+    repo-non-staged-change "A new line..."
     check git-elegant clear-local
     [[ "${status}" -eq 0 ]]
     [[ "${lines[@]}" =~ "git stash push" ]]
