@@ -76,10 +76,11 @@ teardown() {
 
 @test "'acquire-repository': aliases configuration works as expected" {
     check git-elegant acquire-repository
-    [[ "${lines[@]}" =~ "==>> git config --local alias.start-work elegant start-work" ]]
-    [[ "${lines[@]}" =~ "==>> git config --local alias.save-work elegant save-work" ]]
-    [[ "${lines[@]}" =~ "==>> git config --local alias.deliver-work elegant deliver-work" ]]
-    [[ "${lines[@]}" =~ "==>> git config --local alias.accept-work elegant accept-work" ]]
+    for next in $(git-elegant commands); do
+        echo "Test aliasing of '${next}' command"
+        [[ "${lines[@]}" =~ "==>> git config --local alias.${next} elegant ${next}" ]]
+        echo "Tested successfully!"
+    done
 }
 
 @test "'acquire-repository': local aliases are removed as expected" {
