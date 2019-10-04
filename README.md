@@ -9,8 +9,8 @@
 [lb]: https://img.shields.io/github/license/bees-hive/elegant-git
 [0b]: http://www.0pdd.com/svg?name=bees-hive/elegant-git
 [0l]: http://www.0pdd.com/p?name=bees-hive/elegant-git
-[bb]: https://travis-ci.org/bees-hive/elegant-git.svg?branch=master
-[bl]: https://travis-ci.org/bees-hive/elegant-git
+[bb]: https://github.com/bees-hive/elegant-git/workflows/Quality%20pipeline/badge.svg
+[bl]: https://github.com/bees-hive/elegant-git/actions?workflow=Quality+pipeline
 [db]: https://readthedocs.org/projects/elegant-git/badge/?version=latest
 [dl]: https://elegant-git.bees-hive.org/en/latest/?badge=latest
 
