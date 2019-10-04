@@ -167,5 +167,5 @@ default() {
         _core_autocrlf_darwinlinux _core_autocrlf_windows _pull_rebase \
         _rebase_autoStash _credential_helper_darwin
       __remove-old-aliases
-      __aliases-configuration "pull" "clear-local" $(git elegant commands | grep work)
+      __aliases-configuration $(git elegant commands)
 }
