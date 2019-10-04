@@ -21,6 +21,7 @@ teardown() {
         "commands"
         "amend-work"
         "show-release-notes"
+        "release-work"
     )
     check git-elegant commands
     [ ${#lines[@]} -eq ${#COMMANDS[@]} ]

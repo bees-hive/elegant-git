@@ -28,7 +28,7 @@ branch-pipe() {
     local to=$(git rev-parse --abbrev-ref HEAD)
     "${@}"
     local now=$(git rev-parse --abbrev-ref HEAD)
-    if ! ${to} == ${now}; then
+    if [[ ! "${to}" == "${now}" ]]; then
         git-verbose checkout ${to}
     fi
 }

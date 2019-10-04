@@ -28,6 +28,7 @@ There are commands used in various situations such as
 
  release new versions
     show-release-notes   Prints a release log between two references.
+    release-work         Releases available work as a new annotated tag.
 
  and others
     commands             Prints available Elegant Git commands.
@@ -244,6 +245,32 @@ Approximate commands flow is
 ==>> git elegant obtain-work new-feature task-133
 git fetch --all
 git checkout -B task-133 custom-remote/new-feature
+```
+
+# `release-work`
+
+```bash
+usage: git elegant release-work [tag name]
+```
+
+Annotates the latest commit of `master` branch with a given tag and publishes
+it. The tag's message will be prepopulated using commits subjects (from oldest
+to newest) between the last available tag and HEAD. The release notes will be
+either copied to clipboard (if `pbcopy` or `xclip` is available) or printed
+to standard output using `git elegant show-release-notes`.
+
+Prior to the execution, a current state is saved (a branch with modifications).
+After the successful command execution, the state will be restored. In the case
+of a failure, you need to go to the desired branch and apply a stash if needed.
+
+Approximate commands flow is
+```bash
+==>> git elegant release-work 1.2.0
+git checkout master
+git pull --tags
+git tag --annotate --file tag-message --edit 1.2.0
+git push --tags
+git elegant show-release-notes smart 1.1.12 1.2.0
 ```
 
 # `save-work`
