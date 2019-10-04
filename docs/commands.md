@@ -311,7 +311,10 @@ hosting is unknown, the default layout is used. Now only GitHub is supported
 Approximate commands flow is
 ```bash
 ==>> git elegant show-release-notes
-git .....
+# produces output like this
+Release notes
+- Add `show-release-notes` command
+- Add `release-work` command
 ```
 
 # `start-work`
