@@ -16,7 +16,6 @@ setup() {
     repo "git tag -a -m ${second} 2"
     repo-commit-file ${third}
     repo "git tag && git log --oneline"
-
 }
 
 teardown() {
@@ -43,7 +42,6 @@ teardown() {
     [[ "${lines[@]}" =~ ${third} ]]
     [[ "${#lines[@]}" -eq 3 ]]
 }
-
 
 @test "'show-release-notes': a 'to-reference' is used when it is specified" {
     fake-pass "git remote get-url origin" "https://fake-repo.git"
