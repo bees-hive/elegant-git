@@ -26,6 +26,9 @@ There are commands used in various situations such as
     obtain-work          Checkouts a remote branch matching by a name.
     accept-work          Applies a branch on top of upstream branch.
 
+ release new versions
+    show-release-notes   Prints a release log between two references.
+
  and others
     commands             Prints available Elegant Git commands.
 
@@ -259,6 +262,29 @@ Approximate commands flow is
 git add --interactive
 git diff --cached --check
 git commit
+```
+
+# `show-release-notes`
+
+```bash
+usage: git elegant show-release-notes [<layout> | <layout> <from-reference> | <layout> <from-reference> <to-reference>]
+```
+
+Generates a release notes using commits subjects between the given references.
+The commits are ordered from oldest to newest. By default, the `from-reference`
+is the last available tag, and the `to-reference` is a HEAD revision.
+
+There are two options for a `layout`:
+
+1. `simple` prints the messages as a plain text (default one)
+2. `smart` prints the messages in a form of adopted for a git hosting. If the
+hosting is unknown, the default layout is used. Now only GitHub is supported
+(an HTML output).
+
+Approximate commands flow is
+```bash
+==>> git elegant show-release-notes
+git .....
 ```
 
 # `start-work`

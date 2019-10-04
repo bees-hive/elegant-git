@@ -68,6 +68,10 @@ branch-from-remote-reference() {
     echo ${1} | sed "s|^[a-zA-Z0-9_-]*/||g"
 }
 
+remove-file() {
+    [[ -f ${1} ]] && rm ${1}
+}
+
 --print-command-in-usage() { (
     source "${BINS}/git-elegant-${1}"
     printf "    %-20s %s\n" "${1}" "$(command-purpose)"
@@ -101,6 +105,9 @@ $(--print-command-in-usage deliver-work)
  operate a flow of work management
 $(--print-command-in-usage obtain-work)
 $(--print-command-in-usage accept-work)
+
+ release new versions
+$(--print-command-in-usage show-release-notes)
 
  and others
 $(--print-command-in-usage commands)

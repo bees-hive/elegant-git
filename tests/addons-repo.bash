@@ -33,6 +33,15 @@ repo-staged-change(){
     perform-verbose git add ${FILE_TO_MODIFY}
 }
 
+repo-commit-file() {
+    # Commits a new file to the repository
+    # usage: repo-commit-file <file name>
+    perform-verbose cd ${GIT_REPO_DIR}
+    touch "${1}"
+    git add "${1}"
+    git commit --message "Add ${1}"
+}
+
 repo() {
     # execute given arguments on real git repo
     # usage: repo <command and arguments>
