@@ -18,6 +18,8 @@ pipeline() {
         ./install.bash /usr/local src
         echo "'Unknown command' testing..."
         git elegant unknown-command | grep "Unknown command: git elegant unknown-command"
+        echo "Check installation of version's file..."
+        git elegant --version || exit 1
     )                                                 || fail "Installation test is failed."
     mkdocs build --clean --strict                     || fail "Unable to build the documentation."
     pdd --exclude=.idea/**/* \

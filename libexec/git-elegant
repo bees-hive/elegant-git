@@ -83,9 +83,10 @@ remove-file() {
 
 An assistant who carefully makes routine work with Git.
 
-usage: git elegant [-h|--help|help]
+usage: git elegant [-h | --help | help]
+   or: git elegant [-v | --version | version]
    or: git elegant <command> [args]
-   or: git elegant <command> [-h|--help|help]
+   or: git elegant <command> [-h | --help | help]
 
 
 There are commands used in various situations such as
@@ -141,8 +142,9 @@ main() {
     local COMMAND="none"
     [[ -n "$1" ]] && COMMAND="$1" && shift
     case "${COMMAND}" in
-        none|-h|--help|help) --usage                       ;;
-        *)                   --run-command ${COMMAND} "$@" ;;
+        none|-h|--help|help)    --usage                       ;;
+        -v|--version|version)   cat "${BINS}/../version"      ;;
+        *)                      --run-command ${COMMAND} "$@" ;;
     esac
 }
 

@@ -18,6 +18,7 @@ copy(){
     install -m 644 ${FROM}/completions/* ${INTO}/completions
     install -m 644 ${FROM}/LICENSE ${INTO}
     install -m 644 ${FROM}/README.md ${INTO}
+    install -m 644 ${FROM}/version ${INTO}
 }
 
 next-steps() {
@@ -34,6 +35,12 @@ Then, please restart the terminal and enjoy the 'elegant git'!
 TEXT
 }
 
+add-version() {
+    cd "${1}"
+    git describe >> version
+    cd -
+}
+
 main() {
     if [[ -n ${1} ]]; then
         INSTALL_PATH="${1}"
@@ -43,13 +50,16 @@ main() {
     # mode selection
     if [[ -z ${1} ]]; then
         local CODE="/tmp/elegant-git"
-        git clone --quiet --depth 1 ${REPO_HOME} ${CODE}
+        git clone --quiet --depth 50 ${REPO_HOME} ${CODE}
+        add-version ${CODE}
         copy ${CODE} ${INSTALL_PATH}
         rm -r ${CODE}
     else
-        copy ${0%/*} ${INSTALL_PATH}
+        local path="${0%/*}"
+        add-version "${path}"
+        copy "${path}" ${INSTALL_PATH}
     fi
-    echo "'elegant git' is installed to '${INSTALL_PATH}/bin/git-elegant'."
+    echo "Elegant Git is installed to '${INSTALL_PATH}/bin/git-elegant'."
     echo "
 The final step after installation is to run
     git elegant acquire-repository

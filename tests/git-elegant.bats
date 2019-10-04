@@ -30,3 +30,8 @@ load addons-common
         [[ "${lines[@]}" =~ "${COMMAND}" ]]
     done
 }
+
+@test "'git elegant': a version is displayed correctly" {
+    check git-elegant --version
+    [[ "${lines[@]}" =~ "/eg/tests/../libexec/../version" ]]
+}

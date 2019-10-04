@@ -3,9 +3,10 @@
 
 An assistant who carefully makes routine work with Git.
 
-usage: git elegant [-h|--help|help]
+usage: git elegant [-h | --help | help]
+   or: git elegant [-v | --version | version]
    or: git elegant <command> [args]
-   or: git elegant <command> [-h|--help|help]
+   or: git elegant <command> [-h | --help | help]
 
 
 There are commands used in various situations such as
