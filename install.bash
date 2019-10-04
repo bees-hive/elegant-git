@@ -5,7 +5,7 @@
 #   ./install.bash /installation/path src    installs to "installation/path" from local sources
 set -e
 
-REPO_HOME="https://github.com/extsoft/elegant-git.git"
+REPO_HOME="https://github.com/bees-hive/elegant-git.git"
 
 copy(){
     local FROM=${1}
