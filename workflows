@@ -9,8 +9,18 @@ testing() {
     docker run -it --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/bats-pipeline.bash "$@"
 }
 
-documentation() {
+generate-docs() {
     .workflows/docs-generation.bash
+}
+
+preview-docs() {
+    sleep 5 && open http://localhost:8000 &
+    mkdocs serve
+}
+
+serve-docs() {
+    generate-docs
+    preview-docs
 }
 
 repository() {
@@ -52,8 +62,10 @@ Available commands:
                     filtering ("${BASH_SOURCE[0]} testing work" run all tests
                     which have the word in the test name)
     repository      creates a git repository and installs Elegant Git within
-    documentation   generates fresh commands documentation bases on the latest
+    generate-docs   generates fresh commands documentation bases on the latest
                     changes
+    preview-docs    shows current documentation
+    serve-docs      generates and shows latest documentation
     ci              runs CI quality assessment workflow
     prepare-worker  builds a new worker image
     publish-worker  pushes a new worker image
@@ -64,7 +76,9 @@ commands=(
     usage
     testing
     repository
-    documentation
+    generate-docs
+    preview-docs
+    serve-docs
     ci
     prepare-worker
     publish-worker

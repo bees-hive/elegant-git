@@ -141,8 +141,7 @@ Use the following test name template - `'<command args>': <describe what will be
 
 ### Updating documentation
 In order to get the documentation preview locally, please install required dependencies with 
-`pip install -r docs/requirements.txt`. After, run `mkdocs serve` and open <http://127.0.0.1:8000/> 
-in a browser. That's it!
+`pip install -r docs/requirements.txt`. After, run `./workflows serve-docs`. That's it!
 
-The [docs/commands.md](docs/commands.md) generates by running `./workflows documentation` script.
+The [docs/commands.md](docs/commands.md) generates by running `./workflows generate-docs` script.
 All other files in ["docs" directory](docs/) require manual corrections.
