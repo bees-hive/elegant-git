@@ -30,8 +30,6 @@ click on the picture :point_down::point_down::point_down: to see a demo.
 
 [![][bb]][bl] [![][db]][dl] [![][0b]][0l]
 
-[![Rultor.com](http://www.rultor.com/b/bees-hive/elegant-git)](http://www.rultor.com/p/bees-hive/elegant-git)
-
 ---
 
 ## The contribution process at a glance
