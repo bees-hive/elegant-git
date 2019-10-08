@@ -15,7 +15,7 @@ _git_elegant() {
             local data=$(git branch | awk -F ' +' '! /\(no branch\)/ {print $2}')
             COMPREPLY=( $(compgen -W "${data}" ${cur}) )
             return 0 ;;
-        accept-work)
+        accept-work|obtain-work)
             COMPREPLY=(
                 $(compgen -W "$(git branch --remotes --list)" -- ${cur})
             )
