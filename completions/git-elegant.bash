@@ -7,7 +7,7 @@ _git_elegant() {
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
     case "${prev}" in
-        elegant)
+        elegant|git-elegant)
             opts=($(git elegant commands))
             COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cur}) )
             return 0 ;;
@@ -24,3 +24,5 @@ _git_elegant() {
             return 0 ;;
     esac
 }
+
+complete -F _git_elegant git-elegant
