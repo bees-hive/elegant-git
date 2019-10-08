@@ -10,10 +10,6 @@ _git_elegant() {
             local opts=($(git elegant commands))
             COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
             return 0 ;;
-        pull|epull)
-            local data=$(git branch | awk -F ' +' '! /\(no branch\)/ {print $2}')
-            COMPREPLY=( $(compgen -W "${data}" ${cursor}) )
-            return 0 ;;
         accept-work|obtain-work)
             COMPREPLY=(
                 $(compgen -W "$(git branch --remotes --list)" -- ${cursor})
