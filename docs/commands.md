@@ -194,13 +194,16 @@ echo ...
 # `deliver-work`
 
 ```bash
-usage: git elegant deliver-work [branch name]
+usage: git elegant deliver-work [branch-name]
 ```
 
 Updates the current branch by rebasing the default upstream branch. Then,
-it pushes HEAD to appropriate upstream branch. By default, the name of remote
-branch is equal to the local one. Also, you can give a custom name of
-the remote branch if needed.
+it pushes HEAD to the appropriate upstream branch.
+
+By default, the name of remote branch is equal to the local one. If a local
+branch has an upstream branch configured, it will be used as a remote branch.
+If you provide a custom name of the remote branch, it will be used as a remote
+branch.
 
 If there are uncommitted changes, they will be stashed prior to the command
 execution and un-stashed after its successful completion. This is useful if you

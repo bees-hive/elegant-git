@@ -9,16 +9,19 @@ MESSAGE
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant deliver-work [branch name]
+usage: git elegant deliver-work [branch-name]
 MESSAGE
 }
 
 command-description() {
     cat<<MESSAGE
 Updates the current branch by rebasing the default upstream branch. Then,
-it pushes HEAD to appropriate upstream branch. By default, the name of remote
-branch is equal to the local one. Also, you can give a custom name of
-the remote branch if needed.
+it pushes HEAD to the appropriate upstream branch.
+
+By default, the name of remote branch is equal to the local one. If a local
+branch has an upstream branch configured, it will be used as a remote branch.
+If you provide a custom name of the remote branch, it will be used as a remote
+branch.
 
 If there are uncommitted changes, they will be stashed prior to the command
 execution and un-stashed after its successful completion. This is useful if you
@@ -37,11 +40,19 @@ MESSAGE
 --deliver-work-logic() {
     git-verbose fetch
     git-verbose rebase ${RMASTER}
-    local remote_branch=${1}
+    local upstream=$(git branch --list --format "%(upstream:lstrip=2)" ${1})
+    local remote_branch=${upstream/*\//}
+    local remote=${upstream/\/*/}
     if [[ -n "${2}" ]]; then
         remote_branch=${2}
     fi
-    git-verbose push --set-upstream --force origin ${1}:${remote_branch}
+    if [[ -z "${remote_branch}" ]]; then
+        remote_branch=${1}
+    fi
+    if [[ -z "${remote}" ]]; then
+        remote=${REMOTE_NAME}
+    fi
+    git-verbose push --set-upstream --force ${remote} ${1}:${remote_branch}
 }
 
 default() {
