@@ -27,6 +27,9 @@ If there are uncommitted changes, they will be stashed prior to the command
 execution and un-stashed after its successful completion. This is useful if you
 need to deliver only sub-set of the changes.
 
+If the push output contains an URL (like a link to create a pull request), it
+will be open (in case if \`open\` command is available) in a default browser.
+
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant deliver-work
@@ -35,6 +38,13 @@ git rebase origin/master
 git push --set-upstream --force origin task-123:task-123
 \`\`\`
 MESSAGE
+}
+
+--open-urls-if-possible() {
+    type open >/dev/null 2>&1 || return 0
+    for line in ${1}; do
+        [[ ${line} =~ ^http(.+) ]] && open ${line}
+    done
 }
 
 --deliver-work-logic() {
@@ -52,7 +62,7 @@ MESSAGE
     if [[ -z "${remote}" ]]; then
         remote=${REMOTE_NAME}
     fi
-    git-verbose push --set-upstream --force ${remote} ${1}:${remote_branch}
+    git-verbose-op --open-urls-if-possible push --set-upstream --force ${remote} ${1}:${remote_branch}
 }
 
 default() {

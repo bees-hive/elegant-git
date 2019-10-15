@@ -209,6 +209,9 @@ If there are uncommitted changes, they will be stashed prior to the command
 execution and un-stashed after its successful completion. This is useful if you
 need to deliver only sub-set of the changes.
 
+If the push output contains an URL (like a link to create a pull request), it
+will be open (in case if `open` command is available) in a default browser.
+
 Approximate commands flow is
 ```bash
 ==>> git elegant deliver-work

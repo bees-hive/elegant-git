@@ -13,8 +13,21 @@ __site="https://elegant-git.bees-hive.org"
 
 
 git-verbose() {
+    # Prints a command to be executed and executes it using `git` executable.
+    # usage: git-verbose [arg]...
     command-text "git $@"
     git "$@"
+}
+
+git-verbose-op() {
+    # Prints a command to be executed, executes it using `git` executable,
+    # prints the output, and processes the output by a given function.
+    # usage: git-verbose-op <function> [arg]...
+    local processor=${1}; shift
+    command-text "git $@"
+    local output=$(git "$@" 2>&1)
+    echo "${output}"
+    ${processor} "${output}"
 }
 
 MASTER="master"

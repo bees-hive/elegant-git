@@ -82,7 +82,7 @@ it. Each command file has to provide the following BASH functions:
 ### Coding rules
 We enforce having a consistent implementation by following the next strict rules:
 - add `#!/usr/bin/env bash` at the beginning of each script
-- use `git-verbose` instead of `git` if you need to print a `git`'s command to CLI
+- use whether `git-verbose` or `git-verbose-op` instead of `git` command for well-formatted outputs
 - a private function (a usage in the scope of current script) should be prefixed with `--`
 
 If you need to write a message to the system output, please use public functions in

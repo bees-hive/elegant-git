@@ -57,3 +57,11 @@ teardown() {
     [[ "${status}" -eq 0 ]]
     [[ "${lines[@]}" =~ "git push --set-upstream --force some feature1:remote" ]]
 }
+
+@test "'deliver-work': open URls if they are present in the push output" {
+    repo "git checkout -b feature1"
+    fake-pass "git push --set-upstream --force origin feature1:feature1" "remote: https://pull/new/some"
+    fake "open https://pull/new/some" 23
+    check git-elegant deliver-work
+    [[ "${status}" -eq 23 ]]
+}
