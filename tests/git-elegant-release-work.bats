@@ -22,8 +22,6 @@ setup() {
     fake-pass "git pull --tags"
     fake-pass "git push --tags"
     fake-pass "git tag --annotate --file tag-message --edit ${new_tag}"
-    fake-fail "which pbcopy"
-    fake-fail "which xclip"
     fake-pass "git remote get-url origin" "https://fake-repo.git"
     read-answer ${new_tag}
 }

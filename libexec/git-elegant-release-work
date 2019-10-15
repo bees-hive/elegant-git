@@ -36,6 +36,19 @@ git elegant show-release-notes smart 1.1.12 1.2.0
 MESSAGE
 }
 
+--copy-notes-if-possible(){
+    local default_tool="cat"
+    local copy_tool=${default_tool}
+    # mac
+    type pbcopy >/dev/null 2>&1 && copy_tool="pbcopy"
+    # linux
+    type xclip >/dev/null 2>&1 && copy_tool="xclip -selection clipboard"
+    echo "${1}" | ${copy_tool}
+    if [[ ! "${default_tool}" == "${copy_tool}" ]]; then
+        info-text "The release notes are copied to clipboard."
+    fi
+}
+
 --release-work() {
     git-verbose checkout ${MASTER}
     git-verbose pull --tags
@@ -54,21 +67,7 @@ MESSAGE
     git-verbose tag --annotate --file ${message} --edit ${new_tag}
     remove-file ${message}
     git-verbose push --tags
-
-
-    local default_tool="cat"
-    local copy_tool=${default_tool}
-    # mac
-    which pbcopy >/dev/null && copy_tool="pbcopy"
-    # linux
-    which xclip >/dev/null && copy_tool="xclip -selection clipboard"
-    (
-        git-verbose elegant show-release-notes smart ${last_tag} ${new_tag}
-    ) | ${copy_tool}
-    if [[ ! "${default_tool}" == "${copy_tool}" ]]; then
-        info-text "The release notes are copied to clipboard."
-    fi
-
+    git-verbose-op --copy-notes-if-possible elegant show-release-notes smart ${last_tag} ${new_tag}
 }
 
 default() {

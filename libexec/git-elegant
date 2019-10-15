@@ -21,13 +21,11 @@ git-verbose() {
 
 git-verbose-op() {
     # Prints a command to be executed, executes it using `git` executable,
-    # prints the output, and processes the output by a given function.
+    # and processes the output by a given function instead of printing it.
     # usage: git-verbose-op <function> [arg]...
     local processor=${1}; shift
     command-text "git $@"
-    local output=$(git "$@" 2>&1)
-    echo "${output}"
-    ${processor} "${output}"
+    ${processor} "$(git "$@" 2>&1)"
 }
 
 MASTER="master"
