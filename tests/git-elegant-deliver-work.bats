@@ -65,3 +65,11 @@ teardown() {
     check git-elegant deliver-work
     [[ "${status}" -eq 23 ]]
 }
+
+@test "'deliver-work': exit 0 if URls are not present in the push output" {
+    repo "git checkout -b feature1"
+    fake-pass "git push --set-upstream --force origin feature1:feature1" "Branch 'workflows' set up to track remote branch 'workflows' from 'origin'."
+    fake "open https://pull/new/some" 23
+    check git-elegant deliver-work
+    [[ "${status}" -eq 0 ]]
+}
