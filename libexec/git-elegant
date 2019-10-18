@@ -92,7 +92,7 @@ remove-file() {
 --usage() {
     cat <<MESSAGE
 
-An assistant who carefully makes routine work with Git.
+An assistant who carefully automates routine work with Git.
 
 usage: git elegant [-h | --help | help]
    or: git elegant [-v | --version | version]
@@ -131,6 +131,20 @@ Please visit ${__site} to find out more.
 MESSAGE
 }
 
+--run-file(){
+    if [[ -f "${1}" ]]; then
+        command-text ${1}
+        ${1}
+    fi
+}
+
+--run-workflow(){
+    local type=${1}
+    local command=${2}
+    --run-file ".git/.workflows/${command}-${type}"
+    --run-file ".workflows/${command}-${type}"
+}
+
 --run-command() {
     # usage: <command name> [arg]...
     local COMMAND=${1}; shift
@@ -145,7 +159,11 @@ MESSAGE
             command-description
             echo ""
             ;;
-        *)  default "$@" ;;
+        *)
+            --run-workflow ahead ${COMMAND}
+            default "$@"
+            --run-workflow after ${COMMAND}
+            ;;
     esac
 }
 

@@ -1,7 +1,7 @@
 # `git-elegant`
 ```bash
 
-An assistant who carefully makes routine work with Git.
+An assistant who carefully automates routine work with Git.
 
 usage: git elegant [-h | --help | help]
    or: git elegant [-v | --version | version]

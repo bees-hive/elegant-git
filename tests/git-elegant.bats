@@ -35,3 +35,29 @@ load addons-common
     check git-elegant --version
     [[ "${lines[@]}" =~ "/eg/tests/../libexec/../version" ]]
 }
+
+@test "'git elegant': workflows are loaded correctly" {
+    perform-verbose mkdir -p .workflows .git/.workflows
+    echo "echo ahead git" | tee -i .git/.workflows/commands-ahead
+    echo "echo ahead no" | tee -i .workflows/commands-ahead
+    echo "echo after git" | tee -i .git/.workflows/commands-after
+    echo "echo after no" | tee -i .workflows/commands-after
+    perform-verbose chmod +x .git/.workflows/* .workflows/*
+    perform-verbose ls -lah .git/.workflows/* .workflows/*
+    check git-elegant commands
+    [[ "$status" -eq 0 ]]
+    [[ "${lines[0]}" =~ ".git/.workflows/commands-ahead" ]]
+    [[ "${lines[1]}" == "ahead git" ]]
+    [[ "${lines[2]}" =~ ".workflows/commands-ahead" ]]
+    [[ "${lines[3]}" == "ahead no" ]]
+    [[ "${lines[-4]}" =~ ".git/.workflows/commands-after" ]]
+    [[ "${lines[-3]}" == "after git" ]]
+    [[ "${lines[-2]}" =~ ".workflows/commands-after" ]]
+    [[ "${lines[-1]}" == "after no" ]]
+}
+
+teardown(){
+     if [[ -d ".workflows" ]]; then
+        perform-verbose rm -rv .git/.workflows .workflows
+     fi
+}

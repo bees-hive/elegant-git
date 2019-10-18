@@ -15,7 +15,7 @@
 [dl]: https://elegant-git.bees-hive.org/en/latest/?badge=latest
 
 # Elegant Git
-Elegant Git is an assistant who carefully makes routine work with Git.
+Elegant Git is an assistant who carefully automates routine work with Git.
 
 Please visit <https://elegant-git.bees-hive.org/> to get started with user documentation or
 click on the picture :point_down::point_down::point_down: to see a demo.
