@@ -46,6 +46,7 @@ something which should be quickly available, please propose changes here.
 **Table of contents**
 
 - [Architecture](#architecture)
+- [Development environment](#development-environment)
 - [Coding rules](#coding-rules)
 - [Debug mode](#debug-mode)
 - [Testing procedure](#testing-procedure)
@@ -78,6 +79,12 @@ it. Each command file has to provide the following BASH functions:
 - `command-synopsis` prints a `usage` statement (line length is limited to 80 characters)
 - `command-description` prints a command description (line length is limited to 80 characters)
 - `default` executes given command
+
+### Development environment
+The following tools are needed for successful development:
+- Docker >= 19.03.2 is used for running tests
+- Python 3.x is needed for documentation previews
+- Elegant Git automates testing process and documentation generation
 
 ### Coding rules
 We enforce having a consistent implementation by following the next strict rules:
