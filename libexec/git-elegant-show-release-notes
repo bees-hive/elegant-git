@@ -40,7 +40,7 @@ MESSAGE
     local first="${1}"
     local second="${2}"
     local changelog="github-release-notes"
-    echo "<p>Release notes<p>" > ${changelog}
+    echo "<h3>Release notes</h3>" > ${changelog}
     local url=$(git remote get-url origin)
     local repository=""
     [[ ${url} =~ "github.com/" ]] && repository=${url##*github.com/}
