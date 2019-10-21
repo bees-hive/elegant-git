@@ -35,7 +35,9 @@ _git_elegant() {
             show-release-notes)
                 COMPREPLY=( $(compgen -W "simple smart ${gecops[*]}" -- ${cursor}) )
                 return 0 ;;
-            *)  ;;
+            *)
+                COMPREPLY=( $(compgen -W "${gecops[*]}" -- ${cursor}) )
+                return 0 ;;
         esac
     fi
 
