@@ -56,8 +56,35 @@ load addons-common
     [[ "${lines[-1]}" == "after no" ]]
 }
 
+@test "'git elegant': workflows are ignored if --no-workflows is set before a command" {
+    perform-verbose mkdir -p .workflows
+    echo "echo ahead no" | tee -i .workflows/commands-ahead
+    echo "echo after no" | tee -i .workflows/commands-after
+    perform-verbose chmod +x .workflows/*
+    perform-verbose ls -lah .workflows/*
+    check git-elegant --no-workflows commands
+    [[ "$status" -eq 0 ]]
+    [[ ! "${lines[@]}" =~ ".workflows/commands-ahead" ]]
+    [[ ! "${lines[@]}" =~ ".workflows/commands-after" ]]
+}
+
+@test "'git elegant': workflows are ignored if --no-workflows is set after a command" {
+    perform-verbose mkdir -p .workflows
+    echo "echo ahead no" | tee -i .workflows/commands-ahead
+    echo "echo after no" | tee -i .workflows/commands-after
+    perform-verbose chmod +x .workflows/*
+    perform-verbose ls -lah .workflows/*
+    check git-elegant commands --no-workflows
+    [[ "$status" -eq 0 ]]
+    [[ ! "${lines[@]}" =~ ".workflows/commands-ahead" ]]
+    [[ ! "${lines[@]}" =~ ".workflows/commands-after" ]]
+}
+
 teardown(){
      if [[ -d ".workflows" ]]; then
-        perform-verbose rm -rv .git/.workflows .workflows
+        perform-verbose rm -rv .workflows
+     fi
+     if [[ -d ".git/.workflows" ]]; then
+        perform-verbose rm -rv .git/.workflows
      fi
 }

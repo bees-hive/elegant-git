@@ -35,9 +35,6 @@ repository() {
 }
 
 ci() {
-    if [[ -f version ]]; then
-        rm -v version
-    fi
     docker run --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/ci-pipeline.bash testing
 }
 

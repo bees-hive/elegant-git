@@ -94,11 +94,14 @@ remove-file() {
 
 An assistant who carefully automates routine work with Git.
 
-usage: git elegant [-h | --help | help]
-   or: git elegant [-v | --version | version]
-   or: git elegant <command> [args]
+usage: git elegant [-h | --help | help | --version | version]
    or: git elegant <command> [-h | --help | help]
+   or: git elegant <command> [--no-workflows] [args]
+   or: git elegant [--no-workflows] <command> [args]
 
+    -h, --help, help    displays help
+    --version, version  displays program version
+    --no-workflows      disables available workflows
 
 There are commands used in various situations such as
 
@@ -145,12 +148,21 @@ MESSAGE
     --run-file ".workflows/${command}-${type}"
 }
 
+--load-command(){
+    local commandfile="${BINS}/git-elegant-${1}"
+    if [[ -f ${commandfile} ]]; then
+        source ${commandfile}
+    else
+        echo "Unknown command: git elegant ${1}"
+        --usage
+        exit 46
+    fi
+}
+
 --run-command() {
     # usage: <command name> [arg]...
     local COMMAND=${1}; shift
-    . "${BINS}/git-elegant-${COMMAND}" 2>/dev/null || {
-        echo "Unknown command: git elegant $COMMAND" && --usage && exit 46
-    }
+    --load-command ${COMMAND}
     case "${1}" in
         -h|--help|help)
             echo ""
@@ -158,6 +170,10 @@ MESSAGE
             echo ""
             command-description
             echo ""
+            ;;
+        --no-workflows)
+            shift
+            default "$@"
             ;;
         *)
             --run-workflow ahead ${COMMAND}
@@ -171,9 +187,19 @@ main() {
     local COMMAND="none"
     [[ -n "$1" ]] && COMMAND="$1" && shift
     case "${COMMAND}" in
-        none|-h|--help|help)    --usage                       ;;
-        -v|--version|version)   cat "${BINS}/../version"      ;;
-        *)                      --run-command ${COMMAND} "$@" ;;
+        none|-h|--help|help)
+            --usage
+            ;;
+        --version|version)
+            cat "${BINS}/../version"
+            ;;
+        --no-workflows)
+            COMMAND=${1}
+            shift
+            --run-command ${COMMAND} --no-workflows "$@"
+            ;;
+        *)  --run-command ${COMMAND} "$@"
+            ;;
     esac
 }
 

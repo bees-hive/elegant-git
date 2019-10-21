@@ -3,11 +3,14 @@
 
 An assistant who carefully automates routine work with Git.
 
-usage: git elegant [-h | --help | help]
-   or: git elegant [-v | --version | version]
-   or: git elegant <command> [args]
+usage: git elegant [-h | --help | help | --version | version]
    or: git elegant <command> [-h | --help | help]
+   or: git elegant <command> [--no-workflows] [args]
+   or: git elegant [--no-workflows] <command> [args]
 
+    -h, --help, help    displays help
+    --version, version  displays program version
+    --no-workflows      disables available workflows
 
 There are commands used in various situations such as
 

@@ -3,41 +3,63 @@
 _git_elegant() {
     COMPREPLY=()
     local cursor="${COMP_WORDS[COMP_CWORD]}"
-
+    local geops="--help --version --no-workflows"
+    local gecops="--help --no-workflows"
+    local offset=0
+    if [[ ${COMP_WORDS[*]} =~ (--no-workflows)|(-nw) ]]; then
+        geops=""
+        gecops=""
+        if [[ ${COMP_WORDS[COMP_CWORD-1]} =~ (--no-workflows)|(-nw) ]]; then
+            offset=1
+        fi
+    fi
     # the first word prior to the ${cursor}
-    case ""${COMP_WORDS[COMP_CWORD-1]}"" in
-        elegant|git-elegant)
-            local opts=($(git elegant commands))
-            COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
-            return 0 ;;
-        accept-work|obtain-work)
-            COMPREPLY=(
-                $(compgen -W "$(git branch --remotes --list)" -- ${cursor})
-            )
-            return 0 ;;
-        show-release-notes)
-            COMPREPLY=( $(compgen -W "simple smart" ${cursor}) )
-            return 0 ;;
-        *)  ;;
-    esac
+    if [[ ${#COMP_WORDS[*]} > $(( 1 + ${offset} )) ]]; then
+        case "${COMP_WORDS[COMP_CWORD-$(( 1 + ${offset} ))]}" in
+            elegant|git-elegant)
+                local opts=(
+                    ${geops}
+                    $(git elegant commands)
+                )
+                COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
+                return 0 ;;
+            accept-work|obtain-work)
+                local opts=(
+                    ${gecops}
+                    $(git branch --remotes --list)
+                )
+                COMPREPLY=(
+                    $(compgen -W "${opts[*]}" -- ${cursor})
+                )
+                return 0 ;;
+            show-release-notes)
+                COMPREPLY=( $(compgen -W "simple smart ${gecops[*]}" -- ${cursor}) )
+                return 0 ;;
+            *)  ;;
+        esac
+    fi
 
     # the second word prior to the ${cursor}
-    case "${COMP_WORDS[COMP_CWORD-2]}" in
-        show-release-notes)
-            local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/**))
-            COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
-            return 0 ;;
-        *)  ;;
-    esac
+    if [[ ${#COMP_WORDS[*]} > $(( 2 + ${offset} )) ]]; then
+        case "${COMP_WORDS[COMP_CWORD-$(( 2 + ${offset} ))]}" in
+            show-release-notes)
+                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/**))
+                COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
+                return 0 ;;
+            *)  ;;
+        esac
+    fi
 
     # the third word prior to the ${cursor}
-    case "${COMP_WORDS[COMP_CWORD-3]}" in
-        show-release-notes)
-            local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/**))
-            COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
-            return 0 ;;
-        *)  ;;
-    esac
+    if [[ ${#COMP_WORDS[*]} > $(( 3 + ${offset} )) ]]; then
+        case "${COMP_WORDS[COMP_CWORD-$(( 3 + ${offset} ))]}" in
+            show-release-notes)
+                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/**))
+                COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
+                return 0 ;;
+            *)  ;;
+        esac
+    fi
 }
 
 complete -F _git_elegant git-elegant

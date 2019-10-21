@@ -49,6 +49,9 @@ A sample workflow execution:
 ❗Please take into that if an action returns a non-zero exit code, the execution of the workflow
 will be interrupted.
 
+If you want to skip workflows for the current command execution, just use `--no-workflows` option
+like `git elegant --no-workflows save-work`.
+
 # Known limitations
 Support only one default remote - `origin`.
 
