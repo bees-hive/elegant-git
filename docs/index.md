@@ -2,7 +2,8 @@
 Elegant Git is an assistant who carefully automates routine work with Git.
 
 Main capabilities
-- unified local full-cycle work management for any git repository
+
+- unified local full-cycle work management for any Git repository
 - local flexible continuous integration (aka [workflows](#workflows))
 
 Used philosophy

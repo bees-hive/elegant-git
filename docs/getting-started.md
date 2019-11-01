@@ -1,11 +1,16 @@
 # Several important words
 You can install Elegant Git by either executing `bash` script or using `homebrew`. After the
 installation, please run [`git elegant acquire-repository`](commands.md#acquire-repository)
-for an existing repository. This command configures the repository and makes Elegant Git commands
-available just by `git <command>`.
+for an existing repository to apply [the needed Git configuration](configuration.md).
 
-All available commands are described on [commands](commands.md) page or can be displayed in
-a terminal by running `git elegant`.
+Run in CLI any of
+```bash
+git <command>
+git elegant <command>
+git-elegant <command>
+```
+where `<command>` is one of the available commands which are described on [commands](commands.md)
+page or are printed in a terminal by running `git elegant`.
 
 Also, please use [`git elegant clone-repository`](commands.md#clone-repository) or 
 [`git elegant init-repository`](commands.md#init-repository) instead of regular `clone` or `init` 

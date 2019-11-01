@@ -78,49 +78,11 @@ git push origin --delete task-123
 usage: git elegant acquire-repository
 ```
 
-A bunch of git configuration applies to current repository using
-`git config --local`. The first part is an interactive configuration which
-aims to set all user-specific options (identity, editor, etc.). The second batch
-applies all options which are required for successful using of Elegant Git.
-Finally, the last part is aliasing Elegant Git commands by making them available
-as regular Git commands.
+Applies the "basics", "standards", and "aliases" configurations to the current
+Git repository using `git config --local`.
 
-Approximate commands flow is
-```bash
-==>> git elegant acquire-repository
-################ User-specific options ################
-git config --local user.name "Dmytro Serdiuk"
-git config --local user.email "dmytro.serdiuk@email.com"
-git config --local core.editor vim
-################ Mandatory options ################
-# "|" char starts non-message lines while writing commit message
-git config --local core.commentChar |
-# Remove whitespaces when apply a patch
-git config --local apply.whitespace fix
-# Aliasing Elegant Git commands by making them available as Git commands
-git config --local "alias.<command>" "elegant <command>"
-# Keep remote-tracking references up-to-date
-git config --local fetch.prune true
-# Don't prune tags by default
-git config --local fetch.pruneTags false
-# Line ending configuration
-## on MAC or Linux
-git config --local core.autocrlf input
-## on Windows
-git config --local core.autocrlf true
-# Always rebase when pull
-git config --local pull.rebase true
-# Never autostash if rebase
-git config --local rebase.autoStash false
-# Specify an external helper to be called when a username
-# or password credential is needed (MAC only)
-git config --local credential.helper osxkeychain
-################ Aliases ################
-# Remove local aliases which contain Elegant Git commands
-git config --local --unset <alias>
-# Add aliases for current commands
-git config --local alias.<command> "elegant <command>"
-```
+To find out what will be configured, please visit
+https://elegant-git.bees-hive.org/en/latest/configuration/
 
 # `amend-work`
 

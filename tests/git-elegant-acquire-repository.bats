@@ -19,7 +19,7 @@ teardown() {
     [[ "${status}" -eq 0 ]]
 }
 
-@test "'acquire-repository': interactive configuration works as expected" {
+@test "'acquire-repository': basics are configured as expected" {
     check git-elegant acquire-repository
     [[ "${lines[@]}" =~ "What is your user name? {Elegant Git}: " ]]
     [[ "${lines[@]}" =~ "==>> git config --local user.name Elegant Git" ]]
@@ -29,7 +29,7 @@ teardown() {
     [[ "${lines[@]}" =~ "==>> git config --local core.editor edi" ]]
 }
 
-@test "'acquire-repository': mandatory configuration works as expected on Windows" {
+@test "'acquire-repository': standards are configured as expected on Windows" {
     fake-pass "uname -s" Windows
     check git-elegant acquire-repository
     [[ "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
@@ -44,7 +44,7 @@ teardown() {
     [[ ! "${lines[@]}" =~ "==>> git config --local core.autocrlf input" ]]
 }
 
-@test "'acquire-repository': mandatory configuration works as expected on Linux" {
+@test "'acquire-repository': standards are configured as expected on Linux" {
     fake-pass "uname -s" Linux
     check git-elegant acquire-repository
     [[ "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
@@ -59,7 +59,7 @@ teardown() {
     [[ ! "${lines[@]}" =~ "==>> git config --local core.autocrlf true" ]]
 }
 
-@test "'acquire-repository': mandatory configuration works as expected on Darwin" {
+@test "'acquire-repository': standards are configured as expected on Darwin" {
     fake-pass "uname -s" Darwin
     check git-elegant acquire-repository
     [[ "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
@@ -74,7 +74,7 @@ teardown() {
     [[ ! "${lines[@]}" =~ "==>> git config --local core.autocrlf true" ]]
 }
 
-@test "'acquire-repository': aliases configuration works as expected" {
+@test "'acquire-repository': new aliases are configured as expected" {
     check git-elegant acquire-repository
     for next in $(git-elegant commands); do
         echo "Test aliasing of '${next}' command"
@@ -83,25 +83,10 @@ teardown() {
     done
 }
 
-@test "'acquire-repository': local aliases are removed as expected" {
+@test "'acquire-repository': old aliases remove correctly if they are present" {
     repo git config --local "alias.aaa" "\"elegant aaa\""
     repo git config --local "alias.bbb" "\"elegant bbb\""
     check git-elegant acquire-repository
     [[ "$status" -eq 0 ]]
-    [[ "${lines[@]}" =~ "2 git aliases were removed that contained 'elegant git' reference." ]]
-}
-
-@test "'acquire-repository': global aliases aren't removed" {
-    repo git config --global "alias.glb" "\"elegant glb\""
-    check git-elegant acquire-repository
-    repo git config --global --unset "alias.glb"
-    [[ "$status" -eq 0 ]]
-    [[ "${lines[@]}" =~ "Non-local alias! Remove it if needed using 'git config --global --unset alias.glb'" ]]
-    [[ "${lines[@]}" =~ "0 git aliases were removed that contained 'elegant git' reference." ]]
-}
-
-@test "'acquire-repository': removing existing git aliases works as expected when aliases are absent" {
-    check git-elegant acquire-repository
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "There are no git aliases which contain 'elegant git' reference." ]]
+    [[ "${lines[@]}" =~ "2 Elegant Git aliases were removed." ]]
 }
