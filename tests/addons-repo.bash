@@ -53,4 +53,7 @@ repo-clean() {
     if [[ -d "${GIT_REPO_DIR}" ]]; then
         rm -rf "${GIT_REPO_DIR}"
     fi
+    if [[ -f ~/.gitconfig ]]; then
+        rm -rf ~/.gitconfig
+    fi
 }

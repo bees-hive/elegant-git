@@ -36,6 +36,7 @@ There are commands used in various situations such as
 
  and others
     commands             Prints available Elegant Git commands.
+    acquire-git          Configures a Git installation.
 
 
 Please visit https://elegant-git.bees-hive.org to find out more.
@@ -71,6 +72,18 @@ git push origin master:master
 git branch --delete --force __eg
 git push origin --delete task-123
 ```
+
+# `acquire-git`
+
+```bash
+usage: git elegant acquire-repository
+```
+
+Applies the "basics", "standards", and "aliases" configurations to the current
+Git installation using `git config --global`.
+
+To find out what will be configured, please visit
+https://elegant-git.bees-hive.org/en/latest/configuration/
 
 # `acquire-repository`
 

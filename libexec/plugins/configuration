@@ -31,6 +31,9 @@ rebase_autoStash=("rebase.autoStash" "false")
 ## Credentials, MAC only
 credential_helper_darwin=("credential.helper" "osxkeychain")
 
+# Elegant Git
+acquired=("elegant.acquired" "true")
+
 __ask_question() {
     # usage: __ask_options <prefix>
     # it makes available ANSWER available

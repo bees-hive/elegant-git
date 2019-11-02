@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -e
+
+command-purpose() {
+    cat <<MESSAGE
+Configures a Git installation.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant acquire-repository
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Applies the "basics", "standards", and "aliases" configurations to the current
+Git installation using \`git config --global\`.
+
+To find out what will be configured, please visit
+${__site}/en/latest/configuration/
+MESSAGE
+}
+
+default() {
+    source ${BINS}/plugins/configuration
+    basics-configuration --global user_name user_email core_editor
+    standards-configuration --global \
+      core_comment \
+      apply_whitespace \
+      fetch_prune \
+      fetch_pruneTags \
+      core_autocrlf_darwinlinux \
+      core_autocrlf_windows pull_rebase \
+      rebase_autoStash \
+      credential_helper_darwin \
+      acquired
+    aliases-removing --global
+    aliases-configuration --global $(git elegant commands)
+}

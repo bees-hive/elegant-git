@@ -62,12 +62,14 @@ main() {
     echo "Elegant Git is installed to '${INSTALL_PATH}/bin/git-elegant'."
     echo "
 The final step after installation is to run
-    git elegant acquire-repository
-for each git repository where Elegant Git is going to be used.
+    git elegant acquire-git
+to apply the latest Elegant Git's configuration.
 
 If this step is not completed, Elegant Git may behave unexpectedly
 since the desired Git configuration (relevant for the current version)
-is not applied.
+is not applied. Please read more on
+    https://elegant-git.bees-hive.org/en/latest/configuration/
+
 "
     command -v git-elegant 1>/dev/null 2>&1 || next-steps ${INSTALL_PATH}
 }

@@ -10,6 +10,7 @@ teardown() {
 @test "'commands': print all available commands" {
     COMMANDS=(
         "acquire-repository"
+        "acquire-git"
         "clone-repository"
         "init-repository"
         "start-work"

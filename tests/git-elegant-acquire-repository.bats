@@ -90,3 +90,20 @@ teardown() {
     [[ "$status" -eq 0 ]]
     [[ "${lines[@]}" =~ "2 Elegant Git aliases were removed." ]]
 }
+
+@test "'acquire-repository': 'elegant.acquired' affects configuration correctly" {
+    fake-pass "uname -s" Linux
+    repo git config --local "alias.aaa" "\"elegant aaa\""
+    repo git config --global "alias.bbb" "\"elegant bbb\""
+    repo git config --global "elegant.acquired" "true"
+    check git-elegant acquire-repository
+    [[ "${lines[@]}" =~ "What is your user name? {Elegant Git}: " ]]
+    [[ "${lines[@]}" =~ "==>> git config --local user.name Elegant Git" ]]
+    [[ "${lines[@]}" =~ "What is your user email? {elegant-git@example.com}: " ]]
+    [[ "${lines[@]}" =~ "==>> git config --local user.email elegant-git@example.com" ]]
+    [[ ! "${lines[@]}" =~ "Please specify a command to start the editor. {edi}: " ]]
+    [[ ! "${lines[@]}" =~ "==>> git config --local core.editor edi" ]]
+    [[ ! "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
+    [[ "${lines[@]}" =~ "1 Elegant Git aliases were removed." ]]
+    [[ ! "${lines[@]}" =~ "==>> git config --local alias.acquire-repository elegant acquire-repository" ]]
+}

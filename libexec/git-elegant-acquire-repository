@@ -25,16 +25,21 @@ MESSAGE
 
 default() {
     source ${BINS}/plugins/configuration
-    basics-configuration --local user_name user_email core_editor
-    standards-configuration --local \
-      core_comment \
-      apply_whitespace \
-      fetch_prune \
-      fetch_pruneTags \
-      core_autocrlf_darwinlinux \
-      core_autocrlf_windows pull_rebase \
-      rebase_autoStash \
-      credential_helper_darwin
-    aliases-removing --local
-    aliases-configuration --local $(git elegant commands)
+    if [[ $(git config ${acquired[0]}) == ${acquired[1]} ]]; then
+        basics-configuration --local user_name user_email
+        aliases-removing --local
+    else
+        basics-configuration --local user_name user_email core_editor
+        standards-configuration --local \
+          core_comment \
+          apply_whitespace \
+          fetch_prune \
+          fetch_pruneTags \
+          core_autocrlf_darwinlinux \
+          core_autocrlf_windows pull_rebase \
+          rebase_autoStash \
+          credential_helper_darwin
+        aliases-removing --local
+        aliases-configuration --local $(git elegant commands)
+    fi
 }

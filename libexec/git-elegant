@@ -127,6 +127,7 @@ $(--print-command-in-usage release-work)
 
  and others
 $(--print-command-in-usage commands)
+$(--print-command-in-usage acquire-git)
 
 
 Please visit ${__site} to find out more.
