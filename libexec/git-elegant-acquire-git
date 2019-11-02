@@ -18,6 +18,9 @@ command-description() {
 Applies the "basics", "standards", and "aliases" configurations to the current
 Git installation using \`git config --global\`.
 
+During the first execution, you will be asked to provide some information.
+After, Elegant Git will automatically detect what should be changed.
+
 To find out what will be configured, please visit
 ${__site}/en/latest/configuration/
 MESSAGE
@@ -25,7 +28,43 @@ MESSAGE
 
 default() {
     source ${BINS}/plugins/configuration
-    basics-configuration --global user_name user_email core_editor
+    if ! $(is-acquired) ; then
+        info-box "Thank you for installing Elegant Git! Let's configure it..."
+        cat <<MESSAGE
+Elegant Git aims to standardize how a work environment should be configured.
+It operates 3 levels of configurations (basics, standards, and aliases) which
+can be applied to a Git repository (local configuration) and (or) to a Git
+installation globally (global configuration).
+
+A global configuration is preferred since it simplifies the upgrades to the new
+versions.
+
+If needed, please read more about the configuration approach to be used on
+${__site}/en/latest/configuration/.
+MESSAGE
+        question-text "Would you like to apply a global configuration? (y/n) "
+        read answer
+        if [[ ${answer} == "y" ]]; then
+            info-text "Applying global configuration..."
+        else
+            cat <<MESSAGE
+You've decided to stay with local configurations. Great!
+Now you have to follow some rules:
+
+1. if you want to acquire existing local repository
+        git-elegant acquire-repository
+
+2. if you need to clone a repository
+        git-elegant clone-repository
+
+3. if you need to create a new repository
+        git-elegant init-repository
+
+MESSAGE
+            exit 0
+        fi
+    fi
+    basics-configuration --global -- user_name user_email core_editor
     standards-configuration --global \
       core_comment \
       apply_whitespace \

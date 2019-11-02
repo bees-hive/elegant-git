@@ -32,9 +32,11 @@ read-clean() {
 
 read() {
     export next_read=$((next_read + 1))
+    local value
     if [[ -f "${answers_directory}/${next_read}" ]]; then
-        eval "export ${1}=$(cat ${answers_directory}/${next_read})"
+        value=$(cat ${answers_directory}/${next_read})
     fi
+    eval "export ${1}=${value}"
     echo ""
 }
 

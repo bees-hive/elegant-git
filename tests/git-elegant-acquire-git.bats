@@ -7,11 +7,13 @@ load addons-repo
 
 setup() {
     repo-new
+    read-answer "y"
 }
 
 teardown() {
     fake-clean
     repo-clean
+    read-clean
 }
 
 @test "'acquire-git': all configurations work as expected" {
@@ -21,6 +23,7 @@ teardown() {
 
 @test "'acquire-git': basics are configured as expected" {
     check git-elegant acquire-git
+    [[ "${lines[@]}" =~ "Please hit enter if you wish {default value}." ]]
     [[ "${lines[@]}" =~ "What is your user name? {Elegant Git}: " ]]
     [[ "${lines[@]}" =~ "==>> git config --global user.name Elegant Git" ]]
     [[ "${lines[@]}" =~ "What is your user email? {elegant-git@example.com}: " ]]
@@ -92,4 +95,24 @@ teardown() {
     check git-elegant acquire-git
     [[ "$status" -eq 0 ]]
     [[ "${lines[@]}" =~ "2 Elegant Git aliases were removed." ]]
+}
+
+@test "'acquire-git': a message is displayed if global configuration is disabled" {
+    read-clean
+    read-answer "n"
+    check git-elegant acquire-git
+    [[ "$status" -eq 0 ]]
+    [[ "${lines[@]}" =~ "You've decided to stay with local configurations. Great!" ]]
+}
+
+@test "'acquire-git': the basics are not changed if they are already configured" {
+    repo git config --global user.name aaaa
+    repo git config --global user.email aaaa
+    repo git config --global core.editor aaaa
+    check git-elegant acquire-git
+    [[ "$status" -eq 0 ]]
+    [[ "${lines[@]}" =~ "==>> git config --global user.name aaaa" ]]
+    [[ "${lines[@]}" =~ "==>> git config --global user.email aaaa" ]]
+    [[ "${lines[@]}" =~ "==>> git config --global core.editor aaaa" ]]
+    [[ ! "${lines[@]}" =~ "Please hit enter if you wish {default value}." ]]
 }

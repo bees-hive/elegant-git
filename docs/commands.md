@@ -82,6 +82,9 @@ usage: git elegant acquire-repository
 Applies the "basics", "standards", and "aliases" configurations to the current
 Git installation using `git config --global`.
 
+During the first execution, you will be asked to provide some information.
+After, Elegant Git will automatically detect what should be changed.
+
 To find out what will be configured, please visit
 https://elegant-git.bees-hive.org/en/latest/configuration/
 

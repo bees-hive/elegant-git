@@ -29,7 +29,14 @@ repository() {
     info-text "Init repository..."
     docker exec -it repository bash -c "source /eg/tests/addons-repo.bash;source /eg/tests/addons-common.bash; repo-new"
     info-text "Install Elegant Git..."
-    docker exec -it repository bash -c "cd /eg; ./install.bash /usr/local src"
+    docker exec -it repository bash -c "
+        cd /eg
+        git config --global user.name \"Elegant Git\"
+        git config --global user.email elegant.git@email.com
+        git config --global core.editor some-editor
+        git config --global elegant.acquired true
+        ./install.bash /usr/local src
+    "
     info-text "Ready! Enjoy experiments..."
     docker attach repository
 }

@@ -46,16 +46,33 @@ __ask_question() {
 }
 
 basics-configuration() {
-    # usage: interactive-configuration <--global | --local> <name> ...
+    # usage: interactive-configuration <--global | --local> <name> ... -- <name if not set> ...
     info-box "Configuring basics..."
-    info-text "Please hit enter if you wish {default value}."
     local scope=${1}; shift
+    local nonset=false
+    local notify=true
     for f in ${@}; do
+        local key=$(eval "echo -n \$${f}_key")
+        if [[ "${f}" == "--" ]]; then
+            nonset=true
+            continue
+        fi
+        if ${nonset}; then
+            local current="$(git config ${scope} --get ${key})"
+            if [[ -n ${current} ]] ; then
+                command-text "git config ${scope} ${key} ${current}"
+                continue
+            fi
+        fi
+        if ${notify}; then
+            info-text "Please hit enter if you wish {default value}."
+            notify=false
+        fi
         unset ANSWER
         while [[ -z "${ANSWER}" ]]; do
             __ask_question ${f}
             if [[ -n "${ANSWER}" ]]; then
-                git-verbose config ${scope} $(eval "echo -n \$${f}_key") "${ANSWER}"
+                git-verbose config ${scope} ${key} "${ANSWER}"
             fi
         done
     done
@@ -104,4 +121,12 @@ aliases-configuration() {
         local origin="elegant ${command}"
         git-verbose config ${scope} "alias.${alias}" "${origin}"
     done
+}
+
+is-acquired() {
+    # usage: if $(acquired-state) ; then
+    if [[ "$(git config --global --get ${acquired[0]} || true)" == ${acquired[1]} ]]; then
+        return 0
+    fi
+    return 1
 }

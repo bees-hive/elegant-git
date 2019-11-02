@@ -25,7 +25,7 @@ MESSAGE
 
 default() {
     source ${BINS}/plugins/configuration
-    if [[ $(git config ${acquired[0]}) == ${acquired[1]} ]]; then
+    if $(is-acquired) ; then
         basics-configuration --local user_name user_email
         aliases-removing --local
     else

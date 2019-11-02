@@ -1,7 +1,7 @@
 # Approach
-Elegant Git aims to standardize how a Git repository should be configured. It operates 3 levels of
-configurations (basics, standards, and aliases - see below) which can be applied to a repository
-(local configuration) or to a Git globally (global configuration).
+Elegant Git aims to standardize how a work environment should be configured. It operates 3 levels
+of configurations (basics, standards, and aliases - see below) which can be applied to a Git
+repository (local configuration) and (or) to a Git installation globally (global configuration).
 
 The local configuration applies by running
 [`git elegant acquire-repository`](commands.md#acquire-repository) and configures current Git
