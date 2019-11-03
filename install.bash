@@ -21,17 +21,30 @@ copy(){
     install -m 644 ${FROM}/version ${INTO}
 }
 
-next-steps() {
+update-path() {
+    local INSTALL_PATH=${1}
+    cat <<TEXT
+You need to add Elegant Git to the PATH by adding to
+a "~/.bashrc" or "~/.bash_profile" file:
+
+    export PATH=${INSTALL_PATH}/bin:\$PATH
+
+After, please configure the installation by running
+
+    git-elegant acquire-git
+
+TEXT
+}
+
+update-completion() {
     local INSTALL_PATH=${1}
     local COMPLETION_FILE="${INSTALL_PATH}/completions/git-elegant.bash"
-    cat <<TEXT >&1
-Please add 3 highlighted lines to your "~/.bashrc" (or "~/.bash_profile"):
---------------------------------------------------------------------------
-# elegant git: ${REPO_HOME}
-export PATH=${INSTALL_PATH}/bin:\$PATH
-[ -f ${COMPLETION_FILE} ] && . ${COMPLETION_FILE}
---------------------------------------------------------------------------
-Then, please restart the terminal and enjoy the 'elegant git'!
+    cat <<TEXT
+You need to add loading of BASH completion file to
+a "~/.bashrc" or "~/.bash_profile" file:
+
+    [ -f ${COMPLETION_FILE} ] && . ${COMPLETION_FILE}
+
 TEXT
 }
 
@@ -60,8 +73,14 @@ main() {
         copy "${path}" ${INSTALL_PATH}
     fi
     echo "Elegant Git is installed to '${INSTALL_PATH}/bin/git-elegant'."
-    ${INSTALL_PATH}/bin/git-elegant acquire-git
-    command -v git-elegant 1>/dev/null 2>&1 || next-steps ${INSTALL_PATH}
+    if command -v git-elegant 1>/dev/null 2>&1; then
+        git-elegant acquire-git
+    else
+        update-path ${INSTALL_PATH}
+    fi
+    if ! complete -p git-elegant 1>/dev/null 2>&1; then
+        update-completion ${INSTALL_PATH}
+    fi
 }
 
 main $@
