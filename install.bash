@@ -60,7 +60,7 @@ main() {
         copy "${path}" ${INSTALL_PATH}
     fi
     echo "Elegant Git is installed to '${INSTALL_PATH}/bin/git-elegant'."
-    git-elegant acquire-git
+    ${INSTALL_PATH}/bin/git-elegant acquire-git
     command -v git-elegant 1>/dev/null 2>&1 || next-steps ${INSTALL_PATH}
 }
 
