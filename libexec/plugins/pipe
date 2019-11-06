@@ -6,7 +6,7 @@ stash-pipe() {
     # Makes automatic stash and unstash if possible
     # usage:  stash-pipe <command> [args]...
 
-    git update-index -q --refresh
+    git update-index -q --really-refresh
     if ! git diff-index --quiet HEAD --; then
         local message="Elegant Git auto-stash: "
         message+="WIP in '$(git rev-parse --abbrev-ref HEAD)' branch "
@@ -17,7 +17,7 @@ stash-pipe() {
     "${@}"
 
     if [[ -n "${message}" ]]; then
-        git update-index -q --refresh
+        git update-index -q --really-refresh
         git-verbose stash pop $(git stash list --grep="${message}" --format="%gd")
     fi
 }

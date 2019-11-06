@@ -32,7 +32,7 @@ pipeline() {
         --verbose --file=/dev/null                    || fail "Unreadable todo is identified."
     (
         .workflows/docs-generation.bash
-        git update-index --refresh
+        git update-index --really-refresh
         git diff-index --quiet HEAD --
     ) || fail "The documentation is not up to date. Please run './.workflows/docs-generation.bash' and commit the changes"
 
