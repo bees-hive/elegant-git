@@ -24,6 +24,7 @@ There are commands used in various situations such as
     start-work           Creates a new branch.
     save-work            Commits current modifications.
     amend-work           Amends some changes to the most recent commit.
+    polish-work          Reapplies branch commits interactively.
     deliver-work         Publishes current branch to a remote repository.
 
  operate a flow of work management
@@ -233,6 +234,29 @@ Approximate commands flow is
 ==>> git elegant obtain-work new-feature task-133
 git fetch --all
 git checkout -B task-133 custom-remote/new-feature
+```
+
+# `polish-work`
+
+```bash
+usage: git elegant polish-work
+```
+
+Reapplies branch commits using interactive rebase. It uses only new commits that
+aren't in `master` branch. If there is a rebase in progress, the command will
+continue it.
+
+Prior to the execution and in the case of rebase initiation, all uncommitted
+tracked modifications will be temporally stashed. And they will be uncovered if
+the rebase completes without errors, otherwise, you need to apply them manually
+by running `git stash pop`.
+
+The command raises error 42 if it runs against `master` branch.
+
+Approximate commands flow is
+```bash
+==>> git elegant polish-work
+git rebase --interactive @~5
 ```
 
 # `release-work`

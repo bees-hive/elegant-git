@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -e
+
+command-purpose() {
+    cat <<MESSAGE
+Reapplies branch commits interactively.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant polish-work
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Reapplies branch commits using interactive rebase. It uses only new commits that
+aren't in \`master\` branch. If there is a rebase in progress, the command will
+continue it.
+
+Prior to the execution and in the case of rebase initiation, all uncommitted
+tracked modifications will be temporally stashed. And they will be uncovered if
+the rebase completes without errors, otherwise, you need to apply them manually
+by running \`git stash pop\`.
+
+The command raises error 42 if it runs against \`master\` branch.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant polish-work
+git rebase --interactive @~5
+\`\`\`
+MESSAGE
+}
+
+default() {
+    if [[ $(git rev-parse --abbrev-ref HEAD) == "master" ]]; then
+        error-box "'master' branch history can't be rewritten. Please read more on ${__site}"
+        exit 42
+    fi
+    if test -d "$(git rev-parse --git-path rebase-merge)" ||  test -d "$(git rev-parse --git-path rebase-apply)"; then
+        git-verbose rebase --continue
+    else
+        local commits=($(git rev-list ${MASTER}..@))
+        if [[ ${#commits[*]} -eq 0 ]]; then
+            info-text "There are no new commits comparing to '${MASTER}' branch."
+        else
+            stash-pipe git-verbose rebase --interactive @~${#commits[*]}
+        fi
+    fi
+}
