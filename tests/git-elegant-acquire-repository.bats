@@ -25,8 +25,8 @@ teardown() {
     [[ "${lines[@]}" =~ "==>> git config --local user.name Elegant Git" ]]
     [[ "${lines[@]}" =~ "What is your user email? {elegant-git@example.com}: " ]]
     [[ "${lines[@]}" =~ "==>> git config --local user.email elegant-git@example.com" ]]
-    [[ "${lines[@]}" =~ "Please specify a command to start the editor. {edi}: " ]]
-    [[ "${lines[@]}" =~ "==>> git config --local core.editor edi" ]]
+    [[ "${lines[@]}" =~ "Please specify a command to start the editor. {vi}: " ]]
+    [[ "${lines[@]}" =~ "==>> git config --local core.editor vi" ]]
 }
 
 @test "'acquire-repository': standards are configured as expected on Windows" {
@@ -101,8 +101,8 @@ teardown() {
     [[ "${lines[@]}" =~ "==>> git config --local user.name Elegant Git" ]]
     [[ "${lines[@]}" =~ "What is your user email? {elegant-git@example.com}: " ]]
     [[ "${lines[@]}" =~ "==>> git config --local user.email elegant-git@example.com" ]]
-    [[ ! "${lines[@]}" =~ "Please specify a command to start the editor. {edi}: " ]]
-    [[ ! "${lines[@]}" =~ "==>> git config --local core.editor edi" ]]
+    [[ ! "${lines[@]}" =~ "Please specify a command to start the editor. {vi}: " ]]
+    [[ ! "${lines[@]}" =~ "==>> git config --local core.editor vi" ]]
     [[ ! "${lines[@]}" =~ "==>> git config --local core.commentChar |" ]]
     [[ "${lines[@]}" =~ "1 Elegant Git aliases were removed." ]]
     [[ ! "${lines[@]}" =~ "==>> git config --local alias.acquire-repository elegant acquire-repository" ]]

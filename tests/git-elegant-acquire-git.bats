@@ -28,8 +28,8 @@ teardown() {
     [[ "${lines[@]}" =~ "==>> git config --global user.name Elegant Git" ]]
     [[ "${lines[@]}" =~ "What is your user email? {elegant-git@example.com}: " ]]
     [[ "${lines[@]}" =~ "==>> git config --global user.email elegant-git@example.com" ]]
-    [[ "${lines[@]}" =~ "Please specify a command to start the editor. {edi}: " ]]
-    [[ "${lines[@]}" =~ "==>> git config --global core.editor edi" ]]
+    [[ "${lines[@]}" =~ "Please specify a command to start the editor. {vi}: " ]]
+    [[ "${lines[@]}" =~ "==>> git config --global core.editor vi" ]]
 }
 
 @test "'acquire-git': standards are configured as expected on Windows" {

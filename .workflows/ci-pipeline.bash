@@ -17,7 +17,7 @@ pipeline() {
         echo "Installation...."
         git config --global user.name "Elegant Git"
         git config --global user.email elegant.git@email.com
-        git config --global core.editor some-editor
+        git config --global core.editor vi
         git config --global elegant.acquired true
         ./install.bash /usr/local src
         echo "'Unknown command' testing..."
