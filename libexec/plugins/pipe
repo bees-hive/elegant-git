@@ -13,6 +13,9 @@ has-changes() {
 stash-pipe() {
     # Makes automatic stash and unstash if possible
     # usage:  stash-pipe <command> [args]...
+    # The pipe behavior is tested based on `start-work` command. That's why you
+    # have to add new tests in `git-elegant-start-work.bats` if you want to
+    # check some specific cases.
 
     git update-index -q --really-refresh
     if has-changes; then
@@ -24,9 +27,12 @@ stash-pipe() {
 
     "${@}"
 
-    if [[ -n "${message}" ]]; then
+    if [[ -n ${message} ]]; then
         git update-index -q --really-refresh
-        git-verbose stash pop $(git stash list --grep="${message}" --format="%gd")
+        local stash=$(git stash list --grep="${message}" --format="%gd")
+        if [[ -n ${stash} ]]; then
+            git-verbose stash pop ${stash}
+        fi
     fi
 }
 
