@@ -19,7 +19,7 @@ _git_elegant() {
             elegant|git-elegant)
                 local opts=(
                     ${geops}
-                    $(git elegant commands)
+                    $(git elegant show-commands)
                 )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
                 return 0 ;;

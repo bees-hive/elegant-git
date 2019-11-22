@@ -40,6 +40,6 @@ default() {
           rebase_autoStash \
           credential_helper_darwin
         aliases-removing --local
-        aliases-configuration --local $(git elegant commands)
+        aliases-configuration --local $(git elegant show-commands)
     fi
 }

@@ -76,5 +76,5 @@ MESSAGE
       credential_helper_darwin \
       acquired
     aliases-removing --global
-    aliases-configuration --global $(git elegant commands)
+    aliases-configuration --global $(git elegant show-commands)
 }

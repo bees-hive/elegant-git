@@ -36,7 +36,7 @@ There are commands used in various situations such as
     release-work         Releases available work as a new annotated tag.
 
  and others
-    commands             Prints available Elegant Git commands.
+    show-commands        Prints available Elegant Git commands.
     acquire-git          Configures a Git installation.
 
 
@@ -155,22 +155,6 @@ Approximate commands flow is
 git clone git@github.com:bees-hive/elegant-git.git
 cd elegant-git
 git elegant acquire-repository
-```
-
-# `commands`
-
-```bash
-usage: git elegant commands
-```
-
-Displays all available commands. This is useful for completion functions as well
-as for other cases when you need iteration over the available commands.
-
-Approximate commands flow is
-```bash
-==>> git elegant commands
-echo <command>
-echo ...
 ```
 
 # `deliver-work`
@@ -301,6 +285,24 @@ Approximate commands flow is
 git add --interactive
 git diff --cached --check
 git commit
+```
+
+# `show-commands`
+
+```bash
+usage: git elegant show-commands
+```
+
+Displays all available Elegant Git commands. This is useful for completion
+functions as well as for other cases when you need iteration over the available
+commands.
+
+Approximate commands flow is
+```bash
+==>> git elegant show-commands
+start-work
+show-commands
+....
 ```
 
 # `show-release-notes`

@@ -7,7 +7,7 @@ teardown() {
     fake-clean
 }
 
-@test "'commands': print all available commands" {
+@test "'show-commands': print all available Elegant Git commands" {
     COMMANDS=(
         "acquire-repository"
         "acquire-git"
@@ -19,20 +19,20 @@ teardown() {
         "accept-work"
         "obtain-work"
         "clear-local"
-        "commands"
+        "show-commands"
         "amend-work"
         "show-release-notes"
         "release-work"
         "polish-work"
     )
-    check git-elegant commands
+    check git-elegant show-commands
     [ ${#lines[@]} -eq ${#COMMANDS[@]} ]
     for command in ${COMMANDS[@]}; do
         [[ "${lines[@]}" =~ "${command}" ]]
     done
 }
 
-@test "'commands': default exit code is 0" {
-    check git-elegant commands
+@test "'show-commands': default exit code is 0" {
+    check git-elegant show-commands
     [ "$status" -eq 0 ]
 }

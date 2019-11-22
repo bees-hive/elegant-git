@@ -82,7 +82,7 @@ teardown() {
 
 @test "'acquire-git': new aliases are configured as expected" {
     check git-elegant acquire-git
-    for next in $(git-elegant commands); do
+    for next in $(git-elegant show-commands); do
         echo "Test aliasing of '${next}' command"
         [[ "${lines[@]}" =~ "==>> git config --global alias.${next} elegant ${next}" ]]
         echo "Tested successfully!"

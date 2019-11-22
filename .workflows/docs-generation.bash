@@ -18,7 +18,7 @@ report-command() {
 
 report-commands() {
     echo "Write all commands to '${1}'"
-    for command in $(git-elegant commands); do
+    for command in $(git-elegant show-commands); do
         report-command ${command} ${1}
     done
 }
