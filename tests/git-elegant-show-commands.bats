@@ -18,7 +18,7 @@ teardown() {
         "deliver-work"
         "accept-work"
         "obtain-work"
-        "clear-local"
+        "prune-repository"
         "show-commands"
         "amend-work"
         "show-release-notes"

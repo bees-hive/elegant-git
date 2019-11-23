@@ -18,7 +18,7 @@ There are commands used in various situations such as
     clone-repository     Clones a repository and configures it.
     init-repository      Initializes a new repository and configures it.
     acquire-repository   Configures current repository.
-    clear-local          Removes obsolete local branches.
+    prune-repository     Removes useless local branches.
 
  manage a personal work
     start-work           Creates a new branch.
@@ -116,29 +116,6 @@ Approximate commands flow is
 git add --interactive
 git diff --cached --check
 git commit --amend
-```
-
-# `clear-local`
-
-```bash
-usage: git elegant clear-local
-```
-
-Identifies local branches for which remote branches were removed. Then, it
-removes them by invoking `git branch -d`. If there are unmerged branches, you
-have to choose either batch or one-by-one deletion procedure using
-`git branch -D`.
-
-Prior to the execution, a current state is saved (a branch with modifications).
-After the successful accepting a work, the state will be restored. In the case
-of a failure, you need to go to the desired branch and apply a stash if needed.
-
-Approximate commands flow is
-```bash
-==>> git elegant clear-local
-git branch -d task-24
-git branch -d 2349
-git branch -D task-1
 ```
 
 # `clone-repository`
@@ -241,6 +218,33 @@ Approximate commands flow is
 ```bash
 ==>> git elegant polish-work
 git rebase --interactive @~5
+```
+
+# `prune-repository`
+
+```bash
+usage: git elegant prune-repository
+```
+
+Identifies useless branches within the current repository and removes them. A
+branch is useless if it either has configured an unavailable upstream branch (1)
+or does not have new commits comparing to `master` branch (2).
+
+1 - Usually, a local branch has this state when an appropriate remote branch was
+merged to a remote target branch and was removed. Since these manipulations were
+made on server side, the local branch is still present, but useless.
+
+2 - This kind of branches appears when a branch is created for some purposes but
+does not have any commits nowadays. So, it is useless.
+
+Approximate commands flow is
+```bash
+==>> git elegant prune-repository
+git checkout master
+git fetch --all
+git branch --delete --force task-24
+git branch --delete --force 2349
+git branch --delete --force task-1
 ```
 
 # `release-work`

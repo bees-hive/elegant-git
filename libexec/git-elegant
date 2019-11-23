@@ -40,40 +40,6 @@ _error-if-empty() {
     fi
 }
 
-__loop_ask() {
-    local c="$1"; shift
-    local m="$1"; shift
-    [ -z "$1" ] && return 0
-    for i in $@; do
-        question-text "$m [$i] (y/n):"
-        read answer
-        if [[ "${answer}" == "y" ]]; then
-            eval "$c $i"
-        fi
-    done
-}
-
-__loop() {
-    local c="$1"; shift
-    [ -z "$1" ] && return 0
-    for i in $@; do
-        eval "$c $i"
-    done
-}
-
-__batch() {
-    local MM="$1"; shift
-    local AM="$1"; shift
-    local CM="$1"; shift
-    question-text "$MM (y/n): "
-    read answer
-    if [[ "${answer}" == "y" ]]; then
-        __loop "$CM" $@
-    else
-        __loop_ask "$CM" "$AM" $@
-    fi
-}
-
 branch-from-remote-reference() {
     # usage: branch-from-remote-reference <full reference name>
     echo ${1} | sed "s|^[a-zA-Z0-9_-]*/||g"
@@ -109,7 +75,7 @@ There are commands used in various situations such as
 $(--print-command-in-usage clone-repository)
 $(--print-command-in-usage init-repository)
 $(--print-command-in-usage acquire-repository)
-$(--print-command-in-usage clear-local)
+$(--print-command-in-usage prune-repository)
 
  manage a personal work
 $(--print-command-in-usage start-work)
