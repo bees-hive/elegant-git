@@ -29,7 +29,7 @@ There are commands used in various situations such as
 
  operate a flow of work management
     obtain-work          Checkouts a remote branch matching by a name.
-    accept-work          Applies a branch on top of upstream branch.
+    accept-work          Applies a branch on top of `master` branch.
 
  release new versions
     show-release-notes   Prints a release log between two references.
@@ -51,10 +51,12 @@ usage: git elegant accept-work <remote branch>
 ```
 
 Checkouts given branch using `git elegant obtain-work` into a temporary one.
-Then, it makes a rebase of the latest version of default upstream branch with
-current changes. The final index merges using fast-forward strategy into the
-default local branch and pushes into the default upstream branch. After a
-successful push, the given and temporary branches are removed.
+Then, it makes a rebase of the latest version of default upstream branch
+(`master`) with current changes. The final prepared index merges using
+fast-forward strategy into the default local branch and pushes into the
+default upstream branch (`origin/master`). After a successful push, the
+temporary branch is removed as well as given branch if it locates in `origin`
+remote.
 
 Prior to the execution, a current state is saved (a branch with modifications).
 After the successful accepting a work, the state will be restored. In the case
