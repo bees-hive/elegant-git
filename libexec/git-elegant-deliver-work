@@ -23,9 +23,8 @@ branch has an upstream branch configured, it will be used as a remote branch.
 If you provide a custom name of the remote branch, it will be used as a remote
 branch.
 
-If there are uncommitted changes, they will be stashed prior to the command
-execution and un-stashed after its successful completion. This is useful if you
-need to deliver only sub-set of the changes.
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
 
 If the push output contains an URL (like a link to create a pull request), it
 will be open (in case if \`open\` command is available) in a default browser.

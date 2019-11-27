@@ -58,9 +58,8 @@ default upstream branch (`origin/master`). After a successful push, the
 temporary branch is removed as well as given branch if it locates in `origin`
 remote.
 
-Prior to the execution, a current state is saved (a branch with modifications).
-After the successful accepting a work, the state will be restored. In the case
-of a failure, you need to go to the desired branch and apply a stash if needed.
+The command uses branch and stash pipes to preserve the current Git state prior
+to execution and restore after.
 
 Approximate commands flow is
 ```bash
@@ -150,9 +149,8 @@ branch has an upstream branch configured, it will be used as a remote branch.
 If you provide a custom name of the remote branch, it will be used as a remote
 branch.
 
-If there are uncommitted changes, they will be stashed prior to the command
-execution and un-stashed after its successful completion. This is useful if you
-need to deliver only sub-set of the changes.
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
 
 If the push output contains an URL (like a link to create a pull request), it
 will be open (in case if `open` command is available) in a default browser.
@@ -216,6 +214,9 @@ by running `git stash pop`.
 
 The command raises error 42 if it runs against `master` branch.
 
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
+
 Approximate commands flow is
 ```bash
 ==>> git elegant polish-work
@@ -261,9 +262,8 @@ to newest) between the last available tag and HEAD. The release notes will be
 either copied to clipboard (if `pbcopy` or `xclip` is available) or printed
 to standard output using `git elegant show-release-notes`.
 
-Prior to the execution, a current state is saved (a branch with modifications).
-After the successful command execution, the state will be restored. In the case
-of a failure, you need to go to the desired branch and apply a stash if needed.
+The command uses branch and stash pipes to preserve the current Git state prior
+to execution and restore after.
 
 Approximate commands flow is
 ```bash
@@ -346,6 +346,9 @@ usage: git elegant start-work <name>
 Creates a new local branch based on the latest version of the default upstream
 branch. If there are some uncommitted changes, they will be moved to the new
 branch.
+
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
 
 Approximate commands flow is
 ```bash

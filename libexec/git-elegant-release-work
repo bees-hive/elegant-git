@@ -20,9 +20,8 @@ to newest) between the last available tag and HEAD. The release notes will be
 either copied to clipboard (if \`pbcopy\` or \`xclip\` is available) or printed
 to standard output using \`git elegant show-release-notes\`.
 
-Prior to the execution, a current state is saved (a branch with modifications).
-After the successful command execution, the state will be restored. In the case
-of a failure, you need to go to the desired branch and apply a stash if needed.
+The command uses branch and stash pipes to preserve the current Git state prior
+to execution and restore after.
 
 Approximate commands flow is
 \`\`\`bash

@@ -23,9 +23,8 @@ default upstream branch (\`origin/master\`). After a successful push, the
 temporary branch is removed as well as given branch if it locates in \`origin\`
 remote.
 
-Prior to the execution, a current state is saved (a branch with modifications).
-After the successful accepting a work, the state will be restored. In the case
-of a failure, you need to go to the desired branch and apply a stash if needed.
+The command uses branch and stash pipes to preserve the current Git state prior
+to execution and restore after.
 
 Approximate commands flow is
 \`\`\`bash

@@ -19,6 +19,9 @@ Creates a new local branch based on the latest version of the default upstream
 branch. If there are some uncommitted changes, they will be moved to the new
 branch.
 
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
+
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant start-work task-123

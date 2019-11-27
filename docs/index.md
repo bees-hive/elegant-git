@@ -5,6 +5,7 @@ Main capabilities
 
 - unified local full-cycle work management for any Git repository
 - local flexible continuous integration (aka [workflows](#workflows))
+- preserve current Git state prior to command execution and restore after (aka [pipes](#pipes))
 
 Used philosophy
 
@@ -52,6 +53,26 @@ will be interrupted.
 
 If you want to skip workflows for the current command execution, just use `--no-workflows` option
 like `git elegant --no-workflows save-work`.
+
+# Pipes
+There are a lot of situations when a current Git state needs to be reserved prior to Elegant Git
+commands execution. For instance, you are working on something. And now, urgently, you need to
+accept someone's critical work - `git-elegant accept-work some-critical-branch`. But there are
+uncommitted modifications that need to be stashed prior to accepting work. From the other side, it
+will be good to back into the previous working branch and restore modification from the stash when
+the needed work is accepted. That's why there are **pipes** which are doing preserve and restore
+automatically.
+
+There are the following pipes:
+
+- **branch pipe** which preserves and restores current branch
+- **stash pipe** which preserves and restores uncommitted changes
+
+A command can use one or several pipes at the same time (see command help for the details).
+And if a "piped" command is used, each pipe stores the state within repository configuration (using
+`git config --local`), runs the original command, and restores saved state if the command is
+successful. If the command is failed and it reruns, the pipes do not preserve the state again but
+will restore the initial preserved state if the command is successful.
 
 # Known limitations
 Support only one default remote - `origin`.

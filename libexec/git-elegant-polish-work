@@ -26,6 +26,9 @@ by running \`git stash pop\`.
 
 The command raises error 42 if it runs against \`master\` branch.
 
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
+
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant polish-work
