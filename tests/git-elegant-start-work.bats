@@ -51,3 +51,13 @@ teardown() {
     [[ "${lines[@]}" =~ "stash push" ]]
     [[ ! "${lines[@]}" =~ "stash pop" ]]
 }
+
+@test "'start-work': stash is applied when the failed command reruns" {
+    repo-non-staged-change "A new line..."
+    fake-fail "git checkout -b fail"
+    git-elegant start-work fail || true
+    check git-elegant start-work pass
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git stash pop" ]]
+    [[ ! ${lines[@]} =~ "git stash push" ]]
+}
