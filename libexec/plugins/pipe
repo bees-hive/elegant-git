@@ -15,7 +15,7 @@ has-changes() {
     echo $(git stash list --grep="${1}" --format="%gd")
 }
 
---config() {
+--repository-config() {
     git config --local "$@"
 }
 
@@ -27,22 +27,22 @@ stash-pipe() {
     # check some specific cases.
     local key="elegant.${COMMAND}-stash"
     git update-index -q --really-refresh
-    if has-changes && test -z $(--config --get ${key}); then
+    if has-changes && test -z $(--repository-config --get ${key}); then
         local message="git-elegant ${COMMAND} auto-stash: "
         message+="WIP in '$(git rev-parse --abbrev-ref HEAD)' branch "
         message+="on $(date "+%Y-%m-%dT%H:%M:%S")"
         git-verbose stash push --message "${message}"
         if [[ -n $(--stash-id ${message}) ]]; then
-            --config ${key} "${message}"
+            --repository-config ${key} "${message}"
         fi
     fi
 
     "${@}"
 
-    local saved=$(--config --get ${key})
+    local saved=$(--repository-config --get ${key})
     if [[ -n ${saved} ]]; then
         git update-index -q --really-refresh
-        --config --unset ${key}
+        --repository-config --unset ${key}
         git-verbose stash pop $(--stash-id ${saved})
     fi
 }
@@ -50,10 +50,20 @@ stash-pipe() {
 branch-pipe() {
     # Moves to the current branch after a command execution
     # usage: branch-pipe <command> [args]...
-    local to=$(git rev-parse --abbrev-ref HEAD)
+    # The pipe behavior is tested based on `release-work` command. That's why you
+    # have to add new tests in `git-elegant-release-work.bats` if you want to
+    # check some specific cases.
+    local key="elegant.${COMMAND}-current-branch"
+    if test -z $(--repository-config --get ${key}); then
+        --repository-config ${key} $(git rev-parse --abbrev-ref HEAD)
+    fi
+
     "${@}"
+
+    local previous=$(--repository-config --get ${key})
+    --repository-config --unset ${key}
     local now=$(git rev-parse --abbrev-ref HEAD)
-    if [[ ! "${to}" == "${now}" ]]; then
-        git-verbose checkout ${to}
+    if [[ ! "${previous}" == "${now}" ]]; then
+        git-verbose checkout ${previous}
     fi
 }

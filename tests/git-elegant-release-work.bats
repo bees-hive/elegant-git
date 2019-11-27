@@ -43,3 +43,20 @@ teardown() {
     [[ "${status}" -eq 0 ]]
     [[ "${lines[@]}" =~ "Release notes" ]]
 }
+
+@test "'release-work': working branch is restored when the command runs in non-master branch" {
+    repo "git checkout -b new"
+    check git-elegant release-work
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git checkout new" ]]
+}
+
+@test "'release-work': working branch is restored when the failed command reruns" {
+    repo "git checkout -b new"
+    fake-fail "git tag --annotate --file tag-message --edit 4"
+    git-elegant release-work 4 || true
+    fake-pass "git tag --annotate --file tag-message --edit 5"
+    check git-elegant release-work 5
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git checkout new" ]]
+}
