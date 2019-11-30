@@ -141,8 +141,9 @@ git elegant acquire-repository
 usage: git elegant deliver-work [branch-name]
 ```
 
-Updates the current branch by rebasing the default upstream branch. Then,
-it pushes HEAD to the appropriate upstream branch.
+Updates the current branch by rebasing the default upstream branch. If there is
+a rebase in progress, the command will continue it instead of initiation a new
+one. Then, it pushes HEAD to the appropriate upstream branch.
 
 By default, the name of remote branch is equal to the local one. If a local
 branch has an upstream branch configured, it will be used as a remote branch.

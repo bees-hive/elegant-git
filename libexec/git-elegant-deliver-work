@@ -15,8 +15,9 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Updates the current branch by rebasing the default upstream branch. Then,
-it pushes HEAD to the appropriate upstream branch.
+Updates the current branch by rebasing the default upstream branch. If there is
+a rebase in progress, the command will continue it instead of initiation a new
+one. Then, it pushes HEAD to the appropriate upstream branch.
 
 By default, the name of remote branch is equal to the local one. If a local
 branch has an upstream branch configured, it will be used as a remote branch.
@@ -50,8 +51,13 @@ MESSAGE
 }
 
 --deliver-work-logic() {
-    git-verbose fetch
-    git-verbose rebase ${RMASTER}
+    source ${BINS}/plugins/rebase
+    if is-there-active-rebase; then
+        git-verbose rebase --continue
+    else
+        git-verbose fetch
+        git-verbose rebase ${RMASTER}
+    fi
     local upstream=$(git branch --list --format "%(upstream:lstrip=2)" ${1})
     local remote_branch=${upstream/*\//}
     local remote=${upstream/\/*/}

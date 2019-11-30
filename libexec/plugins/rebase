@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# The plugin that wraps some useful operations around `git rebase`.
+
+is-there-active-rebase(){
+    test -d "$(git rev-parse --git-path rebase-merge)" ||  test -d "$(git rev-parse --git-path rebase-apply)"
+}

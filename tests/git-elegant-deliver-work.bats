@@ -73,3 +73,12 @@ teardown() {
     check git-elegant deliver-work
     [[ "${status}" -eq 0 ]]
 }
+
+@test "'deliver-work': current rebase is continued when there is an active rebase process" {
+    repo "git checkout -b feature1"
+    fake-pass "git push --set-upstream --force origin feature1:feature1"
+    fake-pass "git rev-parse --git-path rebase-merge" ".git"
+    check git-elegant deliver-work
+    [[ ${status} -ne 0 ]]
+    [[ ${lines[@]} =~ "No rebase in progress?" ]]
+}

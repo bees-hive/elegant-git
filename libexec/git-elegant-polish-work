@@ -42,7 +42,8 @@ default() {
         error-box "'master' branch history can't be rewritten. Please read more on ${__site}"
         exit 42
     fi
-    if test -d "$(git rev-parse --git-path rebase-merge)" ||  test -d "$(git rev-parse --git-path rebase-apply)"; then
+    source ${BINS}/plugins/rebase
+    if is-there-active-rebase; then
         git-verbose rebase --continue
     else
         local commits=($(git rev-list ${MASTER}..@))
