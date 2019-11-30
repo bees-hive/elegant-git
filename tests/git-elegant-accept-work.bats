@@ -48,3 +48,21 @@ teardown() {
     check git-elegant accept-work test-feature
     [[ ${status} -eq 0 ]]
 }
+
+@test "'accept-work': continue current rebase when it is initiated by 'accept-work' command" {
+    repo "git checkout __eg"
+    fake-pass "git rev-parse --git-path rebase-merge" ".git"
+    repo "echo refs/heads/__eg > .git/head-name"
+    check git-elegant accept-work rebase
+    [[ ${status} -ne 0 ]]
+    [[ ${lines[@]} =~ "No rebase in progress?" ]]
+}
+
+@test "'accept-work': raise error 43 when current rebase is not initiated by 'accept-work' command" {
+    repo "git checkout __eg"
+    fake-pass "git rev-parse --git-path rebase-merge" ".git"
+    repo "echo refs/heads/rebase > .git/head-name"
+    check git-elegant accept-work rebase
+    [[ ${status} -eq 43 ]]
+    [[ ${lines[@]} =~ "rebase" ]]
+}

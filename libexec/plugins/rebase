@@ -2,5 +2,24 @@
 # The plugin that wraps some useful operations around `git rebase`.
 
 is-there-active-rebase(){
-    test -d "$(git rev-parse --git-path rebase-merge)" ||  test -d "$(git rev-parse --git-path rebase-apply)"
+    # Says if there is a rebase in progress.
+    for location in rebase-merge rebase-apply; do
+        if test -d $(git rev-parse --git-path ${location}); then
+            return 0
+        fi
+    done
+    return 1
+}
+
+rebasing-branch() {
+    # Says a branch name that is rebasing now.
+    # The output will be empty if there is no rebase in progress.
+    for location in rebase-merge rebase-apply; do
+        path=$(git rev-parse --git-path ${location})
+        if test -d ${path}; then
+            revision=$(<${path}/head-name)
+            echo ${revision##refs/heads/}
+            return 0
+        fi
+    done
 }

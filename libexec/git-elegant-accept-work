@@ -17,9 +17,10 @@ command-description() {
     cat<<MESSAGE
 Checkouts given branch using \`git elegant obtain-work\` into a temporary one.
 Then, it makes a rebase of the latest version of default upstream branch
-(\`master\`) with current changes. The final prepared index merges using
-fast-forward strategy into the default local branch and pushes into the
-default upstream branch (\`origin/master\`). After a successful push, the
+(\`master\`) with current changes. If there is a rebase in progress and it is
+initiated by this command, it will be continued instead. The final rebased index
+merges using fast-forward strategy into the default local branch and pushes into
+the default upstream branch (\`origin/master\`). After a successful push, the
 temporary branch is removed as well as given branch if it locates in \`origin\`
 remote.
 
@@ -44,15 +45,20 @@ MESSAGE
 
 --accept-work-logic() {
     local WORK_BRANCH="__eg"
-    git elegant obtain-work "${1}" "${WORK_BRANCH}"
-    git-verbose status
-    git-verbose rebase ${RMASTER}
-    # @todo #137 Alternative flows of `accept-work`
-    #  If this command is executed with `${WORK_BRANCH}` and
-    #  1. `git rebase` is in progress, it has to run `git rebase --continue` prior working with
-    #  `${MASTER}` branch.
-    #  2. `git rebase` is completed (history of `${WORK_BRANCH}` and `${RMASTER}` are different),
-    #  just work with `${MASTER}` branch.
+    source ${BINS}/plugins/rebase
+    if is-there-active-rebase; then
+        local rb=$(rebasing-branch)
+        if [[ ${WORK_BRANCH} == ${rb} ]]; then
+            git-verbose rebase --continue
+        else
+            error-text "First, please complete current rebase which updates '${rb}' branch."
+            exit 43
+        fi
+    else
+        git elegant obtain-work "${1}" "${WORK_BRANCH}"
+        git-verbose status
+        git-verbose rebase ${RMASTER}
+    fi
     local ACTUAL_REMOTE=$(git for-each-ref --format='%(upstream:short)' refs/heads/${WORK_BRANCH})
     git-verbose checkout ${MASTER}
     git-verbose merge --ff-only ${WORK_BRANCH}

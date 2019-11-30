@@ -52,9 +52,10 @@ usage: git elegant accept-work <remote branch>
 
 Checkouts given branch using `git elegant obtain-work` into a temporary one.
 Then, it makes a rebase of the latest version of default upstream branch
-(`master`) with current changes. The final prepared index merges using
-fast-forward strategy into the default local branch and pushes into the
-default upstream branch (`origin/master`). After a successful push, the
+(`master`) with current changes. If there is a rebase in progress and it is
+initiated by this command, it will be continued instead. The final rebased index
+merges using fast-forward strategy into the default local branch and pushes into
+the default upstream branch (`origin/master`). After a successful push, the
 temporary branch is removed as well as given branch if it locates in `origin`
 remote.
 
