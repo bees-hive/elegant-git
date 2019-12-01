@@ -3,6 +3,10 @@
 load addons-common
 load addons-fake
 
+setup() {
+    fake-pass "git rev-parse --show-cdup"
+}
+
 teardown() {
     fake-clean
 }

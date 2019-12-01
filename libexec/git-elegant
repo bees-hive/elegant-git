@@ -112,8 +112,9 @@ MESSAGE
 --run-workflow(){
     local type=${1}
     local command=${2}
-    --run-file ".git/.workflows/${command}-${type}"
-    --run-file ".workflows/${command}-${type}"
+    local prefix=$(git rev-parse --show-cdup)
+    --run-file "${prefix}.git/.workflows/${command}-${type}"
+    --run-file "${prefix}.workflows/${command}-${type}"
 }
 
 --load-command(){

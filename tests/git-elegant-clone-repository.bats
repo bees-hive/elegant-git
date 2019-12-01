@@ -9,6 +9,7 @@ setup() {
     fake-pass "git clone-repository"
     fake-pass "git clone https://github.com/extsoft/elegant-git.git"
     fake-pass "git elegant acquire-repository"
+    fake-pass "git rev-parse --show-cdup"
 }
 
 teardown() {
