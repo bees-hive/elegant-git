@@ -19,6 +19,7 @@ teardown() {
         "init-repository"
         "start-work"
         "save-work"
+        "show-work"
         "deliver-work"
         "accept-work"
         "obtain-work"

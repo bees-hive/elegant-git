@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -e
+
+command-purpose() {
+    cat <<MESSAGE
+Shows a state of current work in progress.
+MESSAGE
+}
+
+command-synopsis() {
+    cat <<MESSAGE
+usage: git elegant show-work
+MESSAGE
+}
+
+command-description() {
+    cat<<MESSAGE
+Shows a state of current work by displaying branch information, new commits
+comparing to \`master\` branch, uncommitted modifications, and available
+stashes.
+
+Approximate commands flow is
+\`\`\`bash
+==>> git elegant show-work
+git log --oneline ${MASTER}..@
+git status --short
+git stash list
+\`\`\`
+MESSAGE
+}
+
+default(){
+    local branch=$(git rev-parse --abbrev-ref @)
+    info-text ">>> Work branch:"
+    info-text "local:  ${branch}"
+    local upstream=$(git rev-parse --abbrev-ref ${branch}@{upstream} 2>/dev/null || echo)
+    if [[ -n ${upstream} ]]; then
+        info-text "remote: ${upstream}"
+    fi
+    info-text ""
+    if [[ -n $(git rev-list ${MASTER}..${branch}) ]]; then
+        info-text ">>> New commits (comparing to 'master' branch):"
+        git log --oneline ${MASTER}..${branch}
+        info-text ""
+    fi
+    if [[ -n $(git status --short) ]]; then
+        info-text ">>> Unsaved modifications:"
+        git status --short
+        info-text ""
+    fi
+    if [[ -n $(git stash list) ]]; then
+        info-text ">>> Available stashes:"
+        git stash list
+        info-text ""
+    fi
+}

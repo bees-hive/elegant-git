@@ -81,6 +81,7 @@ $(--print-command-in-usage prune-repository)
 $(--print-command-in-usage start-work)
 $(--print-command-in-usage save-work)
 $(--print-command-in-usage amend-work)
+$(--print-command-in-usage show-work)
 $(--print-command-in-usage polish-work)
 $(--print-command-in-usage deliver-work)
 

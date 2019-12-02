@@ -24,6 +24,7 @@ There are commands used in various situations such as
     start-work           Creates a new branch.
     save-work            Commits current modifications.
     amend-work           Amends some changes to the most recent commit.
+    show-work            Shows a state of current work in progress.
     polish-work          Reapplies branch commits interactively.
     deliver-work         Publishes current branch to a remote repository.
 
@@ -337,6 +338,24 @@ Approximate commands flow is
 Release notes
 - Add `show-release-notes` command
 - Add `release-work` command
+```
+
+# `show-work`
+
+```bash
+usage: git elegant show-work
+```
+
+Shows a state of current work by displaying branch information, new commits
+comparing to `master` branch, uncommitted modifications, and available
+stashes.
+
+Approximate commands flow is
+```bash
+==>> git elegant show-work
+git log --oneline master..@
+git status --short
+git stash list
 ```
 
 # `start-work`
