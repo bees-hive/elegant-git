@@ -32,12 +32,14 @@ git checkout -b task-123
 git stash apply stash^{/elegant-git}
 git stash drop stash@{0}
 \`\`\`
+
+The command works even if a remote is unavailable.
 MESSAGE
 }
 
 --start-work-logic(){
     git-verbose checkout ${MASTER}
-    git-verbose pull
+    git-verbose pull || info-text "As the branch can't be pulled, the current local version is used."
     git-verbose checkout -b "$1"
 }
 

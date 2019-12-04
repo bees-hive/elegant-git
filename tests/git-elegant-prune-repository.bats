@@ -22,6 +22,17 @@ teardown() {
     [[ ${lines[@]} =~ "git branch --delete --force equal-to-master" ]]
 }
 
+@test "'prune-repository': works when the remote repository is unavailable" {
+    repo "git checkout -b equal-to-master"
+    repo "git checkout master"
+    fake-fail "git fetch --all" "Manual fetch fail"
+    check git-elegant prune-repository
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "Manual fetch fail" ]]
+    [[ ${lines[@]} =~ "As the remotes can't be fetched, the current local version is used." ]]
+    [[ ${lines[@]} =~ "git branch --delete --force equal-to-master" ]]
+}
+
 @test "'prune-repository': a branch is alive when it doesn't have an upstream and has a new commit" {
     repo "git checkout -b commit"
     repo-commit-file "commit"

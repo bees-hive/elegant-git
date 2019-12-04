@@ -253,6 +253,8 @@ git branch --delete --force 2349
 git branch --delete --force task-1
 ```
 
+The command works even if the remotes are unavailable.
+
 # `release-work`
 
 ```bash
@@ -381,3 +383,5 @@ git checkout -b task-123
 git stash apply stash^{/elegant-git}
 git stash drop stash@{0}
 ```
+
+The command works even if a remote is unavailable.

@@ -19,6 +19,13 @@ teardown() {
     [[ "$status" -eq 0 ]]
 }
 
+@test "'start-work': works when the remote repository is unavailable" {
+    fake-fail "git pull"
+    check git-elegant start-work test-feature
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "As the branch can't be pulled, the current local version is used." ]]
+}
+
 @test "'start-work': exit code is 45 when branch name isn't set" {
     check git-elegant start-work
     [[ "$status" -eq 45 ]]
