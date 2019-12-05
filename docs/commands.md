@@ -172,14 +172,16 @@ git push --set-upstream --force origin task-123:task-123
 usage: git elegant init-repository
 ```
 
-Creates an empty Git repository (or reinitialize an existing one) and runs its
-configuration.
+Creates an empty Git repository (or reinitialize an existing one), runs its
+configuration, and creates an initial empty commit.
 
 Approximate commands flow is
 ```bash
 ==>> git elegant init-repository
 git init
 git elegant acquire-repository
+git commit --allow-empty --file a-message-of-initial-commit
+git show
 ```
 
 # `obtain-work`

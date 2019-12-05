@@ -12,6 +12,7 @@ repo-new() {
         perform-verbose git config --local user.email "\"elegant-git@example.com\""
         perform-verbose git config --local user.name "\"Elegant Git\""
         perform-verbose git config --local core.editor "\"vi\""
+        perform-verbose git config --local core.pager cat
         perform-verbose touch ${FILE_TO_MODIFY}
         perform-verbose git add .
         perform-verbose git commit -m "\"Add ${FILE_TO_MODIFY}\""
