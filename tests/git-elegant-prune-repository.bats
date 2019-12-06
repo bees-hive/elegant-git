@@ -22,10 +22,22 @@ teardown() {
     [[ ${lines[@]} =~ "git branch --delete --force equal-to-master" ]]
 }
 
+@test "'prune-repository': updates current master branch when there is a remote upstream" {
+    repo "git checkout -b equal-to-master"
+    fake-pass "git rev-parse --abbrev-ref master@{upstream}"
+    fake-pass "git rebase"
+    check git-elegant prune-repository
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git fetch --all" ]]
+    [[ ${lines[@]} =~ "git rebase" ]]
+    [[ ${lines[@]} =~ "git branch --delete --force equal-to-master" ]]
+}
+
 @test "'prune-repository': works when the remote repository is unavailable" {
     repo "git checkout -b equal-to-master"
-    repo "git checkout master"
+    fake-pass "git rev-parse --abbrev-ref master@{upstream}"
     fake-fail "git fetch --all" "Manual fetch fail"
+    fake-pass "git rebase"
     check git-elegant prune-repository
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "Manual fetch fail" ]]

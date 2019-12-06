@@ -31,6 +31,7 @@ Approximate commands flow is
 ==>> git elegant prune-repository
 git checkout master
 git fetch --all
+git rebase
 git branch --delete --force task-24
 git branch --delete --force 2349
 git branch --delete --force task-1
@@ -40,13 +41,20 @@ The command works even if the remotes are unavailable.
 MESSAGE
 }
 
+--is-there-upstream-for() {
+    git rev-parse --abbrev-ref ${1}@{upstream} >/dev/null  2>&1
+}
+
 default() {
     git-verbose checkout ${MASTER}
-    git-verbose fetch --all || info-text "As the remotes can't be fetched, the current local version is used."
+    if --is-there-upstream-for ${MASTER}; then
+        git-verbose fetch --all || info-text "As the remotes can't be fetched, the current local version is used."
+        git-verbose rebase
+    fi
     for branch in $(git for-each-ref --format "%(refname:short)" refs/heads/**); do
         if [[ ${branch} == ${MASTER} ]]; then continue; fi
         if [[ -n $(git config --get branch.${branch}.merge) ]]; then
-            if git rev-parse --abbrev-ref ${branch}@{upstream} >/dev/null  2>&1; then
+            if --is-there-upstream-for ${branch}; then
                 # the branch has existing upstream; keep it
                 continue
             fi

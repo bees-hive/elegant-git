@@ -250,6 +250,7 @@ Approximate commands flow is
 ==>> git elegant prune-repository
 git checkout master
 git fetch --all
+git rebase
 git branch --delete --force task-24
 git branch --delete --force 2349
 git branch --delete --force task-1
