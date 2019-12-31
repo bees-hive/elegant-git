@@ -98,8 +98,8 @@ https://elegant-git.bees-hive.org/en/latest/configuration/
 usage: git elegant acquire-repository
 ```
 
-Applies the "basics", "standards", and "aliases" configurations to the current
-Git repository using `git config --local`.
+Applies the "basics", "standards", "aliases", and "signature" configurations
+to the current Git repository using `git config --local`.
 
 To find out what will be configured, please visit
 https://elegant-git.bees-hive.org/en/latest/configuration/

@@ -36,7 +36,7 @@ read() {
     if [[ -f "${answers_directory}/${next_read}" ]]; then
         value=$(cat ${answers_directory}/${next_read})
     fi
-    eval "export ${1}=${value}"
+    eval "export ${1}=\"${value}\""
     echo ""
 }
 

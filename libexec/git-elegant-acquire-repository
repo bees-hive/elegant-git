@@ -15,8 +15,8 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Applies the "basics", "standards", and "aliases" configurations to the current
-Git repository using \`git config --local\`.
+Applies the "basics", "standards", "aliases", and "signature" configurations
+to the current Git repository using \`git config --local\`.
 
 To find out what will be configured, please visit
 ${__site}/en/latest/configuration/
@@ -41,5 +41,30 @@ default() {
           credential_helper_darwin
         aliases-removing --local
         aliases-configuration --local $(git elegant show-commands)
+    fi
+    type -p gpg >/dev/null 2>&1 || return 0
+    info-box "Configuring signature..."
+    local listkeys="gpg --list-secret-keys --keyid-format long $(git config --local user.email)"
+    command-text ${listkeys}
+    ${listkeys}
+    info-text "From the list of GPG keys above, copy the GPG key ID you'd like to use."
+    info-text "It will be"
+    info-text "    3AA5C34371567BD2"
+    info-text "for the output like this"
+    info-text "    sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]"
+    info-text "    A330C91F8EC4BC7AECFA63E03AA5C34371567BD2"
+    info-text "    uid                          Hubot"
+    info-text ""
+    info-text "If you don't want to configure signature, just hit Enter button."
+    question-text "Please pass a key that has to sign objects of the current repository: "
+    read key
+    if [[ -n ${key} ]] ; then
+        git-verbose config --local user.signingkey ${key}
+        git-verbose config --local gpg.program $(type -p gpg)
+        git-verbose config --local commit.gpgsign true
+        git-verbose config --local tag.forceSignAnnotated true
+        git-verbose config --local tag.gpgSign true
+    else
+        info-text "The signature is not configured as the empty key is provided."
     fi
 }

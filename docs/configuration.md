@@ -52,3 +52,17 @@ significantly improve user experience.
 
 The configuration is a call of `git config "alias.<command>" "elegant <command>"` (`i`) for each Elegant
 Git command.
+
+# Signature
+This configuration aims to say Git how to sign commits, tags, and other objects you create. It starts after
+all other configurations. In the beginning, all available signing keys will be shown. Then, you need to choose
+the key that will be used to make signatures. If the key is provided, the configuration triggers, otherwise,
+it does not apply. The signing configuration consists of
+
+1. setting `user.signingkey` (`l`) to a provided value
+2. setting `gpg.program` (`l`) to a full path of `gpg` program
+3. setting `commit.gpgsign` (`l`) to `true`
+4. setting `tag.forceSignAnnotated` (`l`) to `true`
+5. setting `tag.gpgSign` (`l`) to `true`
+
+For now, only `gpg` is supported. If you need other tools, please [create a new feature request](https://github.com/bees-hive/elegant-git/issues/new/choose).
