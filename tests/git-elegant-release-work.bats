@@ -23,7 +23,6 @@ setup() {
     fake-pass "git push --tags"
     fake-pass "git tag --annotate --file tag-message --edit ${new_tag}"
     fake-pass "git remote get-url origin" "https://fake-repo.git"
-    read-answer ${new_tag}
 }
 
 teardown() {
@@ -39,6 +38,7 @@ teardown() {
 }
 
 @test "'release-work': release work when a new tag is provided via question" {
+    read-answer ${new_tag}
     check git-elegant release-work
     [[ "${status}" -eq 0 ]]
     [[ "${lines[@]}" =~ "Release notes" ]]
@@ -46,7 +46,7 @@ teardown() {
 
 @test "'release-work': working branch is restored when the command runs in non-master branch" {
     repo "git checkout -b new"
-    check git-elegant release-work
+    check git-elegant release-work ${new_tag}
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "git checkout new" ]]
 }
@@ -59,4 +59,12 @@ teardown() {
     check git-elegant release-work 5
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "git checkout new" ]]
+}
+
+@test "'release-work': creates an annotated tag if there are no other tags" {
+    repo "git tag | xargs git tag -d"
+    check git-elegant release-work ${new_tag}
+    [[ "${status}" -eq 0 ]]
+    [[ "${lines[@]}" =~ "Release notes" ]]
+    [[ "${lines[@]}" =~ "- Add file" ]]
 }

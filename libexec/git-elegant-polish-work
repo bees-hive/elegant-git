@@ -42,7 +42,7 @@ default() {
         error-box "'master' branch history can't be rewritten. Please read more on ${__site}"
         exit 42
     fi
-    source ${BINS}/plugins/rebase
+    source ${BINS}/plugins/state
     if is-there-active-rebase; then
         git-verbose rebase --continue
     else

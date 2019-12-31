@@ -45,7 +45,7 @@ MESSAGE
 
 --accept-work-logic() {
     local WORK_BRANCH="__eg"
-    source ${BINS}/plugins/rebase
+    source ${BINS}/plugins/state
     if is-there-active-rebase; then
         local rb=$(rebasing-branch)
         if [[ ${WORK_BRANCH} == ${rb} ]]; then

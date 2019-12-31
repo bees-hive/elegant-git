@@ -37,8 +37,7 @@ MESSAGE
 }
 
 --github-release-notes() {
-    local first="${1}"
-    local second="${2}"
+    local diapason="${1}"
     local changelog="github-release-notes"
     echo "<h3>Release notes</h3>" > ${changelog}
     local url=$(git remote get-url origin)
@@ -47,7 +46,7 @@ MESSAGE
     [[ ${url} =~ "github.com:" ]] && repository=${url##*github.com:}
     repository=${repository%%.git}
 
-    for hash in $(git log ${first}...${second} --format=%H --reverse); do
+    for hash in $(git log ${diapason} --format=%H --reverse); do
         local issues=$(git show -s --pretty=%B ${hash} | grep "#")
         [[ ! -z ${issues} ]] && issues=" [${issues}]"
         local subject=$(git show -s --pretty=%s ${hash})
@@ -58,11 +57,10 @@ MESSAGE
 }
 
 --simple-release-notes() {
-    local first="${1}"
-    local second="${2}"
+    local diapason="${1}"
     local changelog="simple-release-notes"
     echo "Release notes" > ${changelog}
-    for hash in $(git log ${first}...${second} --format=%H --reverse); do
+    for hash in $(git log ${diapason} --format=%H --reverse); do
         echo "- $(git show -s --pretty=%s ${hash})" >> ${changelog}
     done
     cat ${changelog}
@@ -70,28 +68,23 @@ MESSAGE
 }
 
 default() {
-    local layout="${1}"
-    local first="${2}"
-    local second="${3}"
-    if [[ -z "${layout}" ]]; then
-        layout=simple
+    source ${BINS}/plugins/state
+    local layout=${1:-simple}
+    local first=${2:-$(last-tag)}
+    local second=${3:-@}
+    local diapason=${first}...${second}
+    if [[ ${first} == all-commits ]]; then
+        diapason=${second}
     fi
-    if [[ -z "${first}" ]]; then
-        first=$(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/tags --count 1)
-    fi
-    if [[ -z "${second}" ]]; then
-        second=HEAD
-    fi
-
     case ${layout} in
         simple)
-            --simple-release-notes ${first} ${second}
+            --simple-release-notes ${diapason}
             ;;
         smart)
             if [[ "$(git remote get-url origin)" =~ ((https://)|(git@))github.com ]]; then
-                --github-release-notes ${first} ${second}
+                --github-release-notes ${diapason}
             else
-                --simple-release-notes ${first} ${second}
+                --simple-release-notes ${diapason}
             fi
             ;;
         *)  error-text "A layout can be 'simple' or 'smart'! '${layout}' layout is not supported."

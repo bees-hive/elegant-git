@@ -266,9 +266,10 @@ usage: git elegant release-work [tag name]
 
 Annotates the latest commit of `master` branch with a given tag and publishes
 it. The tag's message will be prepopulated using commits subjects (from oldest
-to newest) between the last available tag and HEAD. The release notes will be
-either copied to clipboard (if `pbcopy` or `xclip` is available) or printed
-to standard output using `git elegant show-release-notes`.
+to newest) between the last available tag and HEAD. If there are no tags, then
+all commits will be used. The release notes will be either copied to clipboard
+(if `pbcopy` or `xclip` is available) or printed to standard output using
+`git elegant show-release-notes`.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.

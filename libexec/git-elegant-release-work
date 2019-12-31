@@ -16,9 +16,10 @@ command-description() {
     cat<<MESSAGE
 Annotates the latest commit of \`master\` branch with a given tag and publishes
 it. The tag's message will be prepopulated using commits subjects (from oldest
-to newest) between the last available tag and HEAD. The release notes will be
-either copied to clipboard (if \`pbcopy\` or \`xclip\` is available) or printed
-to standard output using \`git elegant show-release-notes\`.
+to newest) between the last available tag and HEAD. If there are no tags, then
+all commits will be used. The release notes will be either copied to clipboard
+(if \`pbcopy\` or \`xclip\` is available) or printed to standard output using
+\`git elegant show-release-notes\`.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.
@@ -51,8 +52,9 @@ MESSAGE
 --release-work() {
     git-verbose checkout ${MASTER}
     git-verbose pull --tags
+    source ${BINS}/plugins/state
     local new_tag="${1}"
-    local last_tag=$(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/tags --count 1)
+    local last_tag=$(last-tag)
     if [[ -z ${new_tag} ]]; then
         question-text "'${last_tag}' is the last tag. Which one will be next? "
         read new_tag
@@ -60,13 +62,18 @@ MESSAGE
     local message="tag-message"
     echo "Release ${new_tag}" >> ${message}
     echo "" >> ${message}
-    git log ${last_tag}...@ --pretty=format:'- %s' --reverse >> ${message}
+    local diapason=${last_tag}...@
+    if [[ -z ${last_tag} ]]; then
+        diapason=@
+        last_tag=all-commits
+    fi
+    git log ${diapason} --pretty=format:'- %s' --reverse >> ${message}
     echo "" >> ${message}
     echo "" >> ${message}
     git-verbose tag --annotate --file ${message} --edit ${new_tag}
     remove-file ${message}
     git-verbose push --tags
-    git-verbose-op --copy-notes-if-possible elegant show-release-notes smart ${last_tag} ${new_tag}
+    git-verbose-op --copy-notes-if-possible elegant show-release-notes smart ${last_tag} @
 }
 
 default() {

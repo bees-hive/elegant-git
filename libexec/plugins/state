@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The plugin that wraps some useful operations around `git rebase`.
+# The plugin that wraps the useful operations that describes a state of the repository.
 
 is-there-active-rebase(){
     # Says if there is a rebase in progress.
@@ -22,4 +22,9 @@ rebasing-branch() {
             return 0
         fi
     done
+}
+
+last-tag() {
+    # Seeks for the last created tag.
+    git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/tags --count 1
 }

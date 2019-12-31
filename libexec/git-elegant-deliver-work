@@ -51,7 +51,7 @@ MESSAGE
 }
 
 --deliver-work-logic() {
-    source ${BINS}/plugins/rebase
+    source ${BINS}/plugins/state
     if is-there-active-rebase; then
         git-verbose rebase --continue
     else
