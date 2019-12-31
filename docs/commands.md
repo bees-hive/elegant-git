@@ -328,7 +328,8 @@ usage: git elegant show-release-notes [<layout> | <layout> <from-reference> | <l
 
 Generates a release notes using commits subjects between the given references.
 The commits are ordered from oldest to newest. By default, the `from-reference`
-is the last available tag, and the `to-reference` is a HEAD revision.
+is the last available tag, and the `to-reference` is a HEAD revision. If
+there are no tags, all commits will be displayed.
 
 There are two options for a `layout`:
 

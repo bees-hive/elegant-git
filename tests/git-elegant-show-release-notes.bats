@@ -71,3 +71,14 @@ teardown() {
     [[ "${status}" -eq 43 ]]
     [[ "${lines[@]}" =~ "'some' layout is not supported." ]]
 }
+
+@test "'show-release-notes': displays all commits if there is no tags" {
+    repo "git tag | xargs git tag -d"
+    check git-elegant show-release-notes
+    [[ "${status}" -eq 0 ]]
+    [[ "${lines[0]}" == "Release notes" ]]
+    [[ "${lines[1]}" == "- Add file" ]]
+    [[ "${lines[2]}" == "- Add ${first}" ]]
+    [[ "${lines[3]}" == "- Add ${second}" ]]
+    [[ "${lines[4]}" == "- Add ${third}" ]]
+}

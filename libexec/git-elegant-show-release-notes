@@ -16,7 +16,8 @@ command-description() {
     cat<<MESSAGE
 Generates a release notes using commits subjects between the given references.
 The commits are ordered from oldest to newest. By default, the \`from-reference\`
-is the last available tag, and the \`to-reference\` is a HEAD revision.
+is the last available tag, and the \`to-reference\` is a HEAD revision. If
+there are no tags, all commits will be displayed.
 
 There are two options for a \`layout\`:
 
@@ -73,7 +74,7 @@ default() {
     local first=${2:-$(last-tag)}
     local second=${3:-@}
     local diapason=${first}...${second}
-    if [[ ${first} == all-commits ]]; then
+    if [[ ${first} == all-commits ]] || [[ -z ${first} ]]; then
         diapason=${second}
     fi
     case ${layout} in
