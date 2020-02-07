@@ -1,8 +1,31 @@
-# Several important words
-You can install Elegant Git by either executing `bash` script or using `homebrew`. After the
-installation, please configure your environment by running
-[`git elegant acquire-git`](commands.md#acquire-git) and follow the instructions. To find out more,
-please read [the configuration approach](configuration.md).
+# Installation via Bash script
+Run the follwing command and follow the instructions
+```bash
+curl https://raw.githubusercontent.com/bees-hive/elegant-git/master/install.bash | $(which bash)
+```
+
+Elegant Git will be installed in `~/.elegant-git` directory. That's why if you want to remove
+the installation, just remove the directory.
+
+# Installation via Homebrew
+On macOS, you can install [Homebrew](https://brew.sh/) if you haven't already, then run
+```
+brew install git bees-hive/hive/elegant-git
+```
+The command will
+
+- install Git as it has to be installed with Homebrew for enabling Bash/Zsh completion
+- install Elegant Git
+- configure Bash completion for both Git and Elegant Git
+
+P.S. If you need Zsh completion for all Git commands, consider using
+<https://raw.githubusercontent.com/zsh-users/zsh/master/Completion/Unix/Command/_git>
+(see <https://github.com/bees-hive/elegant-git/blob/master/install.bash> for the details).
+
+# Post-installation actions
+Configure your environment by running [`git elegant acquire-git`](commands.md#acquire-git)
+and follow the instructions. To find out more, please read
+[the configuration approach](configuration.md).
 
 You can access Elegant Git in CLI using any of
 ```bash
@@ -10,25 +33,9 @@ git <command>
 git elegant <command>
 git-elegant <command>
 ```
-where `<command>` is one of the available commands which are described on [commands](commands.md)
-page or are printed in a terminal by running `git elegant`.
+where `<command>` is one of the commands described on the [commands](commands.md) page or
+printed in a terminal after running `git elegant`.
 
 Also, please use [`git elegant clone-repository`](commands.md#clone-repository) or 
 [`git elegant init-repository`](commands.md#init-repository) instead of regular `clone` or `init` 
 Git's commands in order to get Elegant Git working by default.
-
-# `bash` installation
-Run `curl https://raw.githubusercontent.com/bees-hive/elegant-git/master/install.bash | $(which bash)`
-and follow the provided instructions to install the tool. `${HOME}/.elegant-git` directory will host
-all required files. That's why if you want to remove installation, you need to remove this directory
-only (`rm -r ${HOME}/.elegant-git`).
-
-Elegant Git's BASH completion does not work without regular Git BASH completion. If you don't have
-it, please follow <https://github.com/bobthecow/git-flow-completion/wiki/Install-Bash-git-completion>
-in addition to Elegant Git's configuration.
-
-# Homebrew installation
-On macOS, you can install [Homebrew](https://brew.sh/) if you haven't already, then run
-`brew install git` (we must install Git with Homebrew in order to have a working BASH completion)
-and `brew install bees-hive/hive/elegant-git` (please visit
-<https://github.com/bees-hive/homebrew-hive> if you need details).

@@ -1,0 +1,95 @@
+#compdef git-elegant git
+#description enables Elegant Git completion
+#
+# It's recommended to use this completion with the following Git completion file:
+# https://raw.githubusercontent.com/zsh-users/zsh/master/Completion/Unix/Command/_git
+
+_git-elegant (){
+    # update this function if either new commands or options are added
+    local curcontext='$curcontext' state line
+    typeset -A opt_args
+    _arguments -C ':command:->command' '*::option:->option'
+    local all_commands=(
+        'accept-work:applies a branch on top of \`master\` branch'
+        'acquire-git:configures a Git installation'
+        'acquire-repository:configures current repository'
+        'amend-work:amends some changes to the most recent commit'
+        'clone-repository:clones a repository and configures it'
+        'deliver-work:publishes current branch to a remote repository'
+        'init-repository:initializes a new repository and configures it'
+        'obtain-work:checkouts a remote branch matching by a name'
+        'polish-work:reapplies branch commits interactively'
+        'prune-repository:removes useless local branches'
+        'release-work:releases available work as a new annotated tag'
+        'save-work:commits current modifications'
+        'show-commands:prints available Elegant Git commands'
+        'show-release-notes:prints a release log between two references'
+        'show-work:shows a state of current work in progress'
+        'start-work:creates a new branch'
+    )
+
+    case ${state} in
+        command)
+            local options=(
+                '--help:displays help'
+                '--version:displays program version'
+                '--no-workflows:disables available workflows'
+            )
+            _describe 'first' all_commands -- options
+            ;;
+        option)
+            if [[ ${line[1]} == --no-workflows ]]; then
+                __ge_complete_commands_workflow
+            else
+                __ge_complete_commands
+            fi
+        ;;
+    esac
+}
+
+__ge_complete_commands_workflow() {
+    _arguments ':command:->command' '*::options:->options'
+    case ${state} in
+        command) _describe 'only commands' all_commands ;;
+        options) __ge_complete_commands ;;
+    esac
+}
+
+__ge_complete_commands () {
+    # update this function if a new command requires a competion
+    # default completion is empty
+    case ${line[1]} in
+        accept-work|obtain-work)    __ge_remotes ;;
+        show-release-notes)         __ge_show_release_notes ;;
+        *)  _arguments '--help' '--no-workflows'  ;;
+    esac
+}
+
+__ge_remotes() {
+    # completes first position with remote branches
+    local remotes=(
+        $(git for-each-ref --format='%(refname:strip=2)' refs/remotes 2>/dev/null || echo )
+    )
+    _arguments '--help' \
+               '--no-workflows' \
+               '1:branch:(${remotes[@]})'
+}
+
+__ge_show_release_notes_modes(){
+    local modes=(
+        'simple:prints the messages as a plain text (default one)'
+        'smart:prints the messages in a form of adopted for a git hosting'
+    )
+    _describe 'modes' modes
+}
+
+__ge_show_release_notes() {
+    local all=(
+         $(git for-each-ref --format '%(refname:short)' refs 2>/dev/null || echo )
+    )
+    _arguments '--help' \
+               '--no-workflows' \
+               '1:mode:__ge_show_release_notes_modes' \
+               '2:from:(${all[@]})' \
+               '3:to:(${all[@]})'
+}

@@ -24,8 +24,9 @@ copy(){
 update-path() {
     local INSTALL_PATH=${1}
     cat <<TEXT
-You need to add Elegant Git to the PATH by adding to
-a "~/.bashrc" or "~/.bash_profile" file:
+You need to add Elegant Git to the PATH by adding the folowing line
+to relevant shell configuration file ('~/.bashrc', '~/.bash_profile',
+'~/.zshrc', etc.):
 
     export PATH=${INSTALL_PATH}/bin:\$PATH
 
@@ -38,12 +39,52 @@ TEXT
 
 update-completion() {
     local INSTALL_PATH=${1}
-    local COMPLETION_FILE="${INSTALL_PATH}/completions/git-elegant.bash"
+    local BASH_COMPLETION="${INSTALL_PATH}/completions/git-elegant.bash"
+    local ZSH_COMPLETION="${INSTALL_PATH}/completions/_git-elegant"
     cat <<TEXT
-You need to add loading of BASH completion file to
-a "~/.bashrc" or "~/.bash_profile" file:
 
-    [ -f ${COMPLETION_FILE} ] && . ${COMPLETION_FILE}
+Completion installation
+=======================
+
+Bash competion
+--------------
+You need to load a Bash completion file from a relevant shell
+configuration file ('~/.bashrc', '~/.bash_profile', etc.) by
+adding the following line:
+
+    [ -f ${BASH_COMPLETION} ] && source ${BASH_COMPLETION}
+
+Elegant Git's Bash completion does not work without regular Git
+completion. If you don't have it, please install it following
+https://github.com/bobthecow/git-flow-completion/wiki/Install-Bash-git-completion.
+
+Zsh completion
+--------------
+1. link completion file into a completion directory
+
+    mkdir -p ~/.zsh/completion
+    ln -s ${ZSH_COMPLETION} ~/.zsh/completion/
+
+2. include the completion directory in your '\${fpath}'
+
+    fpath=(~/.zsh/completion \${fpath})
+
+3. make sure compinit is loaded or do it by adding in '~/.zshrc:'
+
+    autoload -Uz compinit && compinit -i
+
+4. (optional) consider using
+https://raw.githubusercontent.com/zsh-users/zsh/master/Completion/Unix/Command/_git
+as Git completion file that provides great completions for Git commands and plugins
+Elegant Git's completion file.
+
+    curl -L https://raw.githubusercontent.com/zsh-users/zsh/master/Completion/Unix/Command/_git \\
+        > ~/.zsh/completion/_git
+
+
+P.S.
+----
+Please restart terminal session in order to activate completion.
 
 TEXT
 }
@@ -78,9 +119,7 @@ main() {
     else
         update-path ${INSTALL_PATH}
     fi
-    if ! complete -p git-elegant 1>/dev/null 2>&1; then
-        update-completion ${INSTALL_PATH}
-    fi
+    update-completion ${INSTALL_PATH}
 }
 
 main $@
