@@ -6,10 +6,10 @@ _git_elegant() {
     local geops="--help --version --no-workflows"
     local gecops="--help --no-workflows"
     local offset=0
-    if [[ ${COMP_WORDS[*]} =~ (--no-workflows)|(-nw) ]]; then
+    if [[ ${COMP_WORDS[*]} =~ --no-workflows ]]; then
         geops=""
         gecops=""
-        if [[ ${COMP_WORDS[COMP_CWORD-1]} =~ (--no-workflows)|(-nw) ]]; then
+        if [[ ${COMP_WORDS[COMP_CWORD-1]} =~ --no-workflows ]]; then
             offset=1
         fi
     fi
