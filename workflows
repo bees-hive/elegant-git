@@ -10,7 +10,7 @@ testing() {
 }
 
 generate-docs() {
-    .workflows/docs-generation.bash
+    python .workflows/docs.py
 }
 
 preview-docs() {
