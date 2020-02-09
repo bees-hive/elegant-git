@@ -34,7 +34,7 @@ default() {
     _error-if-empty "${PATTERN}" "Please provide a branch name or its part."
     git-verbose fetch --all
     local REMOTE_BRANCHES=(
-            $(git for-each-ref --format='%(refname:strip=2)' refs/remotes/** | grep "${PATTERN}")
+            $(git for-each-ref --format='%(refname:short)' refs/remotes | grep "${PATTERN}")
         )
     if [[ ${#REMOTE_BRANCHES[@]} > 1 ]]; then
         info-text "The following branches are found:"

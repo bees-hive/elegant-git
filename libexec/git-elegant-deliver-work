@@ -58,7 +58,7 @@ MESSAGE
         git-verbose fetch
         git-verbose rebase ${RMASTER}
     fi
-    local upstream=$(git branch --list --format "%(upstream:lstrip=2)" ${1})
+    local upstream=$(git branch --list --format "%(upstream:short)" ${1})
     local remote_branch=${upstream/*\//}
     local remote=${upstream/\/*/}
     if [[ -n "${2}" ]]; then

@@ -45,7 +45,7 @@ _git_elegant() {
     if [[ ${#COMP_WORDS[*]} > $(( 2 + ${offset} )) ]]; then
         case "${COMP_WORDS[COMP_CWORD-$(( 2 + ${offset} ))]}" in
             show-release-notes)
-                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/**))
+                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs))
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
                 return 0 ;;
             *)  ;;
@@ -56,7 +56,7 @@ _git_elegant() {
     if [[ ${#COMP_WORDS[*]} > $(( 3 + ${offset} )) ]]; then
         case "${COMP_WORDS[COMP_CWORD-$(( 3 + ${offset} ))]}" in
             show-release-notes)
-                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs/**))
+                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs))
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
                 return 0 ;;
             *)  ;;

@@ -68,7 +68,7 @@ __ge_complete_commands () {
 __ge_remotes() {
     # completes first position with remote branches
     local remotes=(
-        $(git for-each-ref --format='%(refname:strip=2)' refs/remotes 2>/dev/null || echo )
+        $(git for-each-ref --format='%(refname:short)' refs/remotes 2>/dev/null || echo )
     )
     _arguments '--help' \
                '--no-workflows' \
