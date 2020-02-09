@@ -157,3 +157,22 @@ teardown() {
     [[ ! ${lines[@]} =~ "==>> git config --local tag.gpgSign true" ]]
     [[ ! ${lines[@]} =~ "The signature is not configured as the empty key is provided." ]]
 }
+
+@test "'acquire-repository': does not configure a signature if there is no key for the email" {
+    read-answer "The User"
+    read-answer "the@email"
+    read-answer "someeditor"
+    read-answer ""
+    fake-fail "gpg --list-secret-keys --keyid-format long the@email" "gpg: error reading key: No secret key"
+    check git-elegant acquire-repository
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "Configuring signature..." ]]
+    [[ ${lines[@]} =~ "There is no gpg key for the given email." ]]
+    [[ ${lines[@]} =~ "A signature is not configured." ]]
+    [[ ! ${lines[@]} =~ "==>> git config --local user.signingkey" ]]
+    [[ ! ${lines[@]} =~ "==>> git config --local gpg.program /tmp/elegant-git-fakes/gpg" ]]
+    [[ ! ${lines[@]} =~ "==>> git config --local commit.gpgsign true" ]]
+    [[ ! ${lines[@]} =~ "==>> git config --local tag.forceSignAnnotated true" ]]
+    [[ ! ${lines[@]} =~ "==>> git config --local tag.gpgSign true" ]]
+    [[ ! ${lines[@]} =~ "The signature is not configured as the empty key is provided." ]]
+}

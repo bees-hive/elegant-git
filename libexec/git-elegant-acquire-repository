@@ -46,7 +46,11 @@ default() {
     info-box "Configuring signature..."
     local listkeys="gpg --list-secret-keys --keyid-format long $(git config --local user.email)"
     command-text ${listkeys}
-    ${listkeys}
+    ${listkeys} 2>/dev/null || {
+        info-text "There is no gpg key for the given email."
+        info-text "A signature is not configured."
+        return 0
+    }
     info-text "From the list of GPG keys above, copy the GPG key ID you'd like to use."
     info-text "It will be"
     info-text "    3AA5C34371567BD2"
