@@ -26,7 +26,7 @@ _git_elegant() {
             accept-work|obtain-work)
                 local opts=(
                     ${gecops}
-                    $(git branch --remotes --list)
+                    $(git for-each-ref --format='%(refname:short)' refs/remotes)
                 )
                 COMPREPLY=(
                     $(compgen -W "${opts[*]}" -- ${cursor})
