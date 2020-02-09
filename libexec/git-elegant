@@ -114,7 +114,7 @@ MESSAGE
     local type=${1}
     local command=${2}
     if [[ ! "init-repository clone-repository" =~ ${command} ]]; then
-        local prefix=$(git rev-parse --show-cdup)
+        local prefix=$(git rev-parse --show-cdup 2>/dev/null)
     fi
     --run-file "${prefix}.git/.workflows/${command}-${type}"
     --run-file "${prefix}.workflows/${command}-${type}"

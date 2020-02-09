@@ -26,7 +26,7 @@ _git_elegant() {
             accept-work|obtain-work)
                 local opts=(
                     ${gecops}
-                    $(git for-each-ref --format='%(refname:short)' refs/remotes)
+                    $(git for-each-ref --format='%(refname:short)' refs/remotes 2>/dev/null)
                 )
                 COMPREPLY=(
                     $(compgen -W "${opts[*]}" -- ${cursor})
@@ -45,7 +45,9 @@ _git_elegant() {
     if [[ ${#COMP_WORDS[*]} > $(( 2 + ${offset} )) ]]; then
         case "${COMP_WORDS[COMP_CWORD-$(( 2 + ${offset} ))]}" in
             show-release-notes)
-                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs))
+                local opts=(
+                    $(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs 2>/dev/null)
+                )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
                 return 0 ;;
             *)  ;;
@@ -56,7 +58,9 @@ _git_elegant() {
     if [[ ${#COMP_WORDS[*]} > $(( 3 + ${offset} )) ]]; then
         case "${COMP_WORDS[COMP_CWORD-$(( 3 + ${offset} ))]}" in
             show-release-notes)
-                local opts=($(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs))
+                local opts=(
+                    $(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs 2>/dev/null)
+                )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
                 return 0 ;;
             *)  ;;

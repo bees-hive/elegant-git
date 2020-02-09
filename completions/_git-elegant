@@ -68,7 +68,7 @@ __ge_complete_commands () {
 __ge_remotes() {
     # completes first position with remote branches
     local remotes=(
-        $(git for-each-ref --format='%(refname:short)' refs/remotes 2>/dev/null || echo )
+        $(git for-each-ref --format '%(refname:short)' refs/remotes 2>/dev/null)
     )
     _arguments '--help' \
                '--no-workflows' \
@@ -85,7 +85,7 @@ __ge_show_release_notes_modes(){
 
 __ge_show_release_notes() {
     local all=(
-         $(git for-each-ref --format '%(refname:short)' refs 2>/dev/null || echo )
+        $(git for-each-ref --sort '-version:refname' --format '%(refname:short)' refs 2>/dev/null)
     )
     _arguments '--help' \
                '--no-workflows' \
