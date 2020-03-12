@@ -6,7 +6,6 @@ load addons-repo
 
 setup() {
     repo-new
-    fake-pass "git pull"
 }
 
 teardown() {
@@ -14,52 +13,58 @@ teardown() {
     repo-clean
 }
 
-@test "'start-work': branch with given name is created successfully" {
-    check git-elegant start-work test-feature
-    [[ "$status" -eq 0 ]]
-}
-
-@test "'start-work': works when the remote repository is unavailable" {
-    fake-fail "git pull"
+@test "'start-work': starts work with a given name" {
     check git-elegant start-work test-feature
     [[ ${status} -eq 0 ]]
-    [[ ${lines[@]} =~ "As the branch can't be pulled, the current local version is used." ]]
+    [[ $(git rev-parse --abbrev-ref @) == "test-feature" ]]
 }
 
-@test "'start-work': exit code is 45 when branch name isn't set" {
+@test "'start-work': updates upsteram branch before start a new work" {
+    fake-fail "git pull"
+    fake-pass "git rev-parse --abbrev-ref master@{upstream}"
+    check git-elegant start-work test-feature
+    [[ ${status} -eq 100 ]]
+}
+
+@test "'start-work': raises 45 error if work name is not set" {
     check git-elegant start-work
-    [[ "$status" -eq 45 ]]
+    [[ ${status} -eq 45 ]]
+    [[ ${lines[0]} =~ "Please give a name for the new branch." ]]
 }
 
-@test "'start-work': print error message when branch name isn't set" {
+@test "'start-work': starts work from a given branch instead of a default one" {
+    repo "git checkout -b custom"
+    fake-pass "git rev-parse --abbrev-ref custom@{upstream}"
+    fake-pass "git pull"
     check git-elegant start-work
-    [[ "${lines[0]}" =~ "Please give a name for the new branch." ]]
+    [[ ${status} -eq 45 ]]
+    [[ ${lines[0]} =~ "Please give a name for the new branch." ]]
 }
 
-@test "'start-work': tracked changes move to a new branch when they are available" {
+@test "'start-work': moves existing changes to a new branch" {
     repo-non-staged-change "A new line..."
     check git-elegant start-work test-feature
-    [[ "$status" -eq 0 ]]
-    [[ "${lines[@]}" =~ "stash push" ]]
-    [[ "${lines[@]}" =~ "stash pop" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "stash push" ]]
+    [[ ${lines[@]} =~ "stash pop" ]]
 }
 
-@test "'start-work': stash commands don't run when there are no tracked changes" {
+@test "'start-work': doesn't run stash pipeline if there are no tracked changes" {
     check git-elegant start-work test-feature
-    [[ "$status" -eq 0 ]]
-    [[ ! "${lines[@]}" =~ "stash push" ]]
-    [[ ! "${lines[@]}" =~ "stash pop" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ! ${lines[@]} =~ "stash push" ]]
+    [[ ! ${lines[@]} =~ "stash pop" ]]
 }
 
-@test "'start-work': stash is not applied when it is not found for a given message" {
+@test "'start-work': doesn't apply a stash when it wasn't found for a given message" {
     fake-fail "git diff-index --quiet HEAD"
     check git-elegant start-work test-feature
-    [[ "$status" -eq 0 ]]
-    [[ "${lines[@]}" =~ "stash push" ]]
-    [[ ! "${lines[@]}" =~ "stash pop" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "stash push" ]]
+    [[ ! ${lines[@]} =~ "stash pop" ]]
 }
 
-@test "'start-work': stash is applied when the failed command reruns" {
+@test "'start-work': appies a stash when the failed command reruns" {
     repo-non-staged-change "A new line..."
     fake-fail "git checkout -b fail"
     git-elegant start-work fail || true

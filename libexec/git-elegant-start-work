@@ -9,7 +9,7 @@ MESSAGE
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant start-work <name>
+usage: git elegant start-work <name> [from-ref]
 MESSAGE
 }
 
@@ -18,6 +18,8 @@ command-description() {
 Creates a new local branch based on the latest version of the default upstream
 branch. If there are some uncommitted changes, they will be moved to the new
 branch.
+
+\`from-ref\` argument overrides the default upstream branch with a given one.
 
 The command uses stash pipe to preserve the current Git state prior to execution
 and restore after.
@@ -38,8 +40,12 @@ MESSAGE
 }
 
 --start-work-logic(){
-    git-verbose checkout ${MASTER}
-    git-verbose pull || info-text "As the branch can't be pulled, the current local version is used."
+    source ${BINS}/plugins/state
+    local target=${2:-${MASTER}}
+    git-verbose checkout ${target}
+    if is-there-upstream-for ${target}; then
+        git-verbose pull
+    fi
     git-verbose checkout -b "$1"
 }
 

@@ -150,3 +150,9 @@ In order to get the documentation preview locally, please install required depen
 
 The [docs/commands.md](docs/commands.md) generates by running `./workflows generate-docs` script.
 All other files in ["docs" directory](docs/) require manual corrections.
+
+### Completions testing
+1. source updated competion file
+    - bash: `source completions/git-elegant.bash`
+    - zsh: `source completions/_git-elegant`
+2. run `git-elegant <some>` and press Tab twice

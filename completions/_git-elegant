@@ -61,6 +61,7 @@ __ge_complete_commands () {
     case ${line[1]} in
         accept-work|obtain-work)    __ge_remotes ;;
         show-release-notes)         __ge_show_release_notes ;;
+        start-work)                 __ge_start_work ;;
         *)  _arguments '--help' '--no-workflows'  ;;
     esac
 }
@@ -92,4 +93,14 @@ __ge_show_release_notes() {
                '1:mode:__ge_show_release_notes_modes' \
                '2:from:(${all[@]})' \
                '3:to:(${all[@]})'
+}
+
+__ge_start_work() {
+    local all=(
+        $(git for-each-ref --sort '-version:refname' --format '%(refname:short)' refs 2>/dev/null)
+    )
+    _arguments '--help' \
+               '--no-workflows' \
+               '1:name:()' \
+               '2:from:(${all[@]})'
 }

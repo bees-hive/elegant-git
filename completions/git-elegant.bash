@@ -22,7 +22,7 @@ _git_elegant() {
                     $(git elegant show-commands)
                 )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
-                return 0 ;;
+                ;;
             accept-work|obtain-work)
                 local opts=(
                     ${gecops}
@@ -31,25 +31,25 @@ _git_elegant() {
                 COMPREPLY=(
                     $(compgen -W "${opts[*]}" -- ${cursor})
                 )
-                return 0 ;;
+                ;;
             show-release-notes)
                 COMPREPLY=( $(compgen -W "simple smart ${gecops[*]}" -- ${cursor}) )
-                return 0 ;;
+                ;;
             *)
                 COMPREPLY=( $(compgen -W "${gecops[*]}" -- ${cursor}) )
-                return 0 ;;
+                ;;
         esac
     fi
 
     # the second word prior to the ${cursor}
     if [[ ${#COMP_WORDS[*]} > $(( 2 + ${offset} )) ]]; then
         case "${COMP_WORDS[COMP_CWORD-$(( 2 + ${offset} ))]}" in
-            show-release-notes)
+            show-release-notes|start-work)
                 local opts=(
                     $(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs 2>/dev/null)
                 )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
-                return 0 ;;
+                ;;
             *)  ;;
         esac
     fi
@@ -62,7 +62,7 @@ _git_elegant() {
                     $(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs 2>/dev/null)
                 )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
-                return 0 ;;
+                ;;
             *)  ;;
         esac
     fi

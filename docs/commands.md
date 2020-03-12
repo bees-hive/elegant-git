@@ -368,12 +368,14 @@ git stash list
 # `start-work`
 
 ```bash
-usage: git elegant start-work <name>
+usage: git elegant start-work <name> [from-ref]
 ```
 
 Creates a new local branch based on the latest version of the default upstream
 branch. If there are some uncommitted changes, they will be moved to the new
 branch.
+
+`from-ref` argument overrides the default upstream branch with a given one.
 
 The command uses stash pipe to preserve the current Git state prior to execution
 and restore after.
