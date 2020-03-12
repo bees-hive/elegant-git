@@ -23,7 +23,8 @@ teardown() {
     fake-fail "git pull"
     fake-pass "git rev-parse --abbrev-ref master@{upstream}"
     check git-elegant start-work test-feature
-    [[ ${status} -eq 100 ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "As the pull can't be completed, the current local version is used." ]]
 }
 
 @test "'start-work': raises 45 error if work name is not set" {

@@ -44,7 +44,7 @@ MESSAGE
     local target=${2:-${MASTER}}
     git-verbose checkout ${target}
     if is-there-upstream-for ${target}; then
-        git-verbose pull
+        git-verbose pull || info-text "As the pull can't be completed, the current local version is used."
     fi
     git-verbose checkout -b "$1"
 }
