@@ -19,7 +19,7 @@ Displays all available Elegant Git commands. This is useful for completion
 functions as well as for other cases when you need iteration over the available
 commands.
 
-Approximate commands flow is
+Approximate command's output is
 \`\`\`bash
 ==>> git elegant show-commands
 start-work

@@ -25,6 +25,7 @@ _git-elegant (){
         'show-commands:prints available Elegant Git commands'
         'show-release-notes:prints a release log between two references'
         'show-work:shows a state of current work in progress'
+        'show-workflows:shows configured workflows in the repository'
         'start-work:creates a new branch'
     )
 

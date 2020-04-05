@@ -26,10 +26,9 @@ There are two options for a \`layout\`:
 hosting is unknown, the default layout is used. Now only GitHub is supported
 (an HTML output).
 
-Approximate commands flow is
+Approximate command's output is
 \`\`\`bash
 ==>> git elegant show-release-notes
-# produces output like this
 Release notes
 - Add \`show-release-notes\` command
 - Add \`release-work\` command

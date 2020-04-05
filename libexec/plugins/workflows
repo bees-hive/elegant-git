@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+--prefix(){
+    if [[ ! "init-repository clone-repository" =~ ${1} ]]; then
+        git rev-parse --show-cdup 2>/dev/null
+    fi
+}
+
+personal-workflows() {
+    # usage: personal-workflows <command>
+    echo "$(--prefix ${1}).git/.workflows"
+}
+
+common-workflows() {
+    # usage: common-workflows <command>
+    echo "$(--prefix ${1}).workflows"
+}
+
+personal-workflows-file() {
+    # usage: personal-workflows-file <comand> <type>
+    echo "$(personal-workflows ${1})/${1}-${2}"
+}
+
+common-workflows-file() {
+    # usage: common-workflows-file <comand> <type>
+    echo "$(common-workflows ${1})/${1}-${2}"
+}

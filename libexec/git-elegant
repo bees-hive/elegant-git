@@ -71,31 +71,36 @@ usage: git elegant [-h | --help | help | --version | version]
 
 There are commands used in various situations such as
 
- act with a repository
+ enable Elegnat Git services
+$(--print-command-in-usage acquire-git)
+$(--print-command-in-usage acquire-repository)
 $(--print-command-in-usage clone-repository)
 $(--print-command-in-usage init-repository)
-$(--print-command-in-usage acquire-repository)
+
+ serve a repository
 $(--print-command-in-usage prune-repository)
 
- manage a personal work
+ enhance contribution rules
+$(--print-command-in-usage show-workflows)
+
+ make day-to-day contributions
 $(--print-command-in-usage start-work)
 $(--print-command-in-usage save-work)
 $(--print-command-in-usage amend-work)
 $(--print-command-in-usage show-work)
 $(--print-command-in-usage polish-work)
+
+ interact with others
 $(--print-command-in-usage deliver-work)
-
- operate a flow of work management
 $(--print-command-in-usage obtain-work)
-$(--print-command-in-usage accept-work)
 
- release new versions
-$(--print-command-in-usage show-release-notes)
+ manage contributions
+$(--print-command-in-usage accept-work)
 $(--print-command-in-usage release-work)
+$(--print-command-in-usage show-release-notes)
 
  and others
 $(--print-command-in-usage show-commands)
-$(--print-command-in-usage acquire-git)
 
 
 Please visit ${__site} to find out more.
@@ -113,11 +118,8 @@ MESSAGE
 --run-workflow(){
     local type=${1}
     local command=${2}
-    if [[ ! "init-repository clone-repository" =~ ${command} ]]; then
-        local prefix=$(git rev-parse --show-cdup 2>/dev/null)
-    fi
-    --run-file "${prefix}.git/.workflows/${command}-${type}"
-    --run-file "${prefix}.workflows/${command}-${type}"
+    --run-file "$(personal-workflows-file ${command} ${type})"
+    --run-file "$(common-workflows-file ${command} ${type})"
 }
 
 --load-command(){
@@ -148,6 +150,7 @@ MESSAGE
             default "$@"
             ;;
         *)
+            source ${BINS}/plugins/workflows
             --run-workflow ahead ${COMMAND}
             default "$@"
             --run-workflow after ${COMMAND}

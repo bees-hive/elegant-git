@@ -14,31 +14,36 @@ usage: git elegant [-h | --help | help | --version | version]
 
 There are commands used in various situations such as
 
- act with a repository
+ enable Elegnat Git services
+    acquire-git          Configures a Git installation.
+    acquire-repository   Configures current repository.
     clone-repository     Clones a repository and configures it.
     init-repository      Initializes a new repository and configures it.
-    acquire-repository   Configures current repository.
+
+ serve a repository
     prune-repository     Removes useless local branches.
 
- manage a personal work
+ enhance contribution rules
+    show-workflows       Shows configured workflows in the repository.
+
+ make day-to-day contributions
     start-work           Creates a new branch.
     save-work            Commits current modifications.
     amend-work           Amends some changes to the most recent commit.
     show-work            Shows a state of current work in progress.
     polish-work          Reapplies branch commits interactively.
+
+ interact with others
     deliver-work         Publishes current branch to a remote repository.
-
- operate a flow of work management
     obtain-work          Checkouts a remote branch matching by a name.
-    accept-work          Incorporates a branch on top of the `master`.
 
- release new versions
-    show-release-notes   Prints a release log between two references.
+ manage contributions
+    accept-work          Incorporates a branch on top of the `master`.
     release-work         Releases available work as a new annotated tag.
+    show-release-notes   Prints a release log between two references.
 
  and others
     show-commands        Prints available Elegant Git commands.
-    acquire-git          Configures a Git installation.
 
 
 Please visit https://elegant-git.bees-hive.org to find out more.
@@ -312,7 +317,7 @@ Displays all available Elegant Git commands. This is useful for completion
 functions as well as for other cases when you need iteration over the available
 commands.
 
-Approximate commands flow is
+Approximate command's output is
 ```bash
 ==>> git elegant show-commands
 start-work
@@ -338,10 +343,9 @@ There are two options for a `layout`:
 hosting is unknown, the default layout is used. Now only GitHub is supported
 (an HTML output).
 
-Approximate commands flow is
+Approximate command's output is
 ```bash
 ==>> git elegant show-release-notes
-# produces output like this
 Release notes
 - Add `show-release-notes` command
 - Add `release-work` command
@@ -363,6 +367,30 @@ Approximate commands flow is
 git log --oneline master..@
 git status --short
 git stash list
+```
+
+# `show-workflows`
+
+```bash
+usage: git elegant show-workflows
+```
+
+Shows all personal and common workflows files that are available in the
+repository.
+
+Personal workflows are located in `.git/.workflows` directory and common ones
+are in \'.workflows` relatively to the repository root directory.
+
+Approximate command's output is
+```bash
+==>> git elegant show-workflows
+.git/.workflows/accept-work-after
+.workflows/amend-work-ahead
+.workflows/amend-work-after
+.workflows/release-work-after
+.workflows/save-work-ahead
+.workflows/save-work-after
+....
 ```
 
 # `start-work`
