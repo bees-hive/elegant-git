@@ -20,22 +20,22 @@ teardown() {
     repo "git checkout -b feature1"
     fake-pass "git push --set-upstream --force origin feature1:feature1"
     check git-elegant deliver-work
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "git push --set-upstream --force origin feature1:feature1" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git push --set-upstream --force origin feature1:feature1" ]]
 }
 
 @test "'deliver-work': if branch name passed, a name of remote branch is different to local branch" {
     repo "git checkout -b feature1"
     fake-pass "git push --set-upstream --force origin feature1:feature2"
     check git-elegant deliver-work feature2
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "git push --set-upstream --force origin feature1:feature2" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git push --set-upstream --force origin feature1:feature2" ]]
 }
 
 @test "'deliver-work': exit code is 42 when current local branch is master" {
     check git-elegant deliver-work
-    [[ "${status}" -eq 42 ]]
-    [[ "${lines[1]}" = "== No pushes to 'master' branch. Please read more on https://elegant-git.bees-hive.org ==" ]]
+    [[ ${status} -eq 42 ]]
+    [[ ${lines[1]} = "== No pushes to 'master' branch. Please read more on https://elegant-git.bees-hive.org ==" ]]
 }
 
 @test "'deliver-work': use stash pipe if there are uncommitted changes" {
@@ -43,9 +43,9 @@ teardown() {
     repo-non-staged-change "A new line..."
     fake-pass "git push --set-upstream --force origin feature1:feature1"
     check git-elegant deliver-work
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "git stash push" ]]
-    [[ "${lines[@]}" =~ "git stash pop" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git stash push" ]]
+    [[ ${lines[@]} =~ "git stash pop" ]]
 }
 
 @test "'deliver-work': use existing upstream branch if it is available" {
@@ -54,8 +54,8 @@ teardown() {
     repo "git branch --set-upstream-to some/remote"
     fake-pass "git push --set-upstream --force some feature1:remote"
     check git-elegant deliver-work
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "git push --set-upstream --force some feature1:remote" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git push --set-upstream --force some feature1:remote" ]]
 }
 
 @test "'deliver-work': open URls if they are present in the push output" {
@@ -63,7 +63,7 @@ teardown() {
     fake-pass "git push --set-upstream --force origin feature1:feature1" "remote: https://pull/new/some"
     fake "open https://pull/new/some" 23
     check git-elegant deliver-work
-    [[ "${status}" -eq 23 ]]
+    [[ ${status} -eq 23 ]]
 }
 
 @test "'deliver-work': exit 0 if URls are not present in the push output" {
@@ -71,7 +71,7 @@ teardown() {
     fake-pass "git push --set-upstream --force origin feature1:feature1" "Branch 'workflows' set up to track remote branch 'workflows' from 'origin'."
     fake "open https://pull/new/some" 23
     check git-elegant deliver-work
-    [[ "${status}" -eq 0 ]]
+    [[ ${status} -eq 0 ]]
 }
 
 @test "'deliver-work': current rebase is continued when there is an active rebase process" {

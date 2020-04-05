@@ -31,13 +31,13 @@ teardown() {
         "polish-work"
     )
     check git-elegant show-commands
-    [ ${#lines[@]} -eq ${#COMMANDS[@]} ]
+    [[ ${#lines[@]} -eq ${#COMMANDS[@]} ]]
     for command in ${COMMANDS[@]}; do
-        [[ "${lines[@]}" =~ "${command}" ]]
+        [[ ${lines[@]} =~ "${command}" ]]
     done
 }
 
 @test "'show-commands': default exit code is 0" {
     check git-elegant show-commands
-    [ "$status" -eq 0 ]
+    [[ ${status} -eq 0 ]]
 }

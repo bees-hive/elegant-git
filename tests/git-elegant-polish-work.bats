@@ -15,14 +15,14 @@ teardown() {
 
 @test "'polish-work': exit code is 42 when the command is run against 'master' branch" {
     check git-elegant polish-work
-    [[ "${status}" -eq 42 ]]
+    [[ ${status} -eq 42 ]]
 }
 
 @test "'polish-work': a rebase process doesn't start when there are no new commits" {
     repo "git checkout -b no-new-commits"
     check git-elegant polish-work
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "There are no new commits comparing to 'master' branch." ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "There are no new commits comparing to 'master' branch." ]]
 }
 
 @test "'polish-work': a rebase process works when there are new commits" {
@@ -32,7 +32,7 @@ teardown() {
     repo-commit-file "3"
     fake-fail "git rebase --interactive @~3" "git rebase was executed"
     check git-elegant polish-work
-    [[ "${status}" -eq 100 ]]
+    [[ ${status} -eq 100 ]]
     [[ ${lines[@]} =~ "git rebase was executed" ]]
 }
 
@@ -40,7 +40,7 @@ teardown() {
     repo "git checkout -b new-commits"
     fake-pass "git rev-parse --git-path rebase-merge" ".git"
     check git-elegant polish-work
-    [[ "${status}" -ne 0 ]]
+    [[ ${status} -ne 0 ]]
     [[ ${lines[@]} =~ "No rebase in progress?" ]]
 }
 
@@ -51,5 +51,5 @@ teardown() {
     fake-pass "git rebase --interactive @~1"
     fake-fail "git stash pop stash@{0}"
     check git-elegant polish-work
-    [[ "$status" -eq 100 ]]
+    [[ ${status} -eq 100 ]]
 }

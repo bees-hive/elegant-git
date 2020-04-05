@@ -135,14 +135,17 @@ Also, there are several optional addons which can be useful in some circumstance
 5. Do not fake `git-elegant` commands within the tests.
 
 #### Assertions
-- `[[ "${lines[0]}" = "+ the space " ]]` for an output line (index starts from 0)
-- `[[ "$status" -eq 2 ]]` for a command status
-- `[[ "${#lines[@]}" -eq 0 ]]` for a length of command output
-- `[[ "${lines[@]}" =~ "exact string" ]]` for an output line within whole output
+- `[[ ${status} -eq 2 ]]` for a command status
+- `[[ ${#lines[@]} -eq 0 ]]` for a length of command output
+- `[[ ${lines[0]} = "+ the space " ]]` for an output line (index starts from 0)
+- `[[ ${lines[@]} =~ "exact string" ]]` for an output line within whole output
 
 #### Test name template
-Use the following test name template - `'<command args>': <describe what will be tested>` like
-`'clone-repository': raise an error if cloneable URL isn't set`.
+Use the following test name template - `'<command>': <describes the behavior that will be tested>`
+like `'clone-repository': stops with exit code 45 if cloneable URL is not set`.
+
+The behavior should be descriptive-style (`stops with exit code 45 if cloneable URL is not set`)
+rather than imperative-style (`stop with exit code 45 if cloneable URL is not set`).
 
 ### Updating documentation
 In order to get the documentation preview locally, please install required dependencies with 

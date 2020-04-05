@@ -9,8 +9,8 @@ teardown() {
 
 @test "'obtain-work': raise 45 error if branch name pattern in not set" {
     check git-elegant obtain-work
-    [[ "$status" -eq 45 ]]
-    [[ "${lines[@]}" =~ "Please provide a branch name or its part." ]]
+    [[ ${status} -eq 45 ]]
+    [[ ${lines[@]} =~ "Please provide a branch name or its part." ]]
 }
 
 @test "'obtain-work': use found remote branch when given pattern matches only one remote branch" {
@@ -19,7 +19,7 @@ teardown() {
     fake-pass "git checkout -B rremote origin/rremote"
 
     check git-elegant obtain-work rr
-    [[ "$status" -eq 0 ]]
+    [[ ${status} -eq 0 ]]
 }
 
 @test "'obtain-work': use given local branch name when it is provided" {
@@ -28,7 +28,7 @@ teardown() {
     fake-pass "git checkout -B myname origin/rremote"
 
     check git-elegant obtain-work rr myname
-    [[ "$status" -eq 0 ]]
+    [[ ${status} -eq 0 ]]
 }
 
 @test "'obtain-work': raise 43 error when given pattern matches several remote branches" {
@@ -36,8 +36,8 @@ teardown() {
     fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/master\nother-upstream/barr"
 
     check git-elegant obtain-work rr
-    [[ "$status" -eq 43 ]]
-    [[ "${lines[@]}" =~ "Please re-run the command with concrete branch name from the list above!" ]]
+    [[ ${status} -eq 43 ]]
+    [[ ${lines[@]} =~ "Please re-run the command with concrete branch name from the list above!" ]]
 }
 
 @test "'obtain-work': raise 43 error when given pattern matches zero remote branches" {
@@ -45,6 +45,6 @@ teardown() {
     fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/master\norigin/barr"
 
     check git-elegant obtain-work aa
-    [[ "$status" -eq 43 ]]
-    [[ "${lines[@]}" =~ "There is no branch that matches the 'aa' pattern." ]]
+    [[ ${status} -eq 43 ]]
+    [[ ${lines[@]} =~ "There is no branch that matches the 'aa' pattern." ]]
 }

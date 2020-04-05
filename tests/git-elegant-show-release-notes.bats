@@ -26,59 +26,59 @@ teardown() {
 @test "'show-release-notes': the defaults are used when there are no arguments specified" {
     fake-pass "git remote get-url origin" "https://fake-repo.git"
     check git-elegant show-release-notes
-    [[ "${status}" -eq 0 ]]
-    [[ ! "${lines[@]}" =~ ${first} ]]
-    [[ ! "${lines[@]}" =~ ${second} ]]
-    [[ "${lines[@]}" =~ ${third} ]]
-    [[ "${#lines[@]}" -eq 2 ]]
+    [[ ${status} -eq 0 ]]
+    [[ ! ${lines[@]} =~ ${first} ]]
+    [[ ! ${lines[@]} =~ ${second} ]]
+    [[ ${lines[@]} =~ ${third} ]]
+    [[ ${#lines[@]} -eq 2 ]]
 }
 
 @test "'show-release-notes': a 'from-reference' is used when it is specified" {
     fake-pass "git remote get-url origin" "https://fake-repo.git"
     check git-elegant show-release-notes simple 1
-    [[ "${status}" -eq 0 ]]
-    [[ ! "${lines[@]}" =~ ${first} ]]
-    [[ "${lines[@]}" =~ ${second} ]]
-    [[ "${lines[@]}" =~ ${third} ]]
-    [[ "${#lines[@]}" -eq 3 ]]
+    [[ ${status} -eq 0 ]]
+    [[ ! ${lines[@]} =~ ${first} ]]
+    [[ ${lines[@]} =~ ${second} ]]
+    [[ ${lines[@]} =~ ${third} ]]
+    [[ ${#lines[@]} -eq 3 ]]
 }
 
 @test "'show-release-notes': a 'to-reference' is used when it is specified" {
     fake-pass "git remote get-url origin" "https://fake-repo.git"
     check git-elegant show-release-notes simple 1 HEAD
-    [[ "${status}" -eq 0 ]]
-    [[ ! "${lines[@]}" =~ ${first} ]]
-    [[ "${lines[@]}" =~ ${second} ]]
-    [[ "${lines[@]}" =~ ${third} ]]
+    [[ ${status} -eq 0 ]]
+    [[ ! ${lines[@]} =~ ${first} ]]
+    [[ ${lines[@]} =~ ${second} ]]
+    [[ ${lines[@]} =~ ${third} ]]
 }
 
 @test "'show-release-notes': a GitHub layout is used if 'git@git@github.com' is in remote URL" {
     fake-pass "git remote get-url origin" "git@github.com:bees-hive/elegant-git.git"
     check git-elegant show-release-notes smart 1 @
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "<li> <a href=\"https://github.com/bees-hive/elegant-git" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "<li> <a href=\"https://github.com/bees-hive/elegant-git" ]]
 }
 
 @test "'show-release-notes': a GitHub layout is used if 'https://github.com' is in remote URL" {
     fake-pass "git remote get-url origin" "https://github.com/bees-hive/elegant-git.git"
     check git-elegant show-release-notes smart 1 @
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "<li> <a href=\"https://github.com/bees-hive/elegant-git" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "<li> <a href=\"https://github.com/bees-hive/elegant-git" ]]
 }
 
 @test "'show-release-notes': raise error 43 if a given layout is unknown" {
     check git-elegant show-release-notes some
-    [[ "${status}" -eq 43 ]]
-    [[ "${lines[@]}" =~ "'some' layout is not supported." ]]
+    [[ ${status} -eq 43 ]]
+    [[ ${lines[@]} =~ "'some' layout is not supported." ]]
 }
 
 @test "'show-release-notes': displays all commits if there is no tags" {
     repo "git tag | xargs git tag -d"
     check git-elegant show-release-notes
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[0]}" == "Release notes" ]]
-    [[ "${lines[1]}" == "- Add file" ]]
-    [[ "${lines[2]}" == "- Add ${first}" ]]
-    [[ "${lines[3]}" == "- Add ${second}" ]]
-    [[ "${lines[4]}" == "- Add ${third}" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[0]} == "Release notes" ]]
+    [[ ${lines[1]} == "- Add file" ]]
+    [[ ${lines[2]} == "- Add ${first}" ]]
+    [[ ${lines[3]} == "- Add ${second}" ]]
+    [[ ${lines[4]} == "- Add ${third}" ]]
 }

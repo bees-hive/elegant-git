@@ -33,15 +33,15 @@ teardown() {
 
 @test "'release-work': release work when a new tag is provided as argument" {
     check git-elegant release-work ${new_tag}
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "Release notes" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "Release notes" ]]
 }
 
 @test "'release-work': release work when a new tag is provided via question" {
     read-answer ${new_tag}
     check git-elegant release-work
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "Release notes" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "Release notes" ]]
 }
 
 @test "'release-work': working branch is restored when the command runs in non-master branch" {
@@ -64,7 +64,7 @@ teardown() {
 @test "'release-work': creates an annotated tag if there are no other tags" {
     repo "git tag | xargs git tag -d"
     check git-elegant release-work ${new_tag}
-    [[ "${status}" -eq 0 ]]
-    [[ "${lines[@]}" =~ "Release notes" ]]
-    [[ "${lines[@]}" =~ "- Add file" ]]
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "Release notes" ]]
+    [[ ${lines[@]} =~ "- Add file" ]]
 }
