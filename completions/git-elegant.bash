@@ -23,10 +23,19 @@ _git_elegant() {
                 )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
                 ;;
-            accept-work|obtain-work)
+            obtain-work)
                 local opts=(
                     ${gecops}
                     $(git for-each-ref --format='%(refname:short)' refs/remotes 2>/dev/null)
+                )
+                COMPREPLY=(
+                    $(compgen -W "${opts[*]}" -- ${cursor})
+                )
+                ;;
+            accept-work)
+                local opts=(
+                    ${gecops}
+                    $(git branch --all --format='%(refname:short)')
                 )
                 COMPREPLY=(
                     $(compgen -W "${opts[*]}" -- ${cursor})

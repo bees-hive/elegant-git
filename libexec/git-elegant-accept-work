@@ -3,26 +3,27 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Applies a branch on top of \`master\` branch.
+Incorporates a branch on top of the \`master\`.
 MESSAGE
 }
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant accept-work <remote branch>
+usage: git elegant accept-work <branch>
 MESSAGE
 }
 
 command-description() {
     cat<<MESSAGE
-Checkouts given branch using \`git elegant obtain-work\` into a temporary one.
-Then, it makes a rebase of the latest version of default upstream branch
-(\`master\`) with current changes. If there is a rebase in progress and it is
-initiated by this command, it will be continued instead. The final rebased index
-merges using fast-forward strategy into the default local branch and pushes into
-the default upstream branch (\`origin/master\`). After a successful push, the
-temporary branch is removed as well as given branch if it locates in \`origin\`
-remote.
+Checkouts a given local or remote branch into a temporary one. Then, it makes
+a rebase of the latest version of the default upstream branch (\`master\`) with
+current changes. The final rebased index merges using fast-forward strategy
+into the default local branch and pushes into the default upstream branch
+(\`origin/master\`). After a successful push, the temporary branch is removed
+as well as the given branch if it locates in \`origin\` remote.
+
+If there is a rebase in progress and it is initiated by this command, it will
+be continued instead; otherwise, the command stops.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.
@@ -32,7 +33,6 @@ Approximate commands flow is
 ==>> git elegant accept-work task-123
 git fetch --all
 git checkout --force -B __eg origin/task-123
-git status
 git rebase origin/master
 git checkout master
 git merge --ff-only __eg
@@ -44,28 +44,40 @@ MESSAGE
 }
 
 --accept-work-logic() {
-    local WORK_BRANCH="__eg"
+    local work_branch="__eg"
+    local changes=${1}
     source ${BINS}/plugins/state
     if is-there-active-rebase; then
         local rb=$(rebasing-branch)
-        if [[ ${WORK_BRANCH} == ${rb} ]]; then
+        if [[ ${work_branch} == ${rb} ]]; then
             git-verbose rebase --continue
         else
             error-text "First, please complete current rebase which updates '${rb}' branch."
             exit 43
         fi
     else
-        git elegant obtain-work "${1}" "${WORK_BRANCH}"
-        git-verbose status
-        git-verbose rebase ${RMASTER}
+        _error-if-empty "${changes}" "Please provide a branch name."
+        if git rev-parse --verify --quiet --abbrev-ref --branches=refs/heads ${changes} >/dev/null; then
+            git-verbose fetch --all
+            git-verbose checkout -B ${work_branch} ${changes}
+        else
+            git elegant obtain-work "${changes}" "${work_branch}"
+        fi
+        if are-there-remotes; then
+            git-verbose rebase ${RMASTER}
+        else
+            git-verbose rebase ${MASTER}
+        fi
     fi
-    local ACTUAL_REMOTE=$(git for-each-ref --format='%(upstream:short)' refs/heads/${WORK_BRANCH})
+    local actual_remote=$(git for-each-ref --format='%(upstream:short)' refs/heads/${work_branch})
     git-verbose checkout ${MASTER}
-    git-verbose merge --ff-only ${WORK_BRANCH}
-    git-verbose push ${REMOTE_NAME} ${MASTER}:${MASTER}
-    git-verbose branch --delete --force ${WORK_BRANCH}
-    if [[ ${ACTUAL_REMOTE} =~ ^origin/ ]];  then
-        git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${ACTUAL_REMOTE})
+    git-verbose merge --ff-only ${work_branch}
+    git-verbose branch --delete --force ${work_branch}
+    if are-there-remotes; then
+        git-verbose push ${REMOTE_NAME} ${MASTER}:${MASTER}
+        if [[ ${actual_remote} =~ ^origin/ ]];  then
+            git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${actual_remote})
+        fi
     fi
 }
 

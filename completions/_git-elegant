@@ -59,7 +59,8 @@ __ge_complete_commands () {
     # update this function if a new command requires a competion
     # default completion is empty
     case ${line[1]} in
-        accept-work|obtain-work)    __ge_remotes ;;
+        obtain-work)                __ge_remotes ;;
+        accept-work)                __ge_all_branches ;;
         show-release-notes)         __ge_show_release_notes ;;
         start-work)                 __ge_start_work ;;
         *)  _arguments '--help' '--no-workflows'  ;;
@@ -74,6 +75,16 @@ __ge_remotes() {
     _arguments '--help' \
                '--no-workflows' \
                '1:branch:(${remotes[@]})'
+}
+
+__ge_all_branches() {
+    # completes first position with all available branches
+    local branches=(
+        $(git branch --all --format='%(refname:short)')
+    )
+    _arguments '--help' \
+               '--no-workflows' \
+               '1:branch:(${branches[@]})'
 }
 
 __ge_show_release_notes_modes(){

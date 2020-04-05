@@ -30,7 +30,7 @@ There are commands used in various situations such as
 
  operate a flow of work management
     obtain-work          Checkouts a remote branch matching by a name.
-    accept-work          Applies a branch on top of `master` branch.
+    accept-work          Incorporates a branch on top of the `master`.
 
  release new versions
     show-release-notes   Prints a release log between two references.
@@ -48,17 +48,18 @@ Please visit https://elegant-git.bees-hive.org to find out more.
 # `accept-work`
 
 ```bash
-usage: git elegant accept-work <remote branch>
+usage: git elegant accept-work <branch>
 ```
 
-Checkouts given branch using `git elegant obtain-work` into a temporary one.
-Then, it makes a rebase of the latest version of default upstream branch
-(`master`) with current changes. If there is a rebase in progress and it is
-initiated by this command, it will be continued instead. The final rebased index
-merges using fast-forward strategy into the default local branch and pushes into
-the default upstream branch (`origin/master`). After a successful push, the
-temporary branch is removed as well as given branch if it locates in `origin`
-remote.
+Checkouts a given local or remote branch into a temporary one. Then, it makes
+a rebase of the latest version of the default upstream branch (`master`) with
+current changes. The final rebased index merges using fast-forward strategy
+into the default local branch and pushes into the default upstream branch
+(`origin/master`). After a successful push, the temporary branch is removed
+as well as the given branch if it locates in `origin` remote.
+
+If there is a rebase in progress and it is initiated by this command, it will
+be continued instead; otherwise, the command stops.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.
@@ -68,7 +69,6 @@ Approximate commands flow is
 ==>> git elegant accept-work task-123
 git fetch --all
 git checkout --force -B __eg origin/task-123
-git status
 git rebase origin/master
 git checkout master
 git merge --ff-only __eg

@@ -33,3 +33,11 @@ is-there-upstream-for() {
     # usage: is-there-upstream-for <branch ref>
     git rev-parse --abbrev-ref ${1}@{upstream} >/dev/null 2>&1
 }
+
+are-there-remotes() {
+    local remotes=$(git remote)
+    if test -z ${remotes}; then
+        return 1
+    fi
+    return 0
+}
