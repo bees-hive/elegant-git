@@ -6,6 +6,7 @@
 
 _git-elegant (){
     # update this function if either new commands or options are added
+    # all commands should be added in alphabetical order
     local curcontext='$curcontext' state line
     typeset -A opt_args
     _arguments -C ':command:->command' '*::option:->option'
@@ -17,6 +18,7 @@ _git-elegant (){
         'clone-repository:clones a repository and configures it'
         'deliver-work:publishes current branch to a remote repository'
         'init-repository:initializes a new repository and configures it'
+        'make-workflow:makes a new workflow file for the repository'
         'obtain-work:checkouts a remote branch matching by a name'
         'polish-work:reapplies branch commits interactively'
         'prune-repository:removes useless local branches'
@@ -64,6 +66,7 @@ __ge_complete_commands () {
         accept-work)                __ge_all_branches ;;
         show-release-notes)         __ge_show_release_notes ;;
         start-work)                 __ge_start_work ;;
+        make-workflow)              __ge_make_workflow ;;
         *)  _arguments '--help' '--no-workflows'  ;;
     esac
 }
@@ -115,4 +118,29 @@ __ge_start_work() {
                '--no-workflows' \
                '1:name:()' \
                '2:from:(${all[@]})'
+}
+
+__ge_make_workflow_types() {
+    local types=(
+        'ahead:runs this workflow ahead of the command execution'
+        'after:runs this workflow after of the command execution'
+    )
+    _describe 'types' types
+}
+
+__ge_make_workflow_locations() {
+    local locations=(
+        'common:stores this workflow in ".workflows" directory (public)'
+        'personal:stores this workflow in ".git/.workflows" directory (private)'
+    )
+    _describe 'locations' locations
+}
+
+__ge_make_workflow() {
+    local commands=( $(git elegant show-commands) )
+    _arguments '--help' \
+               '--no-workflows' \
+               '1:command:(${commands[@]})' \
+               '2:type:__ge_make_workflow_types' \
+               '3:location:__ge_make_workflow_locations'
 }

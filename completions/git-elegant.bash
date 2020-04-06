@@ -16,7 +16,7 @@ _git_elegant() {
     # the first word prior to the ${cursor}
     if [[ ${#COMP_WORDS[*]} > $(( 1 + ${offset} )) ]]; then
         case "${COMP_WORDS[COMP_CWORD-$(( 1 + ${offset} ))]}" in
-            elegant|git-elegant)
+            elegant|git-elegant|make-workflow)
                 local opts=(
                     ${geops}
                     $(git elegant show-commands)
@@ -59,6 +59,9 @@ _git_elegant() {
                 )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
                 ;;
+            make-workflow)
+                COMPREPLY=( $(compgen -W "ahead after" -- ${cursor}) )
+                ;;
             *)  ;;
         esac
     fi
@@ -71,6 +74,9 @@ _git_elegant() {
                     $(git for-each-ref --sort "-version:refname" --format "%(refname:short)" refs 2>/dev/null)
                 )
                 COMPREPLY=( $(compgen -W "${opts[*]}" -- ${cursor}) )
+                ;;
+            make-workflow)
+                COMPREPLY=( $(compgen -W "common personal" -- ${cursor}) )
                 ;;
             *)  ;;
         esac

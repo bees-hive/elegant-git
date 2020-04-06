@@ -6,22 +6,29 @@
     fi
 }
 
-personal-workflows() {
-    # usage: personal-workflows <command>
-    echo "$(--prefix ${1}).git/.workflows"
+workflows-directory() {
+    # usage: workflows-directory <location>
+    if [[ ${1} == personal ]]; then
+        echo "$(--prefix ${1}).git/.workflows"
+    elif [[ ${1} == common ]]; then
+        echo "$(--prefix ${1}).workflows"
+    else
+        error-text "Unknown workflows location: " ${1}
+        exit 1
+    fi
 }
 
-common-workflows() {
-    # usage: common-workflows <command>
-    echo "$(--prefix ${1}).workflows"
+workflows-file() {
+    # usage: workflows-file <location> <command> <type>
+    echo "$(workflows-directory ${1})/${2}-${3}"
 }
 
 personal-workflows-file() {
     # usage: personal-workflows-file <comand> <type>
-    echo "$(personal-workflows ${1})/${1}-${2}"
+    workflows-file personal ${1} ${2}
 }
 
 common-workflows-file() {
     # usage: common-workflows-file <comand> <type>
-    echo "$(common-workflows ${1})/${1}-${2}"
+    workflows-file common ${1} ${2}
 }

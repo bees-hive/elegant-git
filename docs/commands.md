@@ -25,6 +25,7 @@ There are commands used in various situations such as
 
  enhance contribution rules
     show-workflows       Shows configured workflows in the repository.
+    make-workflow        Makes a new workflow file for the repository.
 
  make day-to-day contributions
     start-work           Creates a new branch.
@@ -187,6 +188,34 @@ git init
 git elegant acquire-repository
 git commit --allow-empty --file a-message-of-initial-commit
 git show
+```
+
+# `make-workflow`
+
+```bash
+usage: git elegant make-workflow <command> <type> <location>
+```
+
+Makes a new workflow file for a given Elegant Git command and opens it for the
+further scripting in the default text editor. The created file will have a
+shebang line pointing to `#!/usr/bin/env sh -e` and executable permissions.
+That's why the created file becomes an executable one by default. All needed
+directories will be created if any.
+
+A `type` defines whether it should be executed `ahead` or `after` the
+given command.
+
+And `location` defines the availability such as personal (located at
+`.git/.workflows`) or common (located at `.workflows`).
+
+
+Approximate commands flow is
+```bash
+==>> git elegant make-workflow show-work ahead common
+mkdir -p .workflows
+touch .workflows/show-work-ahead
+chmod +x .workflows/show-work-ahead
+vim .workflows/show-work-ahead
 ```
 
 # `obtain-work`

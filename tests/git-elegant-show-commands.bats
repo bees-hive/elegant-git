@@ -30,6 +30,7 @@ teardown() {
         "release-work"
         "polish-work"
         "show-workflows"
+        "make-workflow"
     )
     check git-elegant show-commands
     [[ ${#lines[@]} -eq ${#COMMANDS[@]} ]]
