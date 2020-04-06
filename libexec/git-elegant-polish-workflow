@@ -27,10 +27,10 @@ MESSAGE
 
 default() {
     _error-if-empty "${1}" "Please specify a workflow file name"
-    if test -e ${file}; then
-        $(git config core.editor) ${file}
+    if test -e ${1}; then
+        $(git config core.editor) ${1}
     else
-        error-text "The '${file}' file does not exist."
+        error-text "The '${1}' file does not exist."
         exit 43
     fi
 }
