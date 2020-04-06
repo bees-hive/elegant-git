@@ -83,6 +83,7 @@ $(--print-command-in-usage prune-repository)
  enhance contribution rules
 $(--print-command-in-usage show-workflows)
 $(--print-command-in-usage make-workflow)
+$(--print-command-in-usage polish-workflow)
 
  make day-to-day contributions
 $(--print-command-in-usage start-work)

@@ -44,6 +44,11 @@ _git_elegant() {
             show-release-notes)
                 COMPREPLY=( $(compgen -W "simple smart ${gecops[*]}" -- ${cursor}) )
                 ;;
+            polish-workflow)
+                COMPREPLY=(
+                    $(compgen -W "${opts[*]} $(git elegant show-workflows)" -- ${cursor})
+                )
+                ;;
             *)
                 COMPREPLY=( $(compgen -W "${gecops[*]}" -- ${cursor}) )
                 ;;

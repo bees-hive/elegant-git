@@ -21,6 +21,7 @@ _git-elegant (){
         'make-workflow:makes a new workflow file for the repository'
         'obtain-work:checkouts a remote branch matching by a name'
         'polish-work:reapplies branch commits interactively'
+        'polish-workflow:edits a given workflows file'
         'prune-repository:removes useless local branches'
         'release-work:releases available work as a new annotated tag'
         'save-work:commits current modifications'
@@ -67,6 +68,10 @@ __ge_complete_commands () {
         show-release-notes)         __ge_show_release_notes ;;
         start-work)                 __ge_start_work ;;
         make-workflow)              __ge_make_workflow ;;
+        polish-workflow)
+            local files=($(git elegant show-workflows))
+            _arguments '--help' '--no-workflows' '1:file:(${files[@]})'
+            ;;
         *)  _arguments '--help' '--no-workflows'  ;;
     esac
 }

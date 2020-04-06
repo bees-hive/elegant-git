@@ -26,6 +26,7 @@ There are commands used in various situations such as
  enhance contribution rules
     show-workflows       Shows configured workflows in the repository.
     make-workflow        Makes a new workflow file for the repository.
+    polish-workflow      Edits a given workflows file.
 
  make day-to-day contributions
     start-work           Creates a new branch.
@@ -260,6 +261,21 @@ Approximate commands flow is
 ```bash
 ==>> git elegant polish-work
 git rebase --interactive @~5
+```
+
+# `polish-workflow`
+
+```bash
+usage: git elegant polish-workflow <file>
+```
+
+Opens a given workflow file in the default text editor. If given file is not
+present, the command raises an error.
+
+Approximate commands flow is
+```bash
+==>> git elegant polish-workflow .workflows/show-work-ahead
+vim .workflows/show-work-ahead
 ```
 
 # `prune-repository`
