@@ -49,13 +49,13 @@ teardown() {
 }
 
 @test "'deliver-work': use existing upstream branch if it is available" {
-    repo "git checkout -b some/remote"
-    repo "git checkout -b feature1"
-    repo "git branch --set-upstream-to some/remote"
-    fake-pass "git push --set-upstream --force some feature1:remote"
+    repo "git checkout -b some-remote/feature/123"
+    repo "git checkout -b 123"
+    repo "git branch --set-upstream-to some-remote/feature/123"
+    fake-pass "git push --set-upstream --force some-remote 123:feature/123"
     check git-elegant deliver-work
     [[ ${status} -eq 0 ]]
-    [[ ${lines[@]} =~ "git push --set-upstream --force some feature1:remote" ]]
+    [[ ${lines[@]} =~ "git push --set-upstream --force some-remote 123:feature/123" ]]
 }
 
 @test "'deliver-work': open URls if they are present in the push output" {

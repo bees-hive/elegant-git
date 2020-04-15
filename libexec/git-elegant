@@ -40,11 +40,6 @@ _error-if-empty() {
     fi
 }
 
-branch-from-remote-reference() {
-    # usage: branch-from-remote-reference <full reference name>
-    echo ${1} | sed "s|^[a-zA-Z0-9_-]*/||g"
-}
-
 remove-file() {
     [[ -f ${1} ]] && rm ${1}
 }
