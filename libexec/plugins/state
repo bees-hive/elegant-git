@@ -35,8 +35,7 @@ is-there-upstream-for() {
 }
 
 are-there-remotes() {
-    local remotes=$(git remote)
-    if test -z ${remotes}; then
+    if test -z "$(git remote)"; then
         return 1
     fi
     return 0

@@ -54,7 +54,7 @@ branch-pipe() {
     # have to add new tests in `git-elegant-release-work.bats` if you want to
     # check some specific cases.
     local key="elegant.${COMMAND}-current-branch"
-    if test -z $(--repository-config --get ${key}); then
+    if test -z "$(--repository-config --get ${key})"; then
         --repository-config ${key} $(git rev-parse --abbrev-ref HEAD)
     fi
 
