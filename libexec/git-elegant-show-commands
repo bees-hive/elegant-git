@@ -30,8 +30,9 @@ MESSAGE
 }
 
 default() {
-    local PREFIX="git-elegant-"
-    for FILE in $(ls -1 ${BINS}/${PREFIX}*); do
-        echo $(basename ${FILE} | sed "s/${PREFIX}//")
+    local pattern="git-elegant-*"
+    for command_path in $(ls -1 ${BINS}/${pattern}); do
+        local command_file=$(basename ${command_path})
+        echo ${command_file#${pattern}}
     done
 }
