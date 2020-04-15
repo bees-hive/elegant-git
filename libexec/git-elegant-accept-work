@@ -76,7 +76,8 @@ MESSAGE
     if are-there-remotes; then
         git-verbose push ${REMOTE_NAME} ${MASTER}:${MASTER}
         if [[ ${actual_remote} =~ ^origin/ ]];  then
-            git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${actual_remote})
+            source ${BINS}/plugins/transformation
+            git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-branch ${actual_remote})
         fi
     fi
 }

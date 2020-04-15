@@ -48,7 +48,8 @@ default() {
         local REMOTE=${REMOTE_BRANCHES[0]}
         local LOCAL=${2}
         if [[ -z ${LOCAL} ]]; then
-            LOCAL=$(branch-from-remote-reference ${REMOTE})
+            source ${BINS}/plugins/transformation
+            LOCAL=$(branch-from-remote-branch ${REMOTE})
         fi
         git-verbose checkout -B ${LOCAL} ${REMOTE}
     else
