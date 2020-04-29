@@ -2,24 +2,33 @@
 
 command-purpose() {
     cat <<MESSAGE
-Releases available work as a new annotated tag.
+Releases the default development branch.
 MESSAGE
 }
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant release-work [tag name]
+usage: git elegant release-work [name]
 MESSAGE
 }
 
 command-description() {
     cat<<MESSAGE
-Annotates the latest commit of \`master\` branch with a given tag and publishes
-it. The tag's message will be prepopulated using commits subjects (from oldest
-to newest) between the last available tag and HEAD. If there are no tags, then
-all commits will be used. The release notes will be either copied to clipboard
-(if \`pbcopy\` or \`xclip\` is available) or printed to standard output using
-\`git elegant show-release-notes\`.
+Annotates the head commit of the default development branch by adding anotated
+tag, publishes it to the remote repository, and prepares release notes.
+
+A \`[name]\` is a desired name for the new tag. If it isn't provided, the
+command will ask it interactively.
+
+The command generates a tag's message that has to be polished and saved. The
+message is a list of commits titles generated based on commits between the last
+tagged commit (not included) and head one (included) ordered from oldest to
+newest. If there are no tags in the repository, then all commits are used to
+generate the tag's message.
+
+The release notes are the output of \`git elegant show-release-notes smart ...\`
+command. They are either copied to the clipboard (if \`pbcopy\` or \`xclip\`
+commands are available) or printed to the standard output.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.
@@ -50,7 +59,7 @@ MESSAGE
 }
 
 --release-work() {
-    git-verbose checkout ${MASTER}
+    git-verbose checkout ${DEFAULT_BRANCH}
     git-verbose pull --tags
     source ${BINS}/plugins/state
     local new_tag="${1}"

@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Shows a state of current work in progress.
+Prints HEAD state.
 MESSAGE
 }
 
@@ -15,14 +15,14 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Shows a state of current work by displaying branch information, new commits
-comparing to \`master\` branch, uncommitted modifications, and available
-stashes.
+Prints HEAD state by displaying local and remote-tracking (if available) refs,
+commits that aren't in the default development branch, uncommitted
+modifications, and available stashes.
 
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant show-work
-git log --oneline ${MASTER}..@
+git log --oneline ${DEFAULT_BRANCH}..@
 git status --short
 git stash list
 \`\`\`
@@ -31,20 +31,20 @@ MESSAGE
 
 default(){
     local branch=$(git rev-parse --abbrev-ref @)
-    info-text ">>> Work branch:"
+    info-text ">>> Branch refs:"
     info-text "local:  ${branch}"
     local upstream=$(git rev-parse --abbrev-ref ${branch}@{upstream} 2>/dev/null || echo)
     if [[ -n ${upstream} ]]; then
         info-text "remote: ${upstream}"
     fi
     info-text ""
-    if [[ -n $(git rev-list ${MASTER}..${branch}) ]]; then
-        info-text ">>> New commits (comparing to 'master' branch):"
-        git log --oneline ${MASTER}..${branch}
+    if [[ -n $(git rev-list ${DEFAULT_BRANCH}..${branch}) ]]; then
+        info-text ">>> New commits (comparing to '${DEFAULT_BRANCH}' branch):"
+        git log --oneline ${DEFAULT_BRANCH}..${branch}
         info-text ""
     fi
     if [[ -n $(git status --short) ]]; then
-        info-text ">>> Unsaved modifications:"
+        info-text ">>> Uncommitted modifications:"
         git status --short
         info-text ""
     fi

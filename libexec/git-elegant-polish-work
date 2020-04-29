@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Reapplies branch commits interactively.
+Rebases HEAD interactively.
 MESSAGE
 }
 
@@ -15,19 +15,19 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Reapplies branch commits using interactive rebase. It uses only new commits that
-aren't in \`master\` branch. If there is a rebase in progress, the command will
-continue it.
+Finds the new commits in HEAD (a delta in commits between the current and the
+default development branches) and runs interactive rebase against them.
 
-Prior to the execution and in the case of rebase initiation, all uncommitted
-tracked modifications will be temporally stashed. And they will be uncovered if
-the rebase completes without errors, otherwise, you need to apply them manually
-by running \`git stash pop\`.
+If there is a rebase in progress, the command will pick it up and continue.
 
-The command raises error 42 if it runs against \`master\` branch.
+The command doesn't allow to modify the history of the default development
+branch.
 
-The command uses stash pipe to preserve the current Git state prior to execution
-and restore after.
+The command uses stash pipe to preserve the current Git state prior to
+execution and restore after. This means that the uncommitted local
+modifications, if they are present, will be stashed. And they will be
+uncovered if the rebase completes without errors or interruptions like for
+solving conflicts, etc. Otherwise, please run \`git stash pop\` to get them.
 
 Approximate commands flow is
 \`\`\`bash
@@ -46,9 +46,9 @@ default() {
     if is-there-active-rebase; then
         git-verbose rebase --continue
     else
-        local commits=($(git rev-list ${MASTER}..@))
+        local commits=($(git rev-list ${DEFAULT_BRANCH}..@))
         if [[ ${#commits[*]} -eq 0 ]]; then
-            info-text "There are no new commits comparing to '${MASTER}' branch."
+            info-text "There are no new commits comparing to '${DEFAULT_BRANCH}' branch."
         else
             stash-pipe git-verbose rebase --interactive @~${#commits[*]}
         fi

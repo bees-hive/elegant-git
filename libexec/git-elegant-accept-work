@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Incorporates a branch on top of the \`master\`.
+Adds modifications to the default development branch.
 MESSAGE
 }
 
@@ -15,15 +15,28 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Checkouts a given local or remote branch into a temporary one. Then, it makes
-a rebase of the latest version of the default upstream branch (\`master\`) with
-current changes. The final rebased index merges using fast-forward strategy
-into the default local branch and pushes into the default upstream branch
-(\`origin/master\`). After a successful push, the temporary branch is removed
-as well as the given branch if it locates in \`origin\` remote.
+Checkouts a given branch into a temporary one and rebases the head of the
+default development branch, checkouts the default development branch and
+makes a fast-forward merge of the temporary branch, and removes the temporary
+branch.
 
-If there is a rebase in progress and it is initiated by this command, it will
-be continued instead; otherwise, the command stops.
+A \`<branch>\` can be either a local branch or a remote-tracking branch or a
+pattern. The pattern should be a string that is a part of the remote-tracking
+branch name. It is used to search the desired branch across the remotes for
+processing (as under the hood the pattern is passed to
+\`git elegant obtain-work\`, please refer to that command for the details).
+
+If the local repository is associated with a remote one, then the remote
+default development branch is used instead of local one as well as it gets
+fetched prior to the command execution and pushed after.
+
+If a given branch name has a full match with a local one, then the local branch
+is used, otherwise, the command acts with a remote one to perform checkout and
+deletion. As the command works with all configured remote repositories, the
+deletion is performed only for \`origin\`.
+
+If there is a rebase in progress initiated by this command, it will be
+continued instead, otherwise, the command stops.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.
@@ -64,20 +77,20 @@ MESSAGE
             git elegant obtain-work "${changes}" "${work_branch}"
         fi
         if are-there-remotes; then
-            git-verbose rebase ${RMASTER}
+            git-verbose rebase ${DEFAULT_REMOTE_TRACKING_BRANCH}
         else
-            git-verbose rebase ${MASTER}
+            git-verbose rebase ${DEFAULT_BRANCH}
         fi
     fi
     local actual_remote=$(git for-each-ref --format='%(upstream:short)' refs/heads/${work_branch})
-    git-verbose checkout ${MASTER}
+    git-verbose checkout ${DEFAULT_BRANCH}
     git-verbose merge --ff-only ${work_branch}
     git-verbose branch --delete --force ${work_branch}
     if are-there-remotes; then
-        git-verbose push ${REMOTE_NAME} ${MASTER}:${MASTER}
+        git-verbose push ${DEFAULT_UPSTREAM_REPOSITORY} ${DEFAULT_BRANCH}:${DEFAULT_BRANCH}
         if [[ ${actual_remote} =~ ^origin/ ]];  then
             source ${BINS}/plugins/transformation
-            git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-branch ${actual_remote})
+            git-verbose push ${DEFAULT_UPSTREAM_REPOSITORY} --delete $(branch-from-remote-branch ${actual_remote})
         fi
     fi
 }

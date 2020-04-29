@@ -36,6 +36,6 @@ git-elegant <command>
 where `<command>` is one of the commands described on the [commands](commands.md) page or
 printed in a terminal after running `git elegant`.
 
-Also, please use [`git elegant clone-repository`](commands.md#clone-repository) or 
-[`git elegant init-repository`](commands.md#init-repository) instead of regular `clone` or `init` 
+Also, please use [`git elegant clone-repository`](commands.md#clone-repository) or
+[`git elegant init-repository`](commands.md#init-repository) instead of regular `clone` or `init`
 Git's commands in order to get Elegant Git working by default.

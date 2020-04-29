@@ -2,7 +2,7 @@
 
 command-purpose() {
     cat <<MESSAGE
-Shows configured workflows in the repository.
+Prints file locations of the configured workflows.
 MESSAGE
 }
 
@@ -14,11 +14,12 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Shows all personal and common workflows files that are available in the
+Prints all personal and common workflows files that are available in the
 repository.
 
-Personal workflows are located in \`.git/.workflows\` directory and common ones
-are in \'.workflows\` relatively to the repository root directory.
+There are two types of workflows. The personal workflows are located in
+\`.git/.workflows\` directory while the common ones are in \'.workflows\`.
+All directories are located relatively to the repository root directory.
 
 Approximate command's output is
 \`\`\`bash

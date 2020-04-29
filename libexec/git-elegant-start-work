@@ -15,11 +15,15 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Creates a new local branch based on the latest version of the default upstream
-branch. If there are some uncommitted changes, they will be moved to the new
-branch.
+Creates a new local branch based on the head of the default development branch.
 
-\`from-ref\` argument overrides the default upstream branch with a given one.
+A \`<name>\` is the name of the new branch.
+
+A \`[from-ref]\` overrides the default development branch with a given one.
+
+If there is a remote repository, the default development branch is updated
+prior to creating a new one. However, if the remote repository is unavailable,
+the local branch is used.
 
 The command uses stash pipe to preserve the current Git state prior to execution
 and restore after.
@@ -34,14 +38,12 @@ git checkout -b task-123
 git stash apply stash^{/elegant-git}
 git stash drop stash@{0}
 \`\`\`
-
-The command works even if a remote is unavailable.
 MESSAGE
 }
 
 --start-work-logic(){
     source ${BINS}/plugins/state
-    local target=${2:-${MASTER}}
+    local target=${2:-${DEFAULT_BRANCH}}
     git-verbose checkout ${target}
     if is-there-upstream-for ${target}; then
         git-verbose pull || info-text "As the pull can't be completed, the current local version is used."

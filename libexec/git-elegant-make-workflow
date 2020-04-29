@@ -2,7 +2,7 @@
 
 command-purpose() {
     cat <<MESSAGE
-Makes a new workflow file for the repository.
+Makes a new workflow file.
 MESSAGE
 }
 
@@ -20,12 +20,13 @@ shebang line pointing to \`#!/usr/bin/env sh -e\` and executable permissions.
 That's why the created file becomes an executable one by default. All needed
 directories will be created if any.
 
-A \`type\` defines whether it should be executed \`ahead\` or \`after\` the
+A \`<command>\` is a name of Elegant Git command.
+
+A \`<type>\` defines whether it should be executed \`ahead\` or \`after\` the
 given command.
 
-And \`location\` defines the availability such as personal (located at
+A \`<location>\` defines the availability such as personal (located at
 \`.git/.workflows\`) or common (located at \`.workflows\`).
-
 
 Approximate commands flow is
 \`\`\`bash

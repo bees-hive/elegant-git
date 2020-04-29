@@ -15,9 +15,13 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Saves available changes as a new commit. You can choose which modifications
-should be added. If there are trailing whitespaces, the commit won't be
-performed.
+Saves available modifications as a new commit. The command provides full
+control of what modifications should be included by starting an interactive
+commit process.
+
+The command doesn't allow to add a commit to the default development branch.
+
+If there are trailing whitespaces in the modifications, the commit is rejected.
 
 Approximate commands flow is
 \`\`\`bash

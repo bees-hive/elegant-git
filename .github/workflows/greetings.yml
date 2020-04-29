@@ -10,7 +10,7 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: >-
-          Thank you for submitting the first issue! 
+          Thank you for submitting the first issue!
           You're making a great contribution to improve Elegant Git.
         pr-message: >-
           Thank you for making the first contribution!

@@ -2,29 +2,35 @@
 
 command-purpose() {
     cat <<MESSAGE
-Prints a release log between two references.
+Prints a release log between two refs.
 MESSAGE
 }
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant show-release-notes [<layout> | <layout> <from-reference> | <layout> <from-reference> <to-reference>]
+usage: git elegant show-release-notes [<layout>] [<from-ref>] [<to-ref>]
 MESSAGE
 }
 
 command-description() {
     cat<<MESSAGE
-Generates a release notes using commits subjects between the given references.
-The commits are ordered from oldest to newest. By default, the \`from-reference\`
-is the last available tag, and the \`to-reference\` is a HEAD revision. If
-there are no tags, all commits will be displayed.
+Prints commit titles of the commits between the given refs ordered from oldest
+to newest.
 
-There are two options for a \`layout\`:
+A \`layout\` defines a formatting for the output - \`simple\` or \`smart\`. The
+\`simple\` layout prints the messages as a plain text (the default one) while
+the \`smart\` one prints the messages in an adopted form for a Git hosting
+service. If the hosting service is unknown, the default layout is used.
 
-1. \`simple\` prints the messages as a plain text (default one)
-2. \`smart\` prints the messages in a form of adopted for a git hosting. If the
-hosting is unknown, the default layout is used. Now only GitHub is supported
-(an HTML output).
+For Github, the \`smart\` layout prints an HTML that includes HTML links to the
+commits and issues if possible.
+
+A \`from-ref\` is a ref to start work from (not included to the output). By
+default, it is the last tag. If there are no tags, the command uses the first
+commit in HEAD.
+
+A \`to-ref\` is a ref to stop work with (included to the output). By default,
+it is a HEAD.
 
 Approximate command's output is
 \`\`\`bash

@@ -48,7 +48,7 @@ stash-pipe() {
 }
 
 branch-pipe() {
-    # Moves to the current branch after a command execution
+    # Moves to the current branch (HEAD) after a command execution
     # usage: branch-pipe <command> [args]...
     # The pipe behavior is tested based on `release-work` command. That's why you
     # have to add new tests in `git-elegant-release-work.bats` if you want to
