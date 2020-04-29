@@ -34,7 +34,7 @@ pipeline() {
         python .workflows/docs.py
         git update-index --really-refresh
         git diff-index --quiet HEAD --
-    ) || fail "The documentation is not up to date. Please run './.workflows/docs-generation.bash' and commit the changes"
+    ) || fail "The documentation is not up to date. Please run 'python .workflows/docs.py' and commit the changes"
 
 }
 
