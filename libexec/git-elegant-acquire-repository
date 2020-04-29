@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Configures current repository.
+Configures the current local Git repository.
 MESSAGE
 }
 
@@ -16,7 +16,13 @@ MESSAGE
 command-description() {
     cat<<MESSAGE
 Applies the "basics", "standards", "aliases", and "signature" configurations
-to the current Git repository using \`git config --local\`.
+to the current Git repository using \`git config --local\`. The command asks to
+provide information that is needed for the current repository configuration.
+
+The behavior of the command varies depend on \`git elegant acquire-git\`
+execution (a global configuration). If the global configuration is applied,
+then this command configures repository-related staffs only, otherwise, it
+applies all configurations to the current local repository.
 
 To find out what will be configured, please visit
 ${__site}/en/latest/configuration/

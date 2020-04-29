@@ -16,12 +16,12 @@ MESSAGE
 command-description() {
     cat<<MESSAGE
 Identifies useless branches within the current repository and removes them. A
-branch is useless if it either has configured an unavailable upstream branch (1)
-or does not have new commits comparing to \`master\` branch (2).
+branch is useless if it either has an unavailable remote-tracking branch (1)
+or does not have new commits comparing to the default development branch (2).
 
-1 - Usually, a local branch has this state when an appropriate remote branch was
-merged to a remote target branch and was removed. Since these manipulations were
-made on server side, the local branch is still present, but useless.
+1 - Usually, a local branch has this state when an appropriate remote-tracking
+branch was merged and removed. As these manipulations were made on the server
+side, the local branch is still present, but useless.
 
 2 - This kind of branches appears when a branch is created for some purposes but
 does not have any commits nowadays. So, it is useless.
@@ -43,20 +43,20 @@ MESSAGE
 
 default() {
     source ${BINS}/plugins/state
-    git-verbose checkout ${MASTER}
-    if is-there-upstream-for ${MASTER}; then
+    git-verbose checkout ${DEFAULT_BRANCH}
+    if is-there-upstream-for ${DEFAULT_BRANCH}; then
         git-verbose fetch --all || info-text "As the remotes can't be fetched, the current local version is used."
         git-verbose rebase
     fi
     for branch in $(git for-each-ref --format "%(refname:short)" refs/heads); do
-        if [[ ${branch} == ${MASTER} ]]; then continue; fi
+        if [[ ${branch} == ${DEFAULT_BRANCH} ]]; then continue; fi
         if [[ -n $(git config --get branch.${branch}.merge) ]]; then
             if is-there-upstream-for ${branch}; then
                 # the branch has existing upstream; keep it
                 continue
             fi
         else
-            if [[ ! $(git merge-base ${MASTER} ${branch}) == $(git rev-parse ${branch}) ]]; then
+            if [[ ! $(git merge-base ${DEFAULT_BRANCH} ${branch}) == $(git rev-parse ${branch}) ]]; then
                 # the branch has new commits; keep it
                 continue
             fi

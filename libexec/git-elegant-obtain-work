@@ -3,28 +3,35 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Checkouts a remote branch matching by a name.
+Checkouts a remote-tracking branch.
 MESSAGE
 }
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant obtain-work <remote branch> [local branch]
+usage: git elegant obtain-work <name> [local branch]
 MESSAGE
 }
 
 command-description() {
     cat<<MESSAGE
-Seeks across all upstreams for a branch matching by a given full or partial
-name. If there are more then 1 matching branch, execution stops with a
-corresponding error message. By default, the name of the local branch responds
-to the remote one. However, it can be overridden by giving a second argument.
+Seeks across all remote repositories for a branch matching with a given name
+and checkouts it.
+
+A \`<name>\` is a full or a partial name (a pattern) of the remote-tracking
+branch. If the pattern is specified and there are more then 1 matching branch,
+the execution stops with a corresponding error message.
+
+A \`[local branch]\` is the name of the local branch in the local repository
+to checkout into. By default, it responds to the name of the remote-tracking
+branch. However, if this argument is provided, the given name is set for the
+local branch.
 
 Approximate commands flow is
 \`\`\`bash
-==>> git elegant obtain-work new-feature task-133
+==>> git elegant obtain-work 133 task-133
 git fetch --all
-git checkout -B task-133 custom-remote/new-feature
+git checkout -B task-133 custom-remote/feature/133
 \`\`\`
 MESSAGE
 }

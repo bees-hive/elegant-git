@@ -1,5 +1,5 @@
 # `git-elegant`
-```bash
+```
 
 An assistant who carefully automates routine work with Git.
 
@@ -15,37 +15,37 @@ usage: git elegant [-h | --help | help | --version | version]
 There are commands used in various situations such as
 
  enable Elegnat Git services
-    acquire-git          Configures a Git installation.
-    acquire-repository   Configures current repository.
-    clone-repository     Clones a repository and configures it.
+    acquire-git          Configures your Git installation.
+    acquire-repository   Configures the current local Git repository.
+    clone-repository     Clones a remote repository and configures it.
     init-repository      Initializes a new repository and configures it.
 
  serve a repository
     prune-repository     Removes useless local branches.
 
  enhance contribution rules
-    show-workflows       Shows configured workflows in the repository.
-    make-workflow        Makes a new workflow file for the repository.
-    polish-workflow      Edits a given workflows file.
+    show-workflows       Prints file locations of the configured workflows.
+    make-workflow        Makes a new workflow file.
+    polish-workflow      Opens a given workflow file.
 
  make day-to-day contributions
     start-work           Creates a new branch.
     save-work            Commits current modifications.
-    amend-work           Amends some changes to the most recent commit.
-    show-work            Shows a state of current work in progress.
-    polish-work          Reapplies branch commits interactively.
+    amend-work           Amends the last commit.
+    show-work            Prints HEAD state.
+    polish-work          Rebases HEAD interactively.
 
  interact with others
-    deliver-work         Publishes current branch to a remote repository.
-    obtain-work          Checkouts a remote branch matching by a name.
+    deliver-work         Publishes HEAD to a remote repository.
+    obtain-work          Checkouts a remote-tracking branch.
 
  manage contributions
-    accept-work          Incorporates a branch on top of the `master`.
-    release-work         Releases available work as a new annotated tag.
-    show-release-notes   Prints a release log between two references.
+    accept-work          Adds modifications to the default development branch.
+    release-work         Releases the default development branch.
+    show-release-notes   Prints a release log between two refs.
 
  and others
-    show-commands        Prints available Elegant Git commands.
+    show-commands        Prints Elegant Git commands.
 
 
 Please visit https://elegant-git.bees-hive.org to find out more.
@@ -58,15 +58,28 @@ Please visit https://elegant-git.bees-hive.org to find out more.
 usage: git elegant accept-work <branch>
 ```
 
-Checkouts a given local or remote branch into a temporary one. Then, it makes
-a rebase of the latest version of the default upstream branch (`master`) with
-current changes. The final rebased index merges using fast-forward strategy
-into the default local branch and pushes into the default upstream branch
-(`origin/master`). After a successful push, the temporary branch is removed
-as well as the given branch if it locates in `origin` remote.
+Checkouts a given branch into a temporary one and rebases the head of the
+default development branch, checkouts the default development branch and
+makes a fast-forward merge of the temporary branch, and removes the temporary
+branch.
 
-If there is a rebase in progress and it is initiated by this command, it will
-be continued instead; otherwise, the command stops.
+A `<branch>` can be either a local branch or a remote-tracking branch or a
+pattern. The pattern should be a string that is a part of the remote-tracking
+branch name. It is used to search the desired branch across the remotes for
+processing (as under the hood the pattern is passed to
+`git elegant obtain-work`, please refer to that command for the details).
+
+If the local repository is associated with a remote one, then the remote
+default development branch is used instead of local one as well as it gets
+fetched prior to the command execution and pushed after.
+
+If a given branch name has a full match with a local one, then the local branch
+is used, otherwise, the command acts with a remote one to perform checkout and
+deletion. As the command works with all configured remote repositories, the
+deletion is performed only for `origin`.
+
+If there is a rebase in progress initiated by this command, it will be
+continued instead, otherwise, the command stops.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.
@@ -87,17 +100,19 @@ git push origin --delete task-123
 # `acquire-git`
 
 ```bash
-usage: git elegant acquire-repository
+usage: git elegant acquire-git
 ```
 
 Applies the "basics", "standards", and "aliases" configurations to the current
 Git installation using `git config --global`.
 
-During the first execution, you will be asked to provide some information.
-After, Elegant Git will automatically detect what should be changed.
+The command may ask to provide some information that is needed for Git
+configuration. All further executions require fewer inputs as Elegant Git
+reuses previous values and will require inputs in case of new configuration
+options are added.
 
 To find out what will be configured, please visit
-https://elegant-git.bees-hive.org/en/latest/configuration/
+<https://elegant-git.bees-hive.org/en/latest/configuration/>
 
 # `acquire-repository`
 
@@ -106,10 +121,16 @@ usage: git elegant acquire-repository
 ```
 
 Applies the "basics", "standards", "aliases", and "signature" configurations
-to the current Git repository using `git config --local`.
+to the current Git repository using `git config --local`. The command asks to
+provide information that is needed for the current repository configuration.
+
+The behavior of the command varies depend on `git elegant acquire-git`
+execution (a global configuration). If the global configuration is applied,
+then this command configures repository-related staffs only, otherwise, it
+applies all configurations to the current local repository.
 
 To find out what will be configured, please visit
-https://elegant-git.bees-hive.org/en/latest/configuration/
+<https://elegant-git.bees-hive.org/en/latest/configuration/>
 
 # `amend-work`
 
@@ -117,8 +138,11 @@ https://elegant-git.bees-hive.org/en/latest/configuration/
 usage: git elegant amend-work
 ```
 
-Updates the most recent commit by adding some changes. The command will fail if
-you'll try to modify history of the default local branch.
+Amends the last commit by incorporating the current state of the repository.
+The command provides full control of what modifications should be included by
+starting an interactive commit process.
+
+The command doesn't allow to modify the history of the default development branch.
 
 Approximate commands flow is
 ```bash
@@ -136,6 +160,9 @@ usage: git elegant clone-repository <repository>
 
 Clones a repository into a new directory and runs its configuration.
 
+A `<repository>` is an Git URL to the repository to clone from (see
+`git clone --help` for the details).
+
 Approximate commands flow is
 ```bash
 ==>> git elegant clone-repository git@github.com:bees-hive/elegant-git.git
@@ -150,20 +177,23 @@ git elegant acquire-repository
 usage: git elegant deliver-work [branch-name]
 ```
 
-Updates the current branch by rebasing the default upstream branch. If there is
-a rebase in progress, the command will continue it instead of initiation a new
-one. Then, it pushes HEAD to the appropriate upstream branch.
+Rebases the head of the remote default development branch into the current one
+and pushes the branch to the remote default upstream repository.
 
-By default, the name of remote branch is equal to the local one. If a local
-branch has an upstream branch configured, it will be used as a remote branch.
-If you provide a custom name of the remote branch, it will be used as a remote
-branch.
+A `[branch-name]` name is a name of a remote-tracking branch in the remote
+default upstream repository. By default, it is equal to the name of the current
+local branch. However, if HEAD has a configured remote-tracking branch, it will
+be used. But if the `[branch-name]` argument is provided, it will be used as
+the name of the remote-tracking branch.
 
-The command uses stash pipe to preserve the current Git state prior to execution
-and restore after.
+If there is a rebase in progress, the command will pick it up as a part of the
+execution flow.
 
 If the push output contains an URL (like a link to create a pull request), it
 will be open (in case if `open` command is available) in a default browser.
+
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
 
 Approximate commands flow is
 ```bash
@@ -203,12 +233,13 @@ shebang line pointing to `#!/usr/bin/env sh -e` and executable permissions.
 That's why the created file becomes an executable one by default. All needed
 directories will be created if any.
 
-A `type` defines whether it should be executed `ahead` or `after` the
+A `<command>` is a name of Elegant Git command.
+
+A `<type>` defines whether it should be executed `ahead` or `after` the
 given command.
 
-And `location` defines the availability such as personal (located at
+A `<location>` defines the availability such as personal (located at
 `.git/.workflows`) or common (located at `.workflows`).
-
 
 Approximate commands flow is
 ```bash
@@ -222,19 +253,26 @@ vim .workflows/show-work-ahead
 # `obtain-work`
 
 ```bash
-usage: git elegant obtain-work <remote branch> [local branch]
+usage: git elegant obtain-work <name> [local branch]
 ```
 
-Seeks across all upstreams for a branch matching by a given full or partial
-name. If there are more then 1 matching branch, execution stops with a
-corresponding error message. By default, the name of the local branch responds
-to the remote one. However, it can be overridden by giving a second argument.
+Seeks across all remote repositories for a branch matching with a given name
+and checkouts it.
+
+A `<name>` is a full or a partial name (a pattern) of the remote-tracking
+branch. If the pattern is specified and there are more then 1 matching branch,
+the execution stops with a corresponding error message.
+
+A `[local branch]` is the name of the local branch in the local repository
+to checkout into. By default, it responds to the name of the remote-tracking
+branch. However, if this argument is provided, the given name is set for the
+local branch.
 
 Approximate commands flow is
 ```bash
-==>> git elegant obtain-work new-feature task-133
+==>> git elegant obtain-work 133 task-133
 git fetch --all
-git checkout -B task-133 custom-remote/new-feature
+git checkout -B task-133 custom-remote/feature/133
 ```
 
 # `polish-work`
@@ -243,19 +281,19 @@ git checkout -B task-133 custom-remote/new-feature
 usage: git elegant polish-work
 ```
 
-Reapplies branch commits using interactive rebase. It uses only new commits that
-aren't in `master` branch. If there is a rebase in progress, the command will
-continue it.
+Finds the new commits in HEAD (a delta in commits between the current and the
+default development branches) and runs interactive rebase against them.
 
-Prior to the execution and in the case of rebase initiation, all uncommitted
-tracked modifications will be temporally stashed. And they will be uncovered if
-the rebase completes without errors, otherwise, you need to apply them manually
-by running `git stash pop`.
+If there is a rebase in progress, the command will pick it up and continue.
 
-The command raises error 42 if it runs against `master` branch.
+The command doesn't allow to modify the history of the default development
+branch.
 
-The command uses stash pipe to preserve the current Git state prior to execution
-and restore after.
+The command uses stash pipe to preserve the current Git state prior to
+execution and restore after. This means that the uncommitted local
+modifications, if they are present, will be stashed. And they will be
+uncovered if the rebase completes without errors or interruptions like for
+solving conflicts, etc. Otherwise, please run `git stash pop` to get them.
 
 Approximate commands flow is
 ```bash
@@ -266,11 +304,13 @@ git rebase --interactive @~5
 # `polish-workflow`
 
 ```bash
-usage: git elegant polish-workflow <file>
+usage: git elegant polish-workflow <file path>
 ```
 
 Opens a given workflow file in the default text editor. If given file is not
 present, the command raises an error.
+
+A `<file path>` is a path to the desired workflow file.
 
 Approximate commands flow is
 ```bash
@@ -285,12 +325,12 @@ usage: git elegant prune-repository
 ```
 
 Identifies useless branches within the current repository and removes them. A
-branch is useless if it either has configured an unavailable upstream branch (1)
-or does not have new commits comparing to `master` branch (2).
+branch is useless if it either has an unavailable remote-tracking branch (1)
+or does not have new commits comparing to the default development branch (2).
 
-1 - Usually, a local branch has this state when an appropriate remote branch was
-merged to a remote target branch and was removed. Since these manipulations were
-made on server side, the local branch is still present, but useless.
+1 - Usually, a local branch has this state when an appropriate remote-tracking
+branch was merged and removed. As these manipulations were made on the server
+side, the local branch is still present, but useless.
 
 2 - This kind of branches appears when a branch is created for some purposes but
 does not have any commits nowadays. So, it is useless.
@@ -311,15 +351,24 @@ The command works even if the remotes are unavailable.
 # `release-work`
 
 ```bash
-usage: git elegant release-work [tag name]
+usage: git elegant release-work [name]
 ```
 
-Annotates the latest commit of `master` branch with a given tag and publishes
-it. The tag's message will be prepopulated using commits subjects (from oldest
-to newest) between the last available tag and HEAD. If there are no tags, then
-all commits will be used. The release notes will be either copied to clipboard
-(if `pbcopy` or `xclip` is available) or printed to standard output using
-`git elegant show-release-notes`.
+Annotates the head commit of the default development branch by adding anotated
+tag, publishes it to the remote repository, and prepares release notes.
+
+A `[name]` is a desired name for the new tag. If it isn't provided, the
+command will ask it interactively.
+
+The command generates a tag's message that has to be polished and saved. The
+message is a list of commits titles generated based on commits between the last
+tagged commit (not included) and head one (included) ordered from oldest to
+newest. If there are no tags in the repository, then all commits are used to
+generate the tag's message.
+
+The release notes are the output of `git elegant show-release-notes smart ...`
+command. They are either copied to the clipboard (if `pbcopy` or `xclip`
+commands are available) or printed to the standard output.
 
 The command uses branch and stash pipes to preserve the current Git state prior
 to execution and restore after.
@@ -340,9 +389,13 @@ git elegant show-release-notes smart 1.1.12 1.2.0
 usage: git elegant save-work
 ```
 
-Saves available changes as a new commit. You can choose which modifications
-should be added. If there are trailing whitespaces, the commit won't be
-performed.
+Saves available modifications as a new commit. The command provides full
+control of what modifications should be included by starting an interactive
+commit process.
+
+The command doesn't allow to add a commit to the default development branch.
+
+If there are trailing whitespaces in the modifications, the commit is rejected.
 
 Approximate commands flow is
 ```bash
@@ -358,9 +411,9 @@ git commit
 usage: git elegant show-commands
 ```
 
-Displays all available Elegant Git commands. This is useful for completion
-functions as well as for other cases when you need iteration over the available
-commands.
+Prints all available Elegant Git commands to the standard output. This command
+is useful for completion functions as well as for other cases when you need
+iteration over the available commands.
 
 Approximate command's output is
 ```bash
@@ -373,20 +426,26 @@ show-commands
 # `show-release-notes`
 
 ```bash
-usage: git elegant show-release-notes [<layout> | <layout> <from-reference> | <layout> <from-reference> <to-reference>]
+usage: git elegant show-release-notes [<layout>] [<from-ref>] [<to-ref>]
 ```
 
-Generates a release notes using commits subjects between the given references.
-The commits are ordered from oldest to newest. By default, the `from-reference`
-is the last available tag, and the `to-reference` is a HEAD revision. If
-there are no tags, all commits will be displayed.
+Prints commit titles of the commits between the given refs ordered from oldest
+to newest.
 
-There are two options for a `layout`:
+A `layout` defines a formatting for the output - `simple` or `smart`. The
+`simple` layout prints the messages as a plain text (the default one) while
+the `smart` one prints the messages in an adopted form for a Git hosting
+service. If the hosting service is unknown, the default layout is used.
 
-1. `simple` prints the messages as a plain text (default one)
-2. `smart` prints the messages in a form of adopted for a git hosting. If the
-hosting is unknown, the default layout is used. Now only GitHub is supported
-(an HTML output).
+For Github, the `smart` layout prints an HTML that includes HTML links to the
+commits and issues if possible.
+
+A `from-ref` is a ref to start work from (not included to the output). By
+default, it is the last tag. If there are no tags, the command uses the first
+commit in HEAD.
+
+A `to-ref` is a ref to stop work with (included to the output). By default,
+it is a HEAD.
 
 Approximate command's output is
 ```bash
@@ -402,9 +461,9 @@ Release notes
 usage: git elegant show-work
 ```
 
-Shows a state of current work by displaying branch information, new commits
-comparing to `master` branch, uncommitted modifications, and available
-stashes.
+Prints HEAD state by displaying local and remote-tracking (if available) refs,
+commits that aren't in the default development branch, uncommitted
+modifications, and available stashes.
 
 Approximate commands flow is
 ```bash
@@ -420,11 +479,12 @@ git stash list
 usage: git elegant show-workflows
 ```
 
-Shows all personal and common workflows files that are available in the
+Prints all personal and common workflows files that are available in the
 repository.
 
-Personal workflows are located in `.git/.workflows` directory and common ones
-are in \'.workflows` relatively to the repository root directory.
+There are two types of workflows. The personal workflows are located in
+`.git/.workflows` directory while the common ones are in \'.workflows`.
+All directories are located relatively to the repository root directory.
 
 Approximate command's output is
 ```bash
@@ -444,11 +504,15 @@ Approximate command's output is
 usage: git elegant start-work <name> [from-ref]
 ```
 
-Creates a new local branch based on the latest version of the default upstream
-branch. If there are some uncommitted changes, they will be moved to the new
-branch.
+Creates a new local branch based on the head of the default development branch.
 
-`from-ref` argument overrides the default upstream branch with a given one.
+A `<name>` is the name of the new branch.
+
+A `[from-ref]` overrides the default development branch with a given one.
+
+If there is a remote repository, the default development branch is updated
+prior to creating a new one. However, if the remote repository is unavailable,
+the local branch is used.
 
 The command uses stash pipe to preserve the current Git state prior to execution
 and restore after.
@@ -463,5 +527,3 @@ git checkout -b task-123
 git stash apply stash^{/elegant-git}
 git stash drop stash@{0}
 ```
-
-The command works even if a remote is unavailable.

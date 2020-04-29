@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Amends some changes to the most recent commit.
+Amends the last commit.
 MESSAGE
 }
 
@@ -15,8 +15,11 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Updates the most recent commit by adding some changes. The command will fail if
-you'll try to modify history of the default local branch.
+Amends the last commit by incorporating the current state of the repository.
+The command provides full control of what modifications should be included by
+starting an interactive commit process.
+
+The command doesn't allow to modify the history of the default development branch.
 
 Approximate commands flow is
 \`\`\`bash

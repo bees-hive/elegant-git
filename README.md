@@ -97,8 +97,8 @@ If you need to write a message to the system output, please use public functions
 for printing them.
 
 ### Debug mode
-You can enable debug mode by running `export GED=1` (the equivalent of `set -x` for `bash`). 
-Run `unset GED` to switch debug off. 
+You can enable debug mode by running `export GED=1` (the equivalent of `set -x` for `bash`).
+Run `unset GED` to switch debug off.
 
 ### Testing procedure
 A testing procedure consists of 3 steps:
@@ -148,7 +148,7 @@ The behavior should be descriptive-style (`stops with exit code 45 if cloneable 
 rather than imperative-style (`stop with exit code 45 if cloneable URL is not set`).
 
 ### Updating documentation
-In order to get the documentation preview locally, please install required dependencies with 
+In order to get the documentation preview locally, please install required dependencies with
 `pip install -r docs/requirements.txt`. After, run `./workflows serve-docs`. That's it!
 
 The [docs/commands.md](docs/commands.md) generates by running `./workflows generate-docs` script.

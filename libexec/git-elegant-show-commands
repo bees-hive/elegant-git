@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Prints available Elegant Git commands.
+Prints Elegant Git commands.
 MESSAGE
 }
 
@@ -15,9 +15,9 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Displays all available Elegant Git commands. This is useful for completion
-functions as well as for other cases when you need iteration over the available
-commands.
+Prints all available Elegant Git commands to the standard output. This command
+is useful for completion functions as well as for other cases when you need
+iteration over the available commands.
 
 Approximate command's output is
 \`\`\`bash

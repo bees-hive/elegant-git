@@ -22,9 +22,9 @@ picture-in-picture" allowfullscreen></iframe></center>
 available [commands](commands.md)._
 
 # Workflows
-While developing something, it may be required to format code prior to committing changes or to open
-several URLs to report release notes after a new release. All these and similar actions, which you
-have to perform in addition to git actions, are your **_workflows_**. And Elegant Git allows
+While developing something, it may be required to format code prior to committing modifications or
+to open several URLs to report release notes after a new release. All these and similar actions,
+which you're performing in addition to Git actions, are the **_workflows_**. And Elegant Git allows
 automating them (it's like [Git Hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks),
 but for Elegant Git commands).
 

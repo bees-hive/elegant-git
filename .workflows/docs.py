@@ -19,6 +19,8 @@ def header(command: str):
 def normalize_command_line(line: str):
     if line.startswith("usage:"):
         return f"```bash\n{line}\n```\n"
+    if line.startswith("http"):
+        return f"<{line}>\n"
     return f"{line}\n"
 
 
@@ -27,7 +29,7 @@ def body() -> Sequence[str]:
     data = []
     print("Explain 'git-elegant'...")
     data.append(header("git-elegant"))
-    data.append("```bash\n")
+    data.append("```\n")
     data.extend(map(lambda line: f"{line}\n", command_output("bin/git-elegant")))
     data.append("```\n\n")
     for command in command_output(["bin/git-elegant", "show-commands"]):

@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Publishes current branch to a remote repository.
+Publishes HEAD to a remote repository.
 MESSAGE
 }
 
@@ -15,20 +15,23 @@ MESSAGE
 
 command-description() {
     cat<<MESSAGE
-Updates the current branch by rebasing the default upstream branch. If there is
-a rebase in progress, the command will continue it instead of initiation a new
-one. Then, it pushes HEAD to the appropriate upstream branch.
+Rebases the head of the remote default development branch into the current one
+and pushes the branch to the remote default upstream repository.
 
-By default, the name of remote branch is equal to the local one. If a local
-branch has an upstream branch configured, it will be used as a remote branch.
-If you provide a custom name of the remote branch, it will be used as a remote
-branch.
+A \`[branch-name]\` name is a name of a remote-tracking branch in the remote
+default upstream repository. By default, it is equal to the name of the current
+local branch. However, if HEAD has a configured remote-tracking branch, it will
+be used. But if the \`[branch-name]\` argument is provided, it will be used as
+the name of the remote-tracking branch.
 
-The command uses stash pipe to preserve the current Git state prior to execution
-and restore after.
+If there is a rebase in progress, the command will pick it up as a part of the
+execution flow.
 
 If the push output contains an URL (like a link to create a pull request), it
 will be open (in case if \`open\` command is available) in a default browser.
+
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
 
 Approximate commands flow is
 \`\`\`bash
@@ -57,7 +60,7 @@ MESSAGE
         git-verbose rebase --continue
     else
         git-verbose fetch
-        git-verbose rebase ${RMASTER}
+        git-verbose rebase ${DEFAULT_REMOTE_TRACKING_BRANCH}
     fi
     local upstream=$(git branch --list --format "%(upstream:short)" ${1})
     local branch=$(branch-from-remote-branch ${upstream})
@@ -69,7 +72,7 @@ MESSAGE
         branch=${1}
     fi
     if [[ -z "${remote}" ]]; then
-        remote=${REMOTE_NAME}
+        remote=${DEFAULT_UPSTREAM_REPOSITORY}
     fi
     git-verbose-op --open-urls-if-possible push --set-upstream --force ${remote} ${1}:${branch}
 }

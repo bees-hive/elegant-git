@@ -2,13 +2,13 @@
 
 command-purpose() {
     cat <<MESSAGE
-Edits a given workflows file.
+Opens a given workflow file.
 MESSAGE
 }
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant polish-workflow <file>
+usage: git elegant polish-workflow <file path>
 MESSAGE
 }
 
@@ -16,6 +16,8 @@ command-description() {
     cat<<MESSAGE
 Opens a given workflow file in the default text editor. If given file is not
 present, the command raises an error.
+
+A \`<file path>\` is a path to the desired workflow file.
 
 Approximate commands flow is
 \`\`\`bash

@@ -3,7 +3,7 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Clones a repository and configures it.
+Clones a remote repository and configures it.
 MESSAGE
 }
 
@@ -16,6 +16,9 @@ MESSAGE
 command-description() {
     cat<<MESSAGE
 Clones a repository into a new directory and runs its configuration.
+
+A \`<repository>\` is an Git URL to the repository to clone from (see
+\`git clone --help\` for the details).
 
 Approximate commands flow is
 \`\`\`bash

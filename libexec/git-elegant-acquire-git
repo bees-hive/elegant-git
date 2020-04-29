@@ -3,13 +3,13 @@ set -e
 
 command-purpose() {
     cat <<MESSAGE
-Configures a Git installation.
+Configures your Git installation.
 MESSAGE
 }
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant acquire-repository
+usage: git elegant acquire-git
 MESSAGE
 }
 
@@ -18,8 +18,10 @@ command-description() {
 Applies the "basics", "standards", and "aliases" configurations to the current
 Git installation using \`git config --global\`.
 
-During the first execution, you will be asked to provide some information.
-After, Elegant Git will automatically detect what should be changed.
+The command may ask to provide some information that is needed for Git
+configuration. All further executions require fewer inputs as Elegant Git
+reuses previous values and will require inputs in case of new configuration
+options are added.
 
 To find out what will be configured, please visit
 ${__site}/en/latest/configuration/
@@ -32,12 +34,19 @@ default() {
         info-box "Thank you for installing Elegant Git! Let's configure it..."
         cat <<MESSAGE
 Elegant Git aims to standardize how a work environment should be configured.
-It operates 3 levels of configurations (basics, standards, and aliases) which
-can be applied to a Git repository (local configuration) and (or) to a Git
-installation globally (global configuration).
+It is achieved by
 
-A global configuration is preferred since it simplifies the upgrades to the new
-versions.
+1. applying the configuration for a concrete repository only (a local
+   configuation that is managed by "git elegant acquire-repository")
+2. applying the configuration for both Git installation (global configuration
+   that is managed by this command) and a repisitory (managed by
+   "git elegant acquire-repository")
+
+The second option is preferred in case of the installation of a newer Elegant
+Git version as it allows you don't refresh a configuration for each local
+repository where Elegant Git is used. Also, if the global configuration is
+applied, it doesn't force you to use Elegant Git for all local repositories you
+interact with. It is still up to you.
 
 If needed, please read more about the configuration approach to be used on
 ${__site}/en/latest/configuration/.
