@@ -31,20 +31,28 @@ MESSAGE
 
 default() {
     source ${BINS}/plugins/configuration
+    source ${BINS}/plugins/configuration-protected-branches
     if $(is-acquired) ; then
-        basics-configuration --local user_name user_email
+        basics-configuration --local \
+            user_name \
+            user_email \
+            protected_branches
         aliases-removing --local
     else
-        basics-configuration --local user_name user_email core_editor
+        basics-configuration --local \
+            user_name \
+            user_email \
+            core_editor \
+            protected_branches
         standards-configuration --local \
-          core_comment \
-          apply_whitespace \
-          fetch_prune \
-          fetch_pruneTags \
-          core_autocrlf_darwinlinux \
-          core_autocrlf_windows pull_rebase \
-          rebase_autoStash \
-          credential_helper_darwin
+            core_comment \
+            apply_whitespace \
+            fetch_prune \
+            fetch_pruneTags \
+            core_autocrlf_darwinlinux \
+            core_autocrlf_windows pull_rebase \
+            rebase_autoStash \
+            credential_helper_darwin
         aliases-removing --local
         aliases-configuration --local $(git elegant show-commands)
     fi

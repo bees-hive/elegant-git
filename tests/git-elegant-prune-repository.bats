@@ -71,3 +71,15 @@ teardown() {
     [[ ${status} -eq 0 ]]
     [[ ! ${lines[@]} =~ "git branch --delete --force upstream" ]]
 }
+
+@test "'prune-repository': keeps protected branches" {
+    repo "git config --local elegant-git.protected-branches \"master some\""
+    repo "git checkout -b some"
+     repo "git checkout -b equal-to-master"
+    repo "git checkout master"
+    check git-elegant prune-repository
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[@]} =~ "git branch --delete --force equal-to-master" ]]
+    [[ ! ${lines[@]} =~ "git branch --delete --force master" ]]
+    [[ ! ${lines[@]} =~ "git branch --delete --force some" ]]
+}

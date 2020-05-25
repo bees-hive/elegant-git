@@ -20,8 +20,7 @@ default development branches) and runs interactive rebase against them.
 
 If there is a rebase in progress, the command will pick it up and continue.
 
-The command doesn't allow to modify the history of the default development
-branch.
+The command doesn't allow to modify the history of the protected branches.
 
 The command uses stash pipe to preserve the current Git state prior to
 execution and restore after. This means that the uncommitted local
@@ -38,8 +37,11 @@ MESSAGE
 }
 
 default() {
-    if [[ $(git rev-parse --abbrev-ref HEAD) == "master" ]]; then
-        error-box "'master' branch history can't be rewritten. Please read more on ${__site}"
+    local current_branch=$(git rev-parse --abbrev-ref HEAD)
+    source ${BINS}/plugins/configuration-protected-branches
+    if is-branch-protected ${current_branch}; then
+        error-box "The protected '${current_branch}' branch history can't be rewritten."
+        error-text "Please read more on ${__site}."
         exit 42
     fi
     source ${BINS}/plugins/state

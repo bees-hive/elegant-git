@@ -142,7 +142,7 @@ Amends the last commit by incorporating the current state of the repository.
 The command provides full control of what modifications should be included by
 starting an interactive commit process.
 
-The command doesn't allow to modify the history of the default development branch.
+The command doesn't allow to modify the history of the protected branches.
 
 Approximate commands flow is
 ```bash
@@ -179,6 +179,8 @@ usage: git elegant deliver-work [branch-name]
 
 Rebases the head of the remote default development branch into the current one
 and pushes the branch to the remote default upstream repository.
+
+The command doesn't allow to push a protected branch.
 
 A `[branch-name]` name is a name of a remote-tracking branch in the remote
 default upstream repository. By default, it is equal to the name of the current
@@ -286,8 +288,7 @@ default development branches) and runs interactive rebase against them.
 
 If there is a rebase in progress, the command will pick it up and continue.
 
-The command doesn't allow to modify the history of the default development
-branch.
+The command doesn't allow to modify the history of the protected branches.
 
 The command uses stash pipe to preserve the current Git state prior to
 execution and restore after. This means that the uncommitted local
@@ -393,7 +394,7 @@ Saves available modifications as a new commit. The command provides full
 control of what modifications should be included by starting an interactive
 commit process.
 
-The command doesn't allow to add a commit to the default development branch.
+The command doesn't allow to modify the history of the protected branches.
 
 If there are trailing whitespaces in the modifications, the commit is rejected.
 

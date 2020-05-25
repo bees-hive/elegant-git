@@ -1,68 +1,90 @@
 # Approach
+
 Elegant Git aims to standardize how a work environment should be configured. It operates several
 levels of configurations (see below) that can be applied to a Git repository (local configuration)
-and/or to a Git installation globally (global configuration).
+and/or to a Git installation globally (global configuration). So,
 
-The local configuration applies by running
+- the local configuration applies by running
 [`git elegant acquire-repository`](commands.md#acquire-repository) and configures current Git
-repository by using `git config --local <key> <value>`.
-
-The global configuration invokes by [`git elegant acquire-git`](commands.md#acquire-git) and uses
-`git config --global <key> <value>` for Git configuration.
+repository by using `git config --local <key> <value>`
+- the global configuration invokes by running [`git elegant acquire-git`](commands.md#acquire-git)
+and uses `git config --global <key> <value>` for Git configuration
 
 If you've applied a global configuration, there is no sense to repeat some options for a local one.
 That's why the following markers explain how each particular option will be configured:
 
-- `b` - configures for both configurations
-- `l` - configures only for a local configuration
-- `g` - configures only for a global configuration
-- `i` - if a global configuration is applied, an option isn't used in local configuration;
+- [`b`] - configures for both configurations
+- [`l`] - configures only for a local configuration
+- [`g`] - configures only for a global configuration
+- [`i`] - if a global configuration is applied, this option isn't used in local configuration;
 otherwise, uses in local configuration
 
-# Basics
-The basics configuration configures the following options `git config` options:
+Also, there are defined [the custom configuration keys](#custom-keys) in addition to
+[the standard `git config` options](https://git-scm.com/docs/git-config). These keys will be configured
+automatically during `acquire-git` or `acquire-repository` execution, so, you don't need to set them
+manually.
 
-1. `user.name` (`b`)
-2. `user.email` (`b`)
-3. `core.editor` (`i`)
+# Level: Basics
 
-During the configuration, you will be asked to provide appropriate values.
+The basics configuration sets the mandatory options for the correct user-focused operation of Git and
+Elegant Git. During the configuration, you will be asked to provide appropriate values. Furthermore,
+if you `acquire-repository`, it proposes defaults that are set by `acquire-git`. The basics includes:
 
-# Standards
-The standards configuration configures a set of the `git config` options which both handle
-OS-specific configurations and add specific options for the correct execution of Elegant Git
-commands. It consists of
+1. setting your full name usign `user.name` [`b`]
+2. setting your email usign `user.email` [`b`]
+3. setting a default editor using `core.editor` [`i`]
+4. setting protected branches using `elegant-git.protected-branches` [`b`]
 
-1. setting `core.commentChar` (`i`) to `|` enables commit messages starting from `#`
-2. setting `apply.whitespace` (`i`) to `fix` removes whitespaces when applying a patch
-3. setting `fetch.prune` (`i`) to `true` keeps remote-tracking references up-to-date
-4. setting `fetch.pruneTags` (`i`) to `false` does not remove tags until you specify it explicitly
-(`git fetch --tags`)
-5. setting `core.autocrlf` (`i`) to either `input` on MacOS/Linux or `true` on Windows solves issues with
-line endings
-6. setting `pull.rebase` (`i`) to `true` uses `rebase` when `git pull`
-7. setting `rebase.autoStash` (`i`) to `false` uses `autostash` never when `git rebase`
-8. setting `credential.helper` (`i`) to `osxkeychain` on MacOS configures default credentials storage
-9. setting `elegant.acquired` (`g`) to `true` identifies that Elegant Git global configuration is applied
+# Level: Standards
 
-# Aliases
+The standards configuration adopts the Git setting for painless and user-oriented commands execution
+for both Git and Elegant Git. It takes into account OS-specific stuff while configuring specific
+options. All Git options in this configuration have the defined values and any changes to them may
+affect the designed behavior of the Elegant Git. However, it should not degrade your Git-related
+experience. So, the following configuration is applied automatically:
+
+1. `core.commentChar |` [`i`] enables lines in commit messages starting from `#` (`|` prefixes lines that should be ignored)
+2. `apply.whitespace fix` [`i`] removes whitespaces when applying a patch
+3. `fetch.prune true` [`i`] keeps remote-tracking references up-to-date
+4. `fetch.pruneTags false` [`i`] does not remove tags while fetching until you specify it explicitly with
+`git fetch --tags`
+5. `core.autocrlf input` [`i`] solves issues with line endings on either MacOS/Linux with `input` or
+Windows with `true`
+6. `pull.rebase true` [`i`] uses `rebase` when `git pull`
+7. `rebase.autoStash false` [`i`] don't use `autostash` when `git rebase`
+8. `credential.helper osxkeychain` [`i`] configures default credentials storage on MacOS only
+9. `elegant.acquired true` [`g`] identifies that Elegant Git global configuration is applied
+
+# Level: Aliases
+
 In order to make Elegant Git command like a native Git command, each Elegant Git command will have
 an appropriate alias like `git elegant save-work` will become `git save-work`. This should
 significantly improve user experience.
 
-The configuration is a call of `git config "alias.<command>" "elegant <command>"` (`i`) for each Elegant
+The configuration is a call of `git config "alias.<command>" "elegant <command>"` [`i`] for each Elegant
 Git command.
 
-# Signature
+# Level: Signature
+
 This configuration aims to say Git how to sign commits, tags, and other objects you create. It starts after
 all other configurations. In the beginning, all available signing keys will be shown. Then, you need to choose
 the key that will be used to make signatures. If the key is provided, the configuration triggers, otherwise,
 it does not apply. The signing configuration consists of
 
-1. setting `user.signingkey` (`l`) to a provided value
-2. setting `gpg.program` (`l`) to a full path of `gpg` program
-3. setting `commit.gpgsign` (`l`) to `true`
-4. setting `tag.forceSignAnnotated` (`l`) to `true`
-5. setting `tag.gpgSign` (`l`) to `true`
+1. setting `user.signingkey` [`l`] to a provided value
+2. setting `gpg.program` [`l`] to a full path of `gpg` program
+3. setting `commit.gpgsign` [`l`] to `true`
+4. setting `tag.forceSignAnnotated` [`l`] to `true`
+5. setting `tag.gpgSign` [`l`] to `true`
 
-For now, only `gpg` is supported. If you need other tools, please [create a new feature request](https://github.com/bees-hive/elegant-git/issues/new/choose).
+For now, only `gpg` is supported. If you need other tools, please [create a new feature request][https://github.com/bees-hive/elegant-git/issues/new/choose].
+
+# Custom keys
+
+The Elegant Git configuration keys:
+
+- `elegant-git.protected-branches` defines the protected branches (if there are multiple values, they
+should be separarated with space). By default, `master` branch treats as protected. The "protected"
+means that Elegant Git commands for a branch state modification (such as `save-work`, `polish-work`,
+etc.) are prohibited to work if the current branch is protected. Also, the protected branches cannot
+be removed while running Elegant Git commands for serving a repository.

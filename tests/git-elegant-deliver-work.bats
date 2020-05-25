@@ -32,10 +32,20 @@ teardown() {
     [[ ${lines[@]} =~ "git push --set-upstream --force origin feature1:feature2" ]]
 }
 
-@test "'deliver-work': exit code is 42 when current local branch is master" {
+@test "'deliver-work': exit code is 42 when the command is run against default protected branch" {
     check git-elegant deliver-work
     [[ ${status} -eq 42 ]]
-    [[ ${lines[1]} = "== No pushes to 'master' branch. Please read more on https://elegant-git.bees-hive.org ==" ]]
+    [[ ${lines[@]} =~ "The push of the protected 'master' branch is prohibited." ]]
+    [[ ${lines[@]} =~ "Consider using 'git elegant accept-work' or use plain 'git push'." ]]
+}
+
+@test "'deliver-work': exit code is 42 when the command is run against custom protected branch" {
+    repo "git config --local elegant-git.protected-branches \"master some\""
+    repo "git checkout -b some"
+    check git-elegant deliver-work
+    [[ ${status} -eq 42 ]]
+    [[ ${lines[@]} =~ "The push of the protected 'some' branch is prohibited." ]]
+    [[ ${lines[@]} =~ "Consider using 'git elegant accept-work' or use plain 'git push'." ]]
 }
 
 @test "'deliver-work': use stash pipe if there are uncommitted changes" {

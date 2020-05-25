@@ -19,7 +19,7 @@ Saves available modifications as a new commit. The command provides full
 control of what modifications should be included by starting an interactive
 commit process.
 
-The command doesn't allow to add a commit to the default development branch.
+The command doesn't allow to modify the history of the protected branches.
 
 If there are trailing whitespaces in the modifications, the commit is rejected.
 
@@ -34,10 +34,12 @@ MESSAGE
 }
 
 default(){
-    local BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    if [[ "$BRANCH" == "master" ]]; then
-        error-box "No commits to 'master' branch. Please read more on ${__site}"
-        error-box "Try 'git elegant start-work' prior to retrying this command."
+    local current_branch=$(git rev-parse --abbrev-ref HEAD)
+    source ${BINS}/plugins/configuration-protected-branches
+    if is-branch-protected ${current_branch} ; then
+        error-box "No direct commits to the protected '${current_branch}' branch."
+        error-text "Please read more on ${__site}."
+        error-text "Run 'git elegant start-work' prior to retrying this command."
         exit 42
     fi
     git-verbose add --interactive

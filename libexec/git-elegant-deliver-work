@@ -18,6 +18,8 @@ command-description() {
 Rebases the head of the remote default development branch into the current one
 and pushes the branch to the remote default upstream repository.
 
+The command doesn't allow to push a protected branch.
+
 A \`[branch-name]\` name is a name of a remote-tracking branch in the remote
 default upstream repository. By default, it is equal to the name of the current
 local branch. However, if HEAD has a configured remote-tracking branch, it will
@@ -79,8 +81,10 @@ MESSAGE
 
 default() {
     local branch=$(git rev-parse --abbrev-ref HEAD)
-    if [[ "${branch}" == "master" ]]; then
-        error-box "No pushes to 'master' branch. Please read more on ${__site}"
+    source ${BINS}/plugins/configuration-protected-branches
+    if is-branch-protected ${branch} ; then
+        error-box "The push of the protected '${branch}' branch is prohibited."
+        error-text "Consider using 'git elegant accept-work' or use plain 'git push'."
         exit 42
     fi
     stash-pipe --deliver-work-logic ${branch} "${@}"
