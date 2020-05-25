@@ -32,7 +32,7 @@ if you `acquire-repository`, it proposes defaults that are set by `acquire-git`.
 
 1. setting your full name usign `user.name` [`b`]
 2. setting your email usign `user.email` [`b`]
-3. setting a default editor using `core.editor` [`i`]
+3. setting a default editor using `core.editor` [`b`]
 4. setting protected branches using `elegant-git.protected-branches` [`b`]
 
 # Level: Standards

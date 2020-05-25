@@ -27,7 +27,7 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --local user.name Elegant Git" ]]
     [[ ${lines[@]} =~ "What is your user email? {elegant-git@example.com}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local user.email elegant-git@example.com" ]]
-    [[ ${lines[@]} =~ "Please specify a command to start the editor. {vi}: " ]]
+    [[ ${lines[@]} =~ "What is the command to launching an editor? {vi}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local core.editor vi" ]]
     [[ ${lines[@]} =~ "What are protected branches (split with space)? {master}:" ]]
     [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches master" ]]
@@ -43,7 +43,7 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --local user.name The User" ]]
     [[ ${lines[@]} =~ "What is your user email? {elegant-git@example.com}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local user.email the@email" ]]
-    [[ ${lines[@]} =~ "Please specify a command to start the editor. {vi}: " ]]
+    [[ ${lines[@]} =~ "What is the command to launching an editor? {vi}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local core.editor someeditor" ]]
     [[ ${lines[@]} =~ "What are protected branches (split with space)? {master}:" ]]
     [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches a b" ]]
@@ -111,11 +111,12 @@ teardown() {
     [[ ${lines[@]} =~ "2 Elegant Git aliases were removed." ]]
 }
 
-@test "'acquire-repository': 'elegant.acquired' affects configuration correctly" {
+@test "'acquire-repository': works properly if 'elegant.acquired' == true " {
     fake-pass "uname -s" Linux
     repo git config --local "alias.aaa" "\"elegant aaa\""
     repo git config --global "alias.bbb" "\"elegant bbb\""
     repo git config --global "elegant.acquired" "true"
+    repo git config --local core.editor my-text-editor
     check git-elegant acquire-repository
     [[ ${lines[@]} =~ "What is your user name? {Elegant Git}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local user.name Elegant Git" ]]
@@ -123,8 +124,8 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --local user.email elegant-git@example.com" ]]
     [[ ${lines[@]} =~ "What are protected branches (split with space)? {master}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches master" ]]
-    [[ ! ${lines[@]} =~ "Please specify a command to start the editor. {vi}: " ]]
-    [[ ! ${lines[@]} =~ "==>> git config --local core.editor vi" ]]
+    [[ ${lines[@]} =~ "What is the command to launching an editor? {my-text-editor}: " ]]
+    [[ ${lines[@]} =~ "==>> git config --local core.editor my-text-editor" ]]
     [[ ! ${lines[@]} =~ "==>> git config --local core.commentChar |" ]]
     [[ ${lines[@]} =~ "1 Elegant Git aliases were removed." ]]
     [[ ! ${lines[@]} =~ "==>> git config --local alias.acquire-repository elegant acquire-repository" ]]

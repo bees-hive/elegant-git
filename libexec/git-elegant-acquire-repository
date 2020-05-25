@@ -32,18 +32,13 @@ MESSAGE
 default() {
     source ${BINS}/plugins/configuration
     source ${BINS}/plugins/configuration-protected-branches
-    if $(is-acquired) ; then
-        basics-configuration --local \
-            user_name \
-            user_email \
-            protected_branches
-        aliases-removing --local
-    else
-        basics-configuration --local \
+    aliases-removing --local
+    basics-configuration --local \
             user_name \
             user_email \
             core_editor \
             protected_branches
+    if ! is-acquired ; then
         standards-configuration --local \
             core_comment \
             apply_whitespace \
@@ -53,7 +48,6 @@ default() {
             core_autocrlf_windows pull_rebase \
             rebase_autoStash \
             credential_helper_darwin
-        aliases-removing --local
         aliases-configuration --local $(git elegant show-commands)
     fi
     type -p gpg >/dev/null 2>&1 || return 0

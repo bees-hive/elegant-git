@@ -10,7 +10,7 @@ user_email_message="What is your user email?"
 
 core_editor_key="core.editor"
 core_editor_default=$(git config "${core_editor_key}" || echo "vim")
-core_editor_message="Please specify a command to start the editor."
+core_editor_message="What is the command to launching an editor?"
 
 
 # mandatory

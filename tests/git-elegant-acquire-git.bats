@@ -28,7 +28,7 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --global user.name Elegant Git" ]]
     [[ ${lines[@]} =~ "What is your user email? {elegant-git@example.com}: " ]]
     [[ ${lines[@]} =~ "==>> git config --global user.email elegant-git@example.com" ]]
-    [[ ${lines[@]} =~ "Please specify a command to start the editor. {vi}: " ]]
+    [[ ${lines[@]} =~ "What is the command to launching an editor? {vi}: " ]]
     [[ ${lines[@]} =~ "==>> git config --global core.editor vi" ]]
     [[ ${lines[@]} =~ "What are protected branches (split with space)?" ]]
     [[ ${lines[@]} =~ "==>> git config --global elegant-git.protected-branches master" ]]
