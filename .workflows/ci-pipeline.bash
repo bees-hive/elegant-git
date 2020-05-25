@@ -18,7 +18,7 @@ pipeline() {
         git config --global user.name "Elegant Git"
         git config --global user.email elegant.git@email.com
         git config --global core.editor vi
-        git config --global elegant.acquired true
+        git config --global elegant-git.acquired true
         ./install.bash /usr/local src
         echo "'Unknown command' testing..."
         git elegant unknown-command | grep "Unknown command: git elegant unknown-command"

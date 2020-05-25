@@ -44,7 +44,7 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --global core.autocrlf true" ]]
     [[ ${lines[@]} =~ "==>> git config --global pull.rebase true" ]]
     [[ ${lines[@]} =~ "==>> git config --global rebase.autoStash false" ]]
-    [[ ${lines[@]} =~ "==>> git config --global elegant.acquired true" ]]
+    [[ ${lines[@]} =~ "==>> git config --global elegant-git.acquired true" ]]
     # negative checks are used instead of checking commands size
     [[ ! ${lines[@]} =~ "==>> git config --global credential.helper osxkeychain" ]]
     [[ ! ${lines[@]} =~ "==>> git config --global core.autocrlf input" ]]
@@ -60,7 +60,7 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --global core.autocrlf input" ]]
     [[ ${lines[@]} =~ "==>> git config --global pull.rebase true" ]]
     [[ ${lines[@]} =~ "==>> git config --global rebase.autoStash false" ]]
-    [[ ${lines[@]} =~ "==>> git config --global elegant.acquired true" ]]
+    [[ ${lines[@]} =~ "==>> git config --global elegant-git.acquired true" ]]
     # negative checks are used instead of checking commands size
     [[ ! ${lines[@]} =~ "==>> git config --global credential.helper osxkeychain" ]]
     [[ ! ${lines[@]} =~ "==>> git config --global core.autocrlf true" ]]
@@ -77,7 +77,7 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --global pull.rebase true" ]]
     [[ ${lines[@]} =~ "==>> git config --global rebase.autoStash false" ]]
     [[ ${lines[@]} =~ "==>> git config --global credential.helper osxkeychain" ]]
-    [[ ${lines[@]} =~ "==>> git config --global elegant.acquired true" ]]
+    [[ ${lines[@]} =~ "==>> git config --global elegant-git.acquired true" ]]
     # negative checks are used instead of checking commands size
     [[ ! ${lines[@]} =~ "==>> git config --global core.autocrlf true" ]]
 }

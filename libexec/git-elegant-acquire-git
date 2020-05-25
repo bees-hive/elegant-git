@@ -31,7 +31,9 @@ MESSAGE
 default() {
     source ${BINS}/plugins/configuration
     source ${BINS}/plugins/configuration-protected-branches
-    if ! $(is-acquired) ; then
+    source ${BINS}/plugins/configuration-acquired
+    obsolete-configurations-removing --global
+    if ! is-git-acquired ; then
         info-box "Thank you for installing Elegant Git! Let's configure it..."
         cat <<MESSAGE
 Elegant Git aims to standardize how a work environment should be configured.
@@ -89,6 +91,5 @@ MESSAGE
         rebase_autoStash \
         credential_helper_darwin \
         acquired
-    aliases-removing --global
     aliases-configuration --global $(git elegant show-commands)
 }

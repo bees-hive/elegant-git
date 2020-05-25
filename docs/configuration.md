@@ -53,7 +53,7 @@ Windows with `true`
 6. `pull.rebase true` [`i`] uses `rebase` when `git pull`
 7. `rebase.autoStash false` [`i`] don't use `autostash` when `git rebase`
 8. `credential.helper osxkeychain` [`i`] configures default credentials storage on MacOS only
-9. `elegant.acquired true` [`g`] identifies that Elegant Git global configuration is applied
+9. `elegant-git.acquired true` [`g`] identifies that Elegant Git global configuration is applied
 
 # Level: Aliases
 
@@ -88,3 +88,5 @@ should be separarated with space). By default, `master` branch treats as protect
 means that Elegant Git commands for a branch state modification (such as `save-work`, `polish-work`,
 etc.) are prohibited to work if the current branch is protected. Also, the protected branches cannot
 be removed while running Elegant Git commands for serving a repository.
+- `elegant-git.acquired` defines whether a user was applied global configuration or not (see
+[approach](#approach) for the details).

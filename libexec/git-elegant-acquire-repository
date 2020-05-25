@@ -32,13 +32,14 @@ MESSAGE
 default() {
     source ${BINS}/plugins/configuration
     source ${BINS}/plugins/configuration-protected-branches
-    aliases-removing --local
+    source ${BINS}/plugins/configuration-acquired
+    obsolete-configurations-removing --local
     basics-configuration --local \
             user_name \
             user_email \
             core_editor \
             protected_branches
-    if ! is-acquired ; then
+    if ! is-git-acquired ; then
         standards-configuration --local \
             core_comment \
             apply_whitespace \

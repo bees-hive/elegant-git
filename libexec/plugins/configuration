@@ -31,9 +31,6 @@ rebase_autoStash=("rebase.autoStash" "false")
 ## Credentials, MAC only
 credential_helper_darwin=("credential.helper" "osxkeychain")
 
-# Elegant Git
-acquired=("elegant.acquired" "true")
-
 __ask_question() {
     # usage: __ask_options <prefix>
     # it makes available ANSWER available
@@ -102,7 +99,7 @@ aliases-removing() {
     local scope=${1}
     local aliases=($(git config ${scope} --name-only --get-regexp "^alias\." "^elegant ([-a-z]+)$"))
     if [[ ${#aliases[@]} -ne 0 ]]; then
-        info-box "Removing old Elegant Git aliases..."
+        info-text "Removing old Elegant Git aliases..."
         local counter=0
         for alias in ${aliases[@]}; do
             git-verbose config ${scope} --unset ${alias}
@@ -123,10 +120,14 @@ aliases-configuration() {
     done
 }
 
-is-acquired() {
-    # usage: if $(acquired-state) ; then
-    if [[ "$(git config --global --get ${acquired[0]} || true)" == ${acquired[1]} ]]; then
-        return 0
+obsolete-configurations-removing() {
+    # usage: obsolete-configurations-removing <--global | --local>
+    local scope=${1}
+    info-box "Removing obsolete configurations..."
+    local old_acquired="elegant.acquired"
+    if git config ${scope} --get-regexp ${old_acquired} >/dev/null; then
+        info-text "Removing old Elegnat Git configuration keys..."
+        git-verbose config ${scope} --unset ${old_acquired}
     fi
-    return 1
+    aliases-removing ${scope}
 }

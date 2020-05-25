@@ -111,11 +111,11 @@ teardown() {
     [[ ${lines[@]} =~ "2 Elegant Git aliases were removed." ]]
 }
 
-@test "'acquire-repository': works properly if 'elegant.acquired' == true " {
+@test "'acquire-repository': works properly if 'elegant-git.acquired' == true " {
     fake-pass "uname -s" Linux
     repo git config --local "alias.aaa" "\"elegant aaa\""
     repo git config --global "alias.bbb" "\"elegant bbb\""
-    repo git config --global "elegant.acquired" "true"
+    repo git config --global "elegant-git.acquired" "true"
     repo git config --local core.editor my-text-editor
     check git-elegant acquire-repository
     [[ ${lines[@]} =~ "What is your user name? {Elegant Git}: " ]]
