@@ -13,6 +13,8 @@
 [bl]: https://github.com/bees-hive/elegant-git/actions?workflow=Quality+pipeline
 [db]: https://readthedocs.org/projects/elegant-git/badge/?version=latest
 [dl]: https://elegant-git.bees-hive.org/en/latest/?badge=latest
+[eb]: https://img.shields.io/badge/assistant-Elegant%20Git-000000.svg
+[el]: https://github.com/bees-hive/elegant-git
 
 # Elegant Git
 Elegant Git is an assistant who carefully automates routine work with Git.
@@ -28,7 +30,8 @@ click on the picture :point_down::point_down::point_down: to see a demo.
 
 [![][sb]][sl] [![][ab]][al]
 
-[![][bb]][bl] [![][db]][dl] [![][0b]][0l]
+[![][bb]][bl] [![][db]][dl] [![][0b]][0l] [![][eb]][el]
+
 
 ---
 
