@@ -60,6 +60,39 @@ publish-worker() {
     docker push beeshive/elegant-git-ci:${1}
 }
 
+robot() {
+    # runs a
+    local smart_testing_status=""
+    local command_files=($(git ls-files --modified --other -- libexec/git-elegant*))
+
+    for command_file in ${command_files[@]}; do
+        local command_name=$(basename ${command_file})
+        if ! test -f tests/${command_name}.bats; then continue; fi
+        ( testing ${command_name} && info-text "'${command_file}' testing is passed." ) || {
+            error-text "'${command_name}' testing is failed."
+            smart_testing_status=failed
+        }
+    done
+    local tests_files=($(git ls-files --modified --other -- tests/git-elegant*.bats))
+    for test_file in ${tests_files[@]}; do
+        local file_name=$(basename ${test_file})
+        if [[ ${command_files[@]} =~ "${file_name/.bats/}" ]] ; then
+            continue # already tested
+        fi
+        if ! test -f tests/${command_name}.bats; then continue; fi
+        ( testing ${file_name} && info-text "'${file_name}' testing is passed.") || {
+            error-text "'${file_name}' testing is failed."
+            smart_testing_status=failed
+        }
+    done
+    if test -z "${smart_testing_status}"; then
+        info-text "Everything is great!"
+    else
+        error-text "Something should be improved!"
+        exit 1
+    fi
+}
+
 usage() {
     cat <<MESSAGE
 usage: ${BASH_SOURCE[0]} [command] [arg]...
@@ -69,6 +102,8 @@ Available commands:
     testing         runs bats tests; accepts a optional pattern for tests
                     filtering ("${BASH_SOURCE[0]} testing work" run all tests
                     which have the word in the test name)
+    robot           runs tests for updated "libexec/git-elegant*" or
+                    "tests/git-elegant*.bats" files
     repository      creates a git repository and installs Elegant Git within
     generate-docs   generates fresh commands documentation bases on the latest
                     changes
@@ -83,6 +118,7 @@ MESSAGE
 commands=(
     usage
     testing
+    robot
     repository
     generate-docs
     preview-docs
@@ -99,8 +135,10 @@ main() {
         echo ""
         select any in ${commands[@]}; do
             command=${any}
-            question-text "Please give the arguments: "
-            read args
+            if test ${command} = testing; then
+                question-text "Please give the tests pattern: "
+                read args
+            fi
             break
         done
     else
