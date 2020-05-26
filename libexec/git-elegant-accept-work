@@ -60,6 +60,7 @@ MESSAGE
     local work_branch="__eg"
     local changes=${1}
     source ${BINS}/plugins/state
+    source ${BINS}/plugins/configuration-default-branches
     if is-there-active-rebase; then
         local rb=$(rebasing-branch)
         if [[ ${work_branch} == ${rb} ]]; then

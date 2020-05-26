@@ -32,12 +32,14 @@ MESSAGE
 default() {
     source ${BINS}/plugins/configuration
     source ${BINS}/plugins/configuration-protected-branches
+    source ${BINS}/plugins/configuration-default-branches
     source ${BINS}/plugins/configuration-acquired
     obsolete-configurations-removing --local
     basics-configuration --local \
             user_name \
             user_email \
             core_editor \
+            default_branch \
             protected_branches
     if ! is-git-acquired ; then
         standards-configuration --local \

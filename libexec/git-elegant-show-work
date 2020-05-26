@@ -22,7 +22,7 @@ modifications, and available stashes.
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant show-work
-git log --oneline ${DEFAULT_BRANCH}..@
+git log --oneline master..@
 git status --short
 git stash list
 \`\`\`
@@ -30,6 +30,7 @@ MESSAGE
 }
 
 default(){
+    source ${BINS}/plugins/configuration-default-branches
     local branch=$(git rev-parse --abbrev-ref @)
     info-text ">>> Branch refs:"
     info-text "local:  ${branch}"

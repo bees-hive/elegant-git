@@ -59,6 +59,7 @@ MESSAGE
 }
 
 --release-work() {
+    source ${BINS}/plugins/configuration-default-branches
     git-verbose checkout ${DEFAULT_BRANCH}
     git-verbose pull --tags
     source ${BINS}/plugins/state

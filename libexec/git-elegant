@@ -28,10 +28,6 @@ git-verbose-op() {
     ${processor} "$(git "$@" 2>&1)"
 }
 
-DEFAULT_BRANCH="master"
-DEFAULT_UPSTREAM_REPOSITORY="origin"
-DEFAULT_REMOTE_TRACKING_BRANCH="${DEFAULT_UPSTREAM_REPOSITORY}/${DEFAULT_BRANCH}"
-
 _error-if-empty() {
     # _error-if-empty <a value to check> <error message>
     if [[ -z "$1" ]]; then

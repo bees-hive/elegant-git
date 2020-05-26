@@ -43,6 +43,7 @@ MESSAGE
 
 --start-work-logic(){
     source ${BINS}/plugins/state
+    source ${BINS}/plugins/configuration-default-branches
     local target=${2:-${DEFAULT_BRANCH}}
     git-verbose checkout ${target}
     if is-there-upstream-for ${target}; then

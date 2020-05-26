@@ -43,6 +43,7 @@ MESSAGE
 
 default() {
     source ${BINS}/plugins/state
+    source ${BINS}/plugins/configuration-default-branches
     git-verbose checkout ${DEFAULT_BRANCH}
     if is-there-upstream-for ${DEFAULT_BRANCH}; then
         git-verbose fetch --all || info-text "As the remotes can't be fetched, the current local version is used."

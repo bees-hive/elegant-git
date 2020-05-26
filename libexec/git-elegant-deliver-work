@@ -58,6 +58,7 @@ MESSAGE
 --deliver-work-logic() {
     source ${BINS}/plugins/state
     source ${BINS}/plugins/transformation
+    source ${BINS}/plugins/configuration-default-branches
     if is-there-active-rebase; then
         git-verbose rebase --continue
     else

@@ -39,6 +39,7 @@ MESSAGE
 default() {
     local current_branch=$(git rev-parse --abbrev-ref HEAD)
     source ${BINS}/plugins/configuration-protected-branches
+    source ${BINS}/plugins/configuration-default-branches
     if is-branch-protected ${current_branch}; then
         error-box "The protected '${current_branch}' branch history can't be rewritten."
         error-text "Please read more on ${__site}."
