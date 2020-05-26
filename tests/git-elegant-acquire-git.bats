@@ -30,8 +30,8 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --global user.email elegant-git@example.com" ]]
     [[ ${lines[@]} =~ "What is the command to launching an editor? {vi}: " ]]
     [[ ${lines[@]} =~ "==>> git config --global core.editor vi" ]]
-    [[ ${lines[@]} =~ "What are protected branches (split with space)?" ]]
-    [[ ${lines[@]} =~ "==>> git config --global elegant-git.protected-branches master" ]]
+    [[ ! ${lines[@]} =~ "What are protected branches (split with space)?" ]]
+    [[ ! ${lines[@]} =~ "==>> git config --global elegant-git.protected-branches master" ]]
 }
 
 @test "'acquire-git': standards are configured as expected on Windows" {

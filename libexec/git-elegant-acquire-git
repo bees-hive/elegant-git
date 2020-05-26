@@ -79,8 +79,7 @@ MESSAGE
     basics-configuration --global -- \
         user_name \
         user_email \
-        core_editor \
-        protected_branches
+        core_editor
     standards-configuration --global \
         core_comment \
         apply_whitespace \
