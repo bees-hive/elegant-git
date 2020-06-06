@@ -26,10 +26,6 @@ pipeline() {
         git elegant --version || exit 1
     )                                                 || fail "Installation test is failed."
     mkdocs build --clean --strict                     || fail "Unable to build the documentation."
-    pdd --exclude=.idea/**/* \
-        --exclude=site/**/* \
-        --exclude=docs/*.png \
-        --verbose --file=/dev/null                    || fail "Unreadable todo is identified."
     (
         python .workflows/docs.py
         git update-index --really-refresh
@@ -48,8 +44,6 @@ main() {
     case $1 in
         --version)
             say-version "bats --version"
-            say-version "ruby --version"
-            say-version "pdd --version"
             say-version "python --version"
             say-version "pip freeze"
             ;;

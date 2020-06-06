@@ -3,7 +3,7 @@ set -e
 
 source ./libexec/plugins/text
 
-WORKER_IMAGE="beeshive/elegant-git-ci:4"
+WORKER_IMAGE="beeshive/elegant-git-ci:5"
 
 testing() {
     docker run -it --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/bats-pipeline.bash "$@"

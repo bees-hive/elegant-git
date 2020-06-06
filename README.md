@@ -7,8 +7,6 @@
 [vb]: https://img.shields.io/github/v/tag/bees-hive/elegant-git?label=Last%20release
 [vl]: https://github.com/bees-hive/elegant-git/releases/latest
 [lb]: https://img.shields.io/github/license/bees-hive/elegant-git
-[0b]: http://www.0pdd.com/svg?name=bees-hive/elegant-git
-[0l]: http://www.0pdd.com/p?name=bees-hive/elegant-git
 [bb]: https://github.com/bees-hive/elegant-git/workflows/Quality%20pipeline/badge.svg
 [bl]: https://github.com/bees-hive/elegant-git/actions?workflow=Quality+pipeline
 [db]: https://readthedocs.org/projects/elegant-git/badge/?version=latest
@@ -30,7 +28,7 @@ click on the picture :point_down::point_down::point_down: to see a demo.
 
 [![][sb]][sl] [![][ab]][al]
 
-[![][bb]][bl] [![][db]][dl] [![][0b]][0l] [![][eb]][el]
+[![][bb]][bl] [![][db]][dl] [![][eb]][el]
 
 
 ---
@@ -108,7 +106,6 @@ A testing procedure consists of 3 steps:
 1. unit testing using [bats](https://github.com/sstephenson/bats)
 2. installation testing
 3. validation of documentation correctness
-4. validation of todo' correctness (for [0pdd](http://www.0pdd.com/p?name=bees-hive/elegant-git))
 
 All these steps can be executed by `./workflows ci` which runs a Docker container (based on
 `beeshive/elegant-git-ci` image) and calls all described checks. The image is also used on CI.
