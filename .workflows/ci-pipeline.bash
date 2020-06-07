@@ -12,7 +12,7 @@ fail() {
 }
 
 pipeline() {
-    .workflows/bats-pipeline.bash                     || fail "Unit tests are failed."
+    .workflows/bats-pipeline.bash || fail "Unit tests are failed."
     (
         echo "Installation...."
         git config --global user.name "Elegant Git"
@@ -24,14 +24,7 @@ pipeline() {
         git elegant unknown-command | grep "Unknown command: git elegant unknown-command"
         echo "Check installation of version's file..."
         git elegant --version || exit 1
-    )                                                 || fail "Installation test is failed."
-    mkdocs build --clean --strict                     || fail "Unable to build the documentation."
-    (
-        python .workflows/docs.py
-        git update-index --really-refresh
-        git diff-index --quiet HEAD --
-    ) || fail "The documentation is not up to date. Please run 'python .workflows/docs.py' and commit the changes"
-
+    ) || fail "Installation test is failed."
 }
 
 say-version() {

@@ -84,8 +84,7 @@ it. Each command file has to provide the following BASH functions:
 ### Development environment
 The following tools are needed for successful development:
 - Docker >= 19.03.2 is used for running tests
-- Python 3.x is needed for documentation previews
-- Elegant Git automates testing process and documentation generation
+- Elegant Git is used for running the testing process and generating documentation
 
 ### Coding rules
 We enforce having a consistent implementation by following the next strict rules:
@@ -148,8 +147,8 @@ The behavior should be descriptive-style (`stops with exit code 45 if cloneable 
 rather than imperative-style (`stop with exit code 45 if cloneable URL is not set`).
 
 ### Updating documentation
-In order to get the documentation preview locally, please install required dependencies with
-`pip install -r docs/requirements.txt`. After, run `./workflows serve-docs`. That's it!
+In order to get a preview of the documentation site locally, please run `./workflows serve-docs`
+and open [http://localhost](http://localhost) (happens automatically if you have `open` command).
 
 The [docs/commands.md](docs/commands.md) generates by running `./workflows generate-docs` script.
 All other files in ["docs" directory](docs/) require manual corrections.

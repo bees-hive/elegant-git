@@ -3,25 +3,53 @@ set -e
 
 source ./libexec/plugins/text
 
-WORKER_IMAGE="beeshive/elegant-git-ci:5"
+bash_5_0_17=5.0.17
+python_3_8_3=3.8.3
 
-testing() {
-    docker run -it --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/bats-pipeline.bash "$@"
+eg_docker_organization=beeshive
+eg_documents_repository=${eg_docker_organization}/elegant-git-docs-workflows
+eg_documents_image=${eg_documents_repository}:python${python_3_8_3}-bash${bash_5_0_17}
+WORKER_IMAGE=${eg_docker_organization}/elegant-git-ci:5
+
+# docs workflows
+prepare-docs-worker() {
+    local bashversion=${bash_5_0_17}
+    local pythonversion=${python_3_8_3}
+    docker build --tag ${eg_documents_image} \
+                 --label bashversion=${bashversion} \
+                 --label pythonversion=${pythonversion} \
+                 --build-arg bashversion=${bashversion} \
+                 --build-arg pythonversion=${pythonversion} \
+                 --file .workflows/docs/Dockerfile .
+}
+
+publish-docs-worker() {
+    info-text "Select image to push:"
+    select tag in $(docker image ls --filter reference=${eg_documents_repository} --format "{{.Repository}}:{{.Tag}}"); do
+        docker push ${tag}
+        break
+    done
 }
 
 generate-docs() {
-    python .workflows/docs.py
+    docker run --interactive --rm \
+               --mount type=bind,source=$(pwd),target=/elegant-git \
+               ${eg_documents_image} generate
 }
 
 preview-docs() {
-    sleep 5 && open http://localhost:8000 &
-    python -m mkdocs serve
+    { sleep 5 && open http://localhost & } || true
+    docker run --interactive --tty --rm \
+               --publish 80:80 \
+               --mount type=bind,source=$(pwd),target=/elegant-git \
+               ${eg_documents_image} preview
 }
 
 serve-docs() {
     generate-docs
     preview-docs
 }
+# docs workflows
 
 repository() {
     info-text "Start container..."
@@ -41,8 +69,36 @@ repository() {
     docker attach repository
 }
 
+# testing workflows
+testing() {
+    docker run -it --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/bats-pipeline.bash "$@"
+}
+
+__fail() {
+    error-box $@
+    exit 1
+}
+
+test-commands-docs() {
+    (
+        generate-docs
+        git update-index --really-refresh
+        git diff-index --quiet HEAD docs
+    ) || __fail "'docs/commands.md' is not up to date. Please run './workflows generate-docs' and commit the changes."
+}
+
+test-docs-site() {
+    {
+        docker run --interactive --rm \
+                   --mount type=bind,source=$(pwd),target=/elegant-git \
+                ${eg_documents_image} build
+    } || __fail "Unable to build the documentation site."
+}
+
 ci() {
     docker run --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/ci-pipeline.bash testing
+    test-commands-docs
+    test-docs-site
 }
 
 prepare-worker() {
@@ -91,37 +147,48 @@ robot() {
         exit 1
     fi
 }
+# testing workflows
 
 usage() {
     cat <<MESSAGE
 usage: ${BASH_SOURCE[0]} [command] [arg]...
 
 Available commands:
-    help            prints this message
-    testing         runs bats tests; accepts a optional pattern for tests
-                    filtering ("${BASH_SOURCE[0]} testing work" run all tests
-                    which have the word in the test name)
-    robot           runs tests for updated "libexec/git-elegant*" or
-                    "tests/git-elegant*.bats" files
-    repository      creates a git repository and installs Elegant Git within
-    generate-docs   generates fresh commands documentation bases on the latest
-                    changes
-    preview-docs    shows current documentation
-    serve-docs      generates and shows latest documentation
-    ci              runs CI quality assessment workflow
-    prepare-worker  builds a new worker image
-    publish-worker  pushes a new worker image
+  developing documentation
+    prepare-docs-worker  builds a new '${eg_documents_image}' image
+    publish-docs-worker  pushes the '${eg_documents_image}' image
+    generate-docs        generates fresh commands documentation
+    preview-docs         runs a site with the current documentation (http://localhost)
+    serve-docs           runs 'generate-docs' and 'preview-docs'
+  testing modifications
+    prepare-worker       builds a new worker image
+    publish-worker       pushes a new worker image
+    testing              runs bats tests; accepts a optional pattern for tests
+                         filtering ("${BASH_SOURCE[0]} testing work" run all tests
+                         which have the word in the test name)
+    test-commands-docs   checks if the commands docs are up to date
+    test-docs-site       checks if the docs site can be built
+    ci                   runs CI quality assessment workflow
+    robot                runs tests for updated "libexec/git-elegant*" or
+                         "tests/git-elegant*.bats" files
+  other
+    help                 prints this message
+    repository           creates a git repository and installs Elegant Git within
 MESSAGE
 }
 
 commands=(
-    usage
-    testing
-    robot
-    repository
+    prepare-docs-worker
+    publish-docs-worker
     generate-docs
     preview-docs
     serve-docs
+    testing
+    test-commands-docs
+    test-docs-site
+    usage
+    robot
+    repository
     ci
     prepare-worker
     publish-worker
