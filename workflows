@@ -134,7 +134,7 @@ robot() {
         if [[ ${command_files[@]} =~ "${file_name/.bats/}" ]] ; then
             continue # already tested
         fi
-        if ! test -f tests/${command_name}.bats; then continue; fi
+        if ! test -f tests/${file_name}; then continue; fi
         ( testing ${file_name} && info-text "'${file_name}' testing is passed.") || {
             error-text "'${file_name}' testing is failed."
             smart_testing_status=failed
