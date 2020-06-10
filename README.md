@@ -102,7 +102,7 @@ Run `unset GED` to switch debug off.
 
 ### Testing procedure
 A testing procedure consists of 3 steps:
-1. unit testing using [bats](https://github.com/sstephenson/bats)
+1. unit testing using [bats-core](https://github.com/bats-core/bats-core)
 2. installation testing
 3. validation of documentation correctness
 

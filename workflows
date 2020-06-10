@@ -3,13 +3,33 @@ set -e
 
 source ./libexec/plugins/text
 
+bash_3_2_57=3.2.57
 bash_5_0_17=5.0.17
 python_3_8_3=3.8.3
+git_2_26_2=2.26.2
+bashes=(
+    ${bash_5_0_17}
+    ${bash_3_2_57}
+)
+gits=(
+    ${git_2_26_2}
+)
+base_testing_worker=bash${bash_3_2_57}-git${git_2_26_2}
 
 eg_docker_organization=beeshive
 eg_documents_repository=${eg_docker_organization}/elegant-git-docs-workflows
 eg_documents_image=${eg_documents_repository}:python${python_3_8_3}-bash${bash_5_0_17}
-WORKER_IMAGE=${eg_docker_organization}/elegant-git-ci:5
+eg_bats_repository=${eg_docker_organization}/elegant-git-bats-worker
+eg_bats_image=${eg_bats_repository}:${base_testing_worker}
+
+
+--publish-worker() {
+    info-text "Select image to push:"
+    select tag in $(docker image ls --filter reference=${1} --format "{{.Repository}}:{{.Tag}}"); do
+        docker push ${tag}
+        break
+    done
+}
 
 # docs workflows
 prepare-docs-worker() {
@@ -24,11 +44,7 @@ prepare-docs-worker() {
 }
 
 publish-docs-worker() {
-    info-text "Select image to push:"
-    select tag in $(docker image ls --filter reference=${eg_documents_repository} --format "{{.Repository}}:{{.Tag}}"); do
-        docker push ${tag}
-        break
-    done
+    --publish-worker ${eg_documents_repository}
 }
 
 generate-docs() {
@@ -53,25 +69,58 @@ serve-docs() {
 
 repository() {
     info-text "Start container..."
-    docker run -idt --rm --name repository --workdir /tmp/elegant-git-repo -v $PWD:/eg ${WORKER_IMAGE} bash
+    docker run --interactive --tty --detach --rm \
+               --name repository \
+               --workdir /tmp/elegant-git-repo \
+               --mount type=bind,source=$(pwd),target=/elegant-git \
+               ${eg_bats_image} bash
     info-text "Init repository..."
-    docker exec -it repository bash -c "source /eg/tests/addons-repo.bash;source /eg/tests/addons-common.bash; repo-new"
+    docker exec --interactive --tty repository bash -c "
+        cd /elegant-git
+        source tests/addons-repo.bash
+        source tests/addons-common.bash
+        repo-new
+    "
     info-text "Install Elegant Git..."
-    docker exec -it repository bash -c "
-        cd /eg
-        git config --global user.name \"Elegant Git\"
-        git config --global user.email elegant.git@email.com
-        git config --global core.editor vi
-        git config --global elegant-git.acquired true
-        ./install.bash /usr/local src
+    docker exec --interactive --tty repository bash -c "
+        cd /elegant-git
+        .workflows/installation-workflows.bash install
     "
     info-text "Ready! Enjoy experiments..."
     docker attach repository
 }
 
 # testing workflows
+prepare-bats-worker() {
+    info-text "Select Bash and Git version:"
+    select bashv in ${bashes[*]}; do
+        bashversion=${bashv}
+        break
+    done
+    select gitv in ${gits[*]}; do
+        gitversion=${gitv}
+        break
+    done
+    local batsversion=v1.2.0
+    docker build --tag ${eg_bats_repository}:bash${bashversion}-git${gitversion} \
+                 --label bashversion=${bashversion} \
+                 --label gitversion=${gitversion} \
+                 --label batsversion=${batsversion} \
+                 --build-arg bashversion=${bashversion} \
+                 --build-arg gitversion=${gitversion} \
+                 --build-arg batsversion=${batsversion} \
+                 .workflows/bats
+}
+
+publish-bats-worker() {
+    --publish-worker ${eg_bats_repository}
+}
+
 testing() {
-    docker run -it --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/bats-pipeline.bash "$@"
+    echo $@
+    docker run --interactive --rm  \
+               --mount type=bind,source=$(pwd),target=/elegant-git \
+               ${eg_bats_image} some_tests "$@"
 }
 
 __fail() {
@@ -95,24 +144,24 @@ test-docs-site() {
     } || __fail "Unable to build the documentation site."
 }
 
+test-installation() {
+    (
+        docker run --interactive --rm \
+               --mount type=bind,source=$(pwd),target=/elegant-git \
+               ${eg_bats_image} bash -c "
+               .workflows/installation-workflows.bash install
+               .workflows/installation-workflows.bash smoke-tests
+        "
+    ) || __fail "Installation test is failed."
+}
+
 ci() {
-    docker run --rm -v $PWD:/eg ${WORKER_IMAGE} .workflows/ci-pipeline.bash testing
+    docker run --interactive --rm \
+               --mount type=bind,source=$(pwd),target=/elegant-git \
+               ${eg_bats_image} all_tests
     test-commands-docs
     test-docs-site
-}
-
-prepare-worker() {
-    if [[ -z ${1} ]]; then
-        error-text "Please specify a tag for Docker image (like '2')"
-    fi
-    docker build --no-cache -t beeshive/elegant-git-ci:${1} .
-}
-
-publish-worker() {
-    if [[ -z ${1} ]]; then
-        error-text "Please specify a tag for Docker image (like '2')"
-    fi
-    docker push beeshive/elegant-git-ci:${1}
+    test-installation
 }
 
 robot() {
@@ -161,13 +210,14 @@ Available commands:
     preview-docs         runs a site with the current documentation (http://localhost)
     serve-docs           runs 'generate-docs' and 'preview-docs'
   testing modifications
-    prepare-worker       builds a new worker image
-    publish-worker       pushes a new worker image
+    prepare-bats-worker  builds a new '${eg_bats_image}' image
+    publish-bats-worker  pushes the '${eg_bats_image}' image
     testing              runs bats tests; accepts a optional pattern for tests
                          filtering ("${BASH_SOURCE[0]} testing work" run all tests
                          which have the word in the test name)
     test-commands-docs   checks if the commands docs are up to date
     test-docs-site       checks if the docs site can be built
+    test-installation    checks if installation works fine
     ci                   runs CI quality assessment workflow
     robot                runs tests for updated "libexec/git-elegant*" or
                          "tests/git-elegant*.bats" files
@@ -183,15 +233,16 @@ commands=(
     generate-docs
     preview-docs
     serve-docs
+    prepare-bats-worker
+    publish-bats-worker
     testing
     test-commands-docs
     test-docs-site
+    test-installation
     usage
     robot
     repository
     ci
-    prepare-worker
-    publish-worker
 )
 
 main() {
