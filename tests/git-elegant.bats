@@ -43,49 +43,49 @@ teardown(){
 
 @test "'git elegant': a version is displayed correctly" {
     check git-elegant --version
-    [[ ${lines[@]} =~ "/eg/tests/../libexec/../version" ]]
+    [[ ${lines[@]} =~ "/elegant-git/tests/../libexec/../version" ]]
 }
 
 @test "'git elegant': workflows are loaded correctly when a command is executed from root directory" {
     repo "mkdir -p .workflows .git/.workflows"
-    repo "echo echo ahead git > .git/.workflows/show-commands-ahead"
-    repo "echo echo ahead no > .workflows/show-commands-ahead"
-    repo "echo echo after git > .git/.workflows/show-commands-after"
-    repo "echo echo after no > .workflows/show-commands-after"
+    repo "echo echo ahead git > .git/.workflows/prune-repository-ahead"
+    repo "echo echo ahead no > .workflows/prune-repository-ahead"
+    repo "echo echo after git > .git/.workflows/prune-repository-after"
+    repo "echo echo after no > .workflows/prune-repository-after"
     repo "chmod +x .git/.workflows/* .workflows/*"
     repo "ls -lah .git/.workflows/* .workflows/*"
-    check git-elegant show-commands
+    check git-elegant prune-repository
     [[ ${status} -eq 0 ]]
-    [[ ${lines[0]} =~ ".git/.workflows/show-commands-ahead" ]]
+    [[ ${lines[0]} =~ ".git/.workflows/prune-repository-ahead" ]]
     [[ ${lines[1]} == "ahead git" ]]
-    [[ ${lines[2]} =~ ".workflows/show-commands-ahead" ]]
+    [[ ${lines[2]} =~ ".workflows/prune-repository-ahead" ]]
     [[ ${lines[3]} == "ahead no" ]]
-    [[ ${lines[-4]} =~ ".git/.workflows/show-commands-after" ]]
-    [[ ${lines[-3]} == "after git" ]]
-    [[ ${lines[-2]} =~ ".workflows/show-commands-after" ]]
-    [[ ${lines[-1]} == "after no" ]]
+    [[ ${lines[6]} =~ ".git/.workflows/prune-repository-after" ]]
+    [[ ${lines[7]} == "after git" ]]
+    [[ ${lines[8]} =~ ".workflows/prune-repository-after" ]]
+    [[ ${lines[9]} == "after no" ]]
 }
 
 @test "'git elegant': workflows are loaded correctly when a command is executed from non-root directory" {
     repo mkdir -p .workflows .git/.workflows
-    repo "echo echo ahead git > .git/.workflows/show-commands-ahead"
-    repo "echo echo ahead no > .workflows/show-commands-ahead"
-    repo "echo echo after git > .git/.workflows/show-commands-after"
-    repo "echo echo after no > .workflows/show-commands-after"
+    repo "echo echo ahead git > .git/.workflows/prune-repository-ahead"
+    repo "echo echo ahead no > .workflows/prune-repository-ahead"
+    repo "echo echo after git > .git/.workflows/prune-repository-after"
+    repo "echo echo after no > .workflows/prune-repository-after"
     repo "chmod +x .git/.workflows/* .workflows/*"
     repo "ls -lah .git/.workflows/* .workflows/*"
     repo "mkdir -p some/path"
     repo "cd some/path"
-    check git-elegant show-commands
+    check git-elegant prune-repository
     [[ ${status} -eq 0 ]]
-    [[ ${lines[0]} =~ ".git/.workflows/show-commands-ahead" ]]
+    [[ ${lines[0]} =~ ".git/.workflows/prune-repository-ahead" ]]
     [[ ${lines[1]} == "ahead git" ]]
-    [[ ${lines[2]} =~ ".workflows/show-commands-ahead" ]]
+    [[ ${lines[2]} =~ ".workflows/prune-repository-ahead" ]]
     [[ ${lines[3]} == "ahead no" ]]
-    [[ ${lines[-4]} =~ ".git/.workflows/show-commands-after" ]]
-    [[ ${lines[-3]} == "after git" ]]
-    [[ ${lines[-2]} =~ ".workflows/show-commands-after" ]]
-    [[ ${lines[-1]} == "after no" ]]
+    [[ ${lines[6]} =~ ".git/.workflows/prune-repository-after" ]]
+    [[ ${lines[7]} == "after git" ]]
+    [[ ${lines[8]} =~ ".workflows/prune-repository-after" ]]
+    [[ ${lines[9]} == "after no" ]]
 }
 
 @test "'git elegant': workflows are ignored if --no-workflows is set before a command" {
