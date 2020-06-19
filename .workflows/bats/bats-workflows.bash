@@ -2,9 +2,6 @@
 set -e
 # Runs bats tests
 # usage: ./script [command name]
-if [[ -f version ]]; then
-    rm -v version
-fi
 
 all_tests() {
     exec bats --tap --recursive tests

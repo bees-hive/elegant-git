@@ -91,7 +91,7 @@ TEXT
 
 add-version() {
     cd "${1}"
-    git describe >> version
+    git describe > version
     cd -
 }
 

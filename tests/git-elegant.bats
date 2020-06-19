@@ -43,7 +43,13 @@ teardown(){
 
 @test "'git elegant': a version is displayed correctly" {
     check git-elegant --version
-    [[ ${lines[@]} =~ "/elegant-git/tests/../libexec/../version" ]]
+    if test -f ${THIS}/../version; then
+        [[ ${status} -eq 0 ]]
+        [[ ${#lines[*]} -eq 1 ]]
+    else
+        [[ ${status} -ne 0 ]]
+        [[ ${lines[@]} =~ "tests/../libexec/../version" ]]
+    fi
 }
 
 @test "'git elegant': workflows are loaded correctly when a command is executed from root directory" {
