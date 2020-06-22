@@ -21,6 +21,18 @@ picture-in-picture" allowfullscreen></iframe></center>
 > _Looks interesting? Go to [getting started](getting-started.md) guide or take a look for
 available [commands](commands.md)._
 
+Elegant Git has a rich test suit that executes on several Git and Bash versions. Please refer to
+the table below to see the coverage matrix.
+
+`bash --version`|`git --version`|`git elegant --version`
+---|---|---
+5.0.17|2.26.2|up to the latest
+4.4.23|2.26.2|up to the latest
+3.2.57|2.26.2|up to the latest
+5.0.17|2.13.7|up to the latest
+4.4.23|2.13.7|up to the latest
+3.2.57|2.13.7|up to the latest
+
 # Workflows
 While developing something, it may be required to format code prior to committing modifications or
 to open several URLs to report release notes after a new release. All these and similar actions,

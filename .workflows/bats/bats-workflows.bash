@@ -25,7 +25,6 @@ MESSAGE
 
 main() {
     case ${1} in
-        all_tests)  all_tests ;;
         some_tests) shift; some_tests "${@}" ;;
         help)       usage ;;
         *)          "${@}" ;;
