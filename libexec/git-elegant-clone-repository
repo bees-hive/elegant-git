@@ -32,6 +32,7 @@ MESSAGE
 
 default() {
     _error-if-empty "${1}" "There are no arguments!"
+    git-verbose clone "${@}"
     for location in "${@}"; do :; done
     if [[ "${location}" =~ (.git$) ]]; then
         # remove all prior last slash inclusively

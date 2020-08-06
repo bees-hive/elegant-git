@@ -22,6 +22,7 @@ teardown() {
     fake-pass "git clone https://github.com/extsoft/elegant-git.git"
     check git-elegant clone-repository https://github.com/extsoft/elegant-git.git
     [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "git clone https://github.com/extsoft/elegant-git.git" ]]
     [[ ${lines[*]} =~ "The repository was cloned into 'elegant-git' directory." ]]
 }
 
@@ -29,6 +30,7 @@ teardown() {
     fake-pass "git clone https://github.com/extsoft/elegant-git.git my-elegnat-git"
     check git-elegant clone-repository https://github.com/extsoft/elegant-git.git my-elegnat-git
     [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "git clone https://github.com/extsoft/elegant-git.git my-elegnat-git" ]]
     [[ ${lines[*]} =~ "The repository was cloned into 'my-elegnat-git' directory." ]]
 }
 
@@ -36,6 +38,7 @@ teardown() {
     fake-pass "git clone --branch work1 https://github.com/extsoft/elegant-git.git"
     check git-elegant clone-repository --branch work1 https://github.com/extsoft/elegant-git.git
     [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "git clone --branch work1 https://github.com/extsoft/elegant-git.git" ]]
     [[ ${lines[*]} =~ "The repository was cloned into 'elegant-git' directory." ]]
 }
 
@@ -43,5 +46,6 @@ teardown() {
     fake-pass "git clone --branch work1 https://github.com/extsoft/elegant-git.git work1"
     check git-elegant clone-repository --branch work1 https://github.com/extsoft/elegant-git.git work1
     [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "git clone --branch work1 https://github.com/extsoft/elegant-git.git work1" ]]
     [[ ${lines[*]} =~ "The repository was cloned into 'work1' directory." ]]
 }
