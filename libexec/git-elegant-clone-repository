@@ -9,7 +9,7 @@ MESSAGE
 
 command-synopsis() {
     cat <<MESSAGE
-usage: git elegant clone-repository <repository>
+usage: git elegant clone-repository [options] <repository> [<directory>]
 MESSAGE
 }
 
@@ -17,22 +17,29 @@ command-description() {
     cat<<MESSAGE
 Clones a repository into a new directory and runs its configuration.
 
-A \`<repository>\` is an Git URL to the repository to clone from (see
-\`git clone --help\` for the details).
+The command accepts everything that \`git clone\` command accepts.
+Run \`git clone --help\` to see the available options.
 
 Approximate commands flow is
 \`\`\`bash
-==>> git elegant clone-repository git@github.com:bees-hive/elegant-git.git
-git clone git@github.com:bees-hive/elegant-git.git
-cd elegant-git
+==>> git elegant clone-repository --depth 5 git@github.com:bees-hive/elegant-git.git my-dir
+git clone --depth 5 git@github.com:bees-hive/elegant-git.git my-dir
+cd my-dir
 git elegant acquire-repository
 \`\`\`
 MESSAGE
 }
 
 default() {
-    _error-if-empty "$1" "Cloneable URL is not set."
-    git-verbose clone "$1"
-    cd $(basename -s .git $1)
+    _error-if-empty "${1}" "There are no arguments!"
+    for location in "${@}"; do :; done
+    if [[ "${location}" =~ (.git$) ]]; then
+        # remove all prior last slash inclusively
+        location=${location##*/}
+        # remove '.git' in the end
+        location=${location//.git}
+    fi
+    info-text "The repository was cloned into '${location}' directory."
+    cd "${location}"
     git elegant acquire-repository
 }

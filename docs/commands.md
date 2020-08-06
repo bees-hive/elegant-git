@@ -155,19 +155,19 @@ git commit --amend
 # `clone-repository`
 
 ```bash
-usage: git elegant clone-repository <repository>
+usage: git elegant clone-repository [options] <repository> [<directory>]
 ```
 
 Clones a repository into a new directory and runs its configuration.
 
-A `<repository>` is an Git URL to the repository to clone from (see
-`git clone --help` for the details).
+The command accepts everything that `git clone` command accepts.
+Run `git clone --help` to see the available options.
 
 Approximate commands flow is
 ```bash
-==>> git elegant clone-repository git@github.com:bees-hive/elegant-git.git
-git clone git@github.com:bees-hive/elegant-git.git
-cd elegant-git
+==>> git elegant clone-repository --depth 5 git@github.com:bees-hive/elegant-git.git my-dir
+git clone --depth 5 git@github.com:bees-hive/elegant-git.git my-dir
+cd my-dir
 git elegant acquire-repository
 ```
 

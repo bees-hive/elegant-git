@@ -1,15 +1,11 @@
-#!/usr/bin/env bats -ex
+#!/usr/bin/env bats
 
 load addons-common
-load addons-read
 load addons-cd
 load addons-fake
 
 setup() {
-    fake-pass "git clone-repository"
-    fake-pass "git clone https://github.com/extsoft/elegant-git.git"
     fake-pass "git elegant acquire-repository"
-    fake-pass "git rev-parse --show-cdup"
 }
 
 teardown() {
@@ -19,10 +15,33 @@ teardown() {
 @test "'clone-repository': stops with exit code 45 if cloneable URL is not set" {
     check git-elegant clone-repository
     [[ ${status} -eq 45 ]]
-    [[ ${lines[0]} =~ "Cloneable URL is not set" ]]
+    [[ ${lines[0]} =~ "There are no arguments!" ]]
 }
 
-@test "'clone-repository': clone the repo" {
+@test "'clone-repository': clone given repository and store to the default directory" {
+    fake-pass "git clone https://github.com/extsoft/elegant-git.git"
     check git-elegant clone-repository https://github.com/extsoft/elegant-git.git
     [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "The repository was cloned into 'elegant-git' directory." ]]
+}
+
+@test "'clone-repository': clone given repository and store to the given directory" {
+    fake-pass "git clone https://github.com/extsoft/elegant-git.git my-elegnat-git"
+    check git-elegant clone-repository https://github.com/extsoft/elegant-git.git my-elegnat-git
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "The repository was cloned into 'my-elegnat-git' directory." ]]
+}
+
+@test "'clone-repository': clone given repository with specific options" {
+    fake-pass "git clone --branch work1 https://github.com/extsoft/elegant-git.git"
+    check git-elegant clone-repository --branch work1 https://github.com/extsoft/elegant-git.git
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "The repository was cloned into 'elegant-git' directory." ]]
+}
+
+@test "'clone-repository': clone given repository with specific options and store to the given directory" {
+    fake-pass "git clone --branch work1 https://github.com/extsoft/elegant-git.git work1"
+    check git-elegant clone-repository --branch work1 https://github.com/extsoft/elegant-git.git work1
+    [[ ${status} -eq 0 ]]
+    [[ ${lines[*]} =~ "The repository was cloned into 'work1' directory." ]]
 }
