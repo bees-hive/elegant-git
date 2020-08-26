@@ -145,8 +145,8 @@ upstream branch is the default development branch.
 A `[branch-name]` argument allows you to redefine the upstream branch. It
 supports both local and remote branches.
 
-If the upstream branch has a remote-tracking branch or is a remote branch, it
-fetches before making a rebase.
+If the upstream branch is a remote branch, a fetch is invoked before making
+a rebase in order to get the latest changes.
 
 If there is a rebase in progress initiated by this command, it will be
 continued prior to running the main logic.

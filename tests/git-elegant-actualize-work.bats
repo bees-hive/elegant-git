@@ -43,7 +43,7 @@ teardown() {
     [[ ${lines[*]} =~ "git rebase origin/master" ]]
 }
 
-@test "'actualize-work': makes a rebase of the given local branch without remote-tracking branch" {
+@test "'actualize-work': makes a rebase of the given local branch" {
     fake-pass "git rebase branch"
     check git-elegant actualize-work branch
     [[ ${status} -eq 0 ]]
@@ -51,18 +51,6 @@ teardown() {
     [[ ! ${lines[*]} =~ "git fetch" ]]
 }
 
-@test "'actualize-work': makes a rebase of the given local branch with remote-tracking branch" {
-    fake-pass "git rev-parse --abbrev-ref rt@{upstream}"
-    fake-pass "git fetch"
-    fake-pass "git rev-parse --abbrev-ref rt@{upstream}" "origin/rt"
-    fake-pass "git rebase origin/rt rt"
-    fake-pass "git rebase rt"
-    check git-elegant actualize-work rt
-    [[ ${status} -eq 0 ]]
-    [[ ${lines[*]} =~ "git fetch" ]]
-    [[ ${lines[*]} =~ "git rebase origin/rt rt" ]]
-    [[ ${lines[*]} =~ "git rebase rt" ]]
-}
 
 @test "'actualize-work': makes a rebase of the given remote-tracking branch" {
     fake-pass "git for-each-ref refs/remotes/only/remote" "true"
@@ -74,18 +62,15 @@ teardown() {
     [[ ${lines[*]} =~ "git rebase only/remote" ]]
 }
 
-@test "'actualize-work': uses local revision of thegiven remote-tracking branch if the fetch is failed" {
-    fake-pass "git rev-parse --abbrev-ref rt@{upstream}"
+@test "'actualize-work': uses local revision of the given remote-tracking branch if the fetch is failed" {
+    fake-pass "git for-each-ref refs/remotes/origin/rt" "true"
     fake-fail "git fetch"
-    fake-pass "git rev-parse --abbrev-ref rt@{upstream}" "origin/rt"
-    fake-pass "git rebase origin/rt rt"
-    fake-pass "git rebase rt"
-    check git-elegant actualize-work rt
+    fake-pass "git rebase origin/rt"
+    check git-elegant actualize-work origin/rt
     [[ ${status} -eq 0 ]]
     [[ ${lines[*]} =~ "git fetch" ]]
     [[ ${lines[*]} =~ "Unable to fetch. The last local revision will be used." ]]
-    [[ ${lines[*]} =~ "git rebase origin/rt rt" ]]
-    [[ ${lines[*]} =~ "git rebase rt" ]]
+    [[ ${lines[*]} =~ "git rebase origin/rt" ]]
 }
 
 @test "'actualize-work': uses stash pipe if uncommited changes are present" {
