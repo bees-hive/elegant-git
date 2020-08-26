@@ -14,6 +14,7 @@ _git-elegant (){
         'accept-work:adds modifications to the default development branch'
         'acquire-git:configures your Git installation'
         'acquire-repository:configures the current local Git repository'
+        'actualize-work:actualizes the current branch with upstream commits'
         'amend-work:amends the last commit'
         'clone-repository:clones a remote repository and configures it'
         'deliver-work:publishes HEAD to a remote repository'
@@ -64,7 +65,7 @@ __ge_complete_commands () {
     # default completion is empty
     case ${line[1]} in
         obtain-work)                __ge_remotes ;;
-        accept-work)                __ge_all_branches ;;
+        accept-work|actualize-work) __ge_all_branches ;;
         show-release-notes)         __ge_show_release_notes ;;
         start-work)                 __ge_start_work ;;
         make-workflow)              __ge_make_workflow ;;

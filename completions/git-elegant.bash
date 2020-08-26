@@ -32,7 +32,7 @@ _git_elegant() {
                     $(compgen -W "${opts[*]}" -- ${cursor})
                 )
                 ;;
-            accept-work)
+            accept-work|actualize-work)
                 local opts=(
                     ${gecops}
                     $(git branch --all --format='%(refname:short)')

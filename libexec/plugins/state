@@ -34,6 +34,16 @@ is-there-upstream-for() {
     git rev-parse --abbrev-ref ${1}@{upstream} >/dev/null 2>&1
 }
 
+upstream-of() {
+    # usage: $(upstream-of <branch ref>)
+    git rev-parse --abbrev-ref ${1}@{upstream} 2>/dev/null || true
+}
+
+is-remote-branch() {
+    # usage: is-remote-branch <branch ref>
+    test -n "$(git for-each-ref refs/remotes/${1})"
+}
+
 are-there-remotes() {
     if test -z "$(git remote)"; then
         return 1
