@@ -82,6 +82,7 @@ $(--print-command-in-usage save-work)
 $(--print-command-in-usage amend-work)
 $(--print-command-in-usage show-work)
 $(--print-command-in-usage polish-work)
+$(--print-command-in-usage actualize-work)
 
  interact with others
 $(--print-command-in-usage deliver-work)

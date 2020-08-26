@@ -34,6 +34,7 @@ There are commands used in various situations such as
     amend-work           Amends the last commit.
     show-work            Prints HEAD state.
     polish-work          Rebases HEAD interactively.
+    actualize-work       Actualizes the current branch with upstream commits.
 
  interact with others
     deliver-work         Publishes HEAD to a remote repository.
@@ -131,6 +132,34 @@ applies all configurations to the current local repository.
 
 To find out what will be configured, please visit
 <https://elegant-git.bees-hive.org/en/latest/configuration/>
+
+# `actualize-work`
+
+```bash
+usage: git elegant actualize-work [branch-name]
+```
+
+Rebases the head of the upstream branch into the current one. By default, the
+upstream branch is the default development branch.
+
+A `[branch-name]` argument allows you to redefine the upstream branch. It
+supports both local and remote branches.
+
+If the upstream branch has a remote-tracking branch or is a remote branch, it
+fetches before making a rebase.
+
+If there is a rebase in progress initiated by this command, it will be
+continued prior to running the main logic.
+
+The command uses stash pipe to preserve the current Git state prior to execution
+and restore after.
+
+Approximate commands flow is
+```bash
+==>> git elegant actualize-work origin/some-work
+git fetch
+git rebase origin/some-work
+```
 
 # `amend-work`
 
