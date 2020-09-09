@@ -39,9 +39,10 @@ default(){
         info-text "remote: ${upstream}"
     fi
     info-text ""
-    if [[ -n $(git rev-list ${DEFAULT_BRANCH}..${branch}) ]]; then
-        info-text ">>> New commits (comparing to '${DEFAULT_BRANCH}' branch):"
-        git log --oneline ${DEFAULT_BRANCH}..${branch}
+    local latest_changes=$(freshest-default-branch)
+    if [[ -n $(git rev-list ${latest_changes}..${branch}) ]]; then
+        info-text ">>> New commits (comparing to '${latest_changes}' branch):"
+        git log --oneline ${latest_changes}..${branch}
         info-text ""
     fi
     if [[ -n $(git status --short) ]]; then

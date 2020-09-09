@@ -77,11 +77,7 @@ MESSAGE
         else
             git elegant obtain-work "${changes}" "${work_branch}"
         fi
-        if are-there-remotes; then
-            git-verbose rebase ${DEFAULT_REMOTE_TRACKING_BRANCH}
-        else
-            git-verbose rebase ${DEFAULT_BRANCH}
-        fi
+        git-verbose rebase $(freshest-default-branch)
     fi
     local actual_remote=$(git for-each-ref --format='%(upstream:short)' refs/heads/${work_branch})
     git-verbose checkout ${DEFAULT_BRANCH}

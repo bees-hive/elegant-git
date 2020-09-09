@@ -49,9 +49,10 @@ default() {
     if is-there-active-rebase; then
         git-verbose rebase --continue
     else
-        local commits=($(git rev-list ${DEFAULT_BRANCH}..@))
+        local latest_changes=$(freshest-default-branch)
+        local commits=($(git rev-list ${latest_changes}..@))
         if [[ ${#commits[*]} -eq 0 ]]; then
-            info-text "There are no new commits comparing to '${DEFAULT_BRANCH}' branch."
+            info-text "There are no new commits comparing to '${latest_changes}' branch."
         else
             stash-pipe git-verbose rebase --interactive @~${#commits[*]}
         fi
