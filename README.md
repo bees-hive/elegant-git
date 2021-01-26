@@ -14,6 +14,7 @@
 [eb]: https://img.shields.io/badge/assistant-Elegant%20Git-000000.svg
 [el]: https://github.com/bees-hive/elegant-git
 
+
 # Elegant Git
 Elegant Git is an assistant who carefully automates routine work with Git.
 
