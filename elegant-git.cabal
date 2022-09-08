@@ -1,0 +1,121 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           elegant-git
+version:        1.0.0
+description:    Elegant Git is an assistant who carefully automates routine work with Git. See more on <https://elegant-git.bees-hive.org/>
+homepage:       https://github.com/bees-hive/elegant-git#readme
+bug-reports:    https://github.com/bees-hive/elegant-git/issues
+author:         Dmytro Serdiuk
+maintainer:     dmytro.serdiuk@gmail.com
+copyright:      2017 Dmytro Serdiuk
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    LICENSE
+
+source-repository head
+  type: git
+  location: https://github.com/bees-hive/elegant-git
+
+library
+  exposed-modules:
+      Elegit.Cli.Action.ShowWork
+      Elegit.Cli.Command
+      Elegit.Cli.Parser
+      Elegit.Git.Action
+      Elegit.Git.Runner.Real
+      Elegit.Git.Runner.Simulated
+      Lib
+  other-modules:
+      Paths_elegant_git
+  hs-source-dirs:
+      src
+  default-extensions:
+      FlexibleContexts
+      OverloadedStrings
+      NoImplicitPrelude
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Werror=incomplete-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+    , dlist
+    , fmt
+    , free
+    , microlens
+    , microlens-mtl
+    , microlens-th
+    , mtl
+    , optparse-applicative
+    , safe-exceptions
+    , text
+    , transformers
+    , typed-process
+    , universum
+  default-language: Haskell2010
+
+executable git-elegant
+  main-is: Main.hs
+  other-modules:
+      Paths_elegant_git
+  hs-source-dirs:
+      app
+  default-extensions:
+      FlexibleContexts
+      OverloadedStrings
+      NoImplicitPrelude
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Werror=incomplete-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , dlist
+    , elegant-git
+    , fmt
+    , free
+    , microlens
+    , microlens-mtl
+    , microlens-th
+    , mtl
+    , optparse-applicative
+    , safe-exceptions
+    , text
+    , transformers
+    , typed-process
+    , universum
+  default-language: Haskell2010
+
+test-suite elegant-git-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Elegit.Cli.Action.ShowWorkSpec
+      Elegit.Git.Runner.SimulatedSpec
+      Paths_elegant_git
+  hs-source-dirs:
+      test
+  default-extensions:
+      FlexibleContexts
+      OverloadedStrings
+      NoImplicitPrelude
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Werror=incomplete-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , dlist
+    , elegant-git
+    , fmt
+    , free
+    , hspec
+    , microlens
+    , microlens-mtl
+    , microlens-th
+    , mtl
+    , optparse-applicative
+    , safe-exceptions
+    , text
+    , transformers
+    , typed-process
+    , universum
+  default-language: Haskell2010
