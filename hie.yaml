@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "elegant-git:lib"
+
+    - path: "./app/Main.hs"
+      component: "elegant-git:exe:elegant-git-exe"
+
+    - path: "./app/Paths_elegant_git.hs"
+      component: "elegant-git:exe:elegant-git-exe"
+
+    - path: "./test"
+      component: "elegant-git:test:elegant-git-test"
