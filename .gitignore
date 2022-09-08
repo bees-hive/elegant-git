@@ -2,3 +2,6 @@
 tmp/
 site/
 version
+.stack-work/
+dist-newstyle/
+out/

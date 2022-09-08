@@ -1,0 +1,53 @@
+name: Haskell Test CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+env:
+  GHC_VERSION: 9.2.4
+  STACK_VERSION: 2.7.3
+  HLINT_VERSION: 3.3.6
+
+jobs:
+  tests:
+    strategy:
+      matrix:
+        # os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    name: "Quality pipeline"
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      name: Cache .stack
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-global-${{ hashFiles('stack.yaml') }}-${{ hashFiles('package.yaml') }}-${{ hashFiles('**/*.hs') }}
+        restore-keys: |
+          ${{ runner.os }}-stack-global-
+    - uses: haskell/actions/setup@v2
+      with:
+        ghc-version: '${{ env.GHC_VERSION }}'
+        enable-stack: true
+        stack-version: '${{ env.STACK_VERSION }}'
+    - name: Install hlint
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        wget -O /tmp/hlint-${{ env.HLINT_VERSION }}.tar.gz https://github.com/ndmitchell/hlint/releases/download/v${{ env.HLINT_VERSION }}/hlint-${{ env.HLINT_VERSION }}-x86_64-linux.tar.gz
+        tar -xf /tmp/hlint-${{ env.HLINT_VERSION }}.tar.gz -C /tmp
+        cp /tmp/hlint-${{ env.HLINT_VERSION }}/hlint ~/.ghcup/bin/hlint
+    - name: Run hlint
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: hlint .
+    - name: Build dependencies
+      run: stack build --no-haddock --only-dependencies --fast --pedantic
+    - name: Run tests
+      run: stack test --fast --pedantic
+
