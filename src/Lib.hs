@@ -1,12 +1,6 @@
-module Lib
-    ( someFunc
-    , tst
-    ) where
+module Lib where
 
-import Universum
+import           Universum
 
 someFunc :: IO ()
 someFunc = putTextLn "someFunc"
-
-tst :: Int
-tst = 1

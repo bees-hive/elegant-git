@@ -22,8 +22,13 @@ description:         Please see the README on GitHub at <https://github.com/gith
 dependencies:
 - base >= 4.7 && < 5
 - universum
+- transformers
+- mtl
+- free
+- dlist
 
 default-extensions:
+- FlexibleContexts
 - OverloadedStrings
 - NoImplicitPrelude
 
@@ -32,8 +37,7 @@ ghc-options:
 - -Wcompat
 - -Widentities
 - -Wincomplete-record-updates
-- -Wincomplete-uni-patterns
-- -Wmissing-export-lists
+- -Werror=incomplete-patterns
 - -Wmissing-home-modules
 - -Wpartial-fields
 - -Wredundant-constraints
