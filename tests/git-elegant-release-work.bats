@@ -44,7 +44,7 @@ teardown() {
     [[ ${lines[@]} =~ "Release notes" ]]
 }
 
-@test "'release-work': working branch is restored when the command runs in non-master branch" {
+@test "'release-work': working branch is restored when the command runs in non-main branch" {
     repo "git checkout -b new"
     check git-elegant release-work ${new_tag}
     [[ ${status} -eq 0 ]]

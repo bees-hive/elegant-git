@@ -46,10 +46,10 @@ Approximate commands flow is
 ==>> git elegant accept-work task-123
 git fetch --all
 git checkout --force -B __eg origin/task-123
-git rebase origin/master
-git checkout master
+git rebase origin/main
+git checkout main
 git merge --ff-only __eg
-git push origin master:master
+git push origin main:main
 git branch --delete --force __eg
 git push origin --delete task-123
 \`\`\`

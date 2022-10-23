@@ -22,7 +22,7 @@ modifications, and available stashes.
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant show-work
-git log --oneline master..@
+git log --oneline main..@
 git status --short
 git stash list
 \`\`\`

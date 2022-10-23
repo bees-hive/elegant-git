@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 ## This plugin is responsible for handling protected branches logic.
 protected_branches_key="elegant-git.protected-branches"
-protected_branches_default="master"
+protected_branches_default="main"
 protected_branches_message="What are protected branches (split with space)?"
 
 protected-branches() {
     # usage : protected-branches
-    # result: "master other-branch"
+    # result: "main other-branch"
     git config ${protected_branches_key} || echo ${protected_branches_default}
 }
 

@@ -12,6 +12,7 @@ install() {
     git config --global user.email elegant.git@email.com
     git config --global core.editor vi
     git config --global elegant-git.acquired true
+    git config --global init.defaultBranch main
     ./install.bash /usr/local src
 }
 

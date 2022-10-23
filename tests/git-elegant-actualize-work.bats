@@ -14,33 +14,33 @@ teardown() {
 }
 
 @test "'actualize-work': makes a rebase of the default local branch if there is no remote repository" {
-    fake-pass "git rebase master"
+    fake-pass "git rebase main"
     check git-elegant actualize-work
     [[ ${status} -eq 0 ]]
     [[ ! ${lines[*]} =~ "git fetch" ]]
-    [[ ${lines[*]} =~ "git rebase master" ]]
+    [[ ${lines[*]} =~ "git rebase main" ]]
 }
 
 @test "'actualize-work': makes a rebase of the default remote branch if there is a remote repository" {
     fake-pass "git remote" "origin"
-    fake-pass "git rebase origin/master"
-    fake-fail "git rebase master"
+    fake-pass "git rebase origin/main"
+    fake-fail "git rebase main"
     check git-elegant actualize-work
     [[ ${status} -eq 0 ]]
     [[ ${lines[*]} =~ "git fetch" ]]
-    [[ ${lines[*]} =~ "git rebase origin/master" ]]
+    [[ ${lines[*]} =~ "git rebase origin/main" ]]
 }
 
 @test "'actualize-work': uses local revision of the default remote branch if the fetch is failed" {
     fake-pass "git remote" "origin"
     fake-fail "git fetch"
-    fake-pass "git rebase origin/master"
-    fake-fail "git rebase master"
+    fake-pass "git rebase origin/main"
+    fake-fail "git rebase main"
     check git-elegant actualize-work
     [[ ${status} -eq 0 ]]
     [[ ${lines[*]} =~ "git fetch" ]]
     [[ ${lines[*]} =~ "Unable to fetch. The last local revision will be used." ]]
-    [[ ${lines[*]} =~ "git rebase origin/master" ]]
+    [[ ${lines[*]} =~ "git rebase origin/main" ]]
 }
 
 @test "'actualize-work': makes a rebase of the given local branch" {
@@ -79,7 +79,7 @@ teardown() {
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "git stash push --message git-elegant actualize-work auto-stash:" ]]
     [[ ! ${lines[*]} =~ "git fetch" ]]
-    [[ ${lines[*]} =~ "git rebase master" ]]
+    [[ ${lines[*]} =~ "git rebase main" ]]
     [[ ${lines[@]} =~ "git stash pop" ]]
 }
 
@@ -91,5 +91,5 @@ teardown() {
     check git-elegant actualize-work
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "git rebase --continue" ]]
-    [[ ${lines[@]} =~ "git rebase master" ]]
+    [[ ${lines[@]} =~ "git rebase main" ]]
 }

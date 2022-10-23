@@ -29,7 +29,7 @@ does not have any commits nowadays. So, it is useless.
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant prune-repository
-git checkout master
+git checkout main
 git fetch --all
 git rebase
 git branch --delete --force task-24

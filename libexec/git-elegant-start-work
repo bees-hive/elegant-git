@@ -32,7 +32,7 @@ Approximate commands flow is
 \`\`\`bash
 ==>> git elegant start-work task-123
 git stash save elegant-git
-git checkout master
+git checkout main
 git pull
 git checkout -b task-123
 git stash apply stash^{/elegant-git}

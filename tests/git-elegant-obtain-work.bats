@@ -15,7 +15,7 @@ teardown() {
 
 @test "'obtain-work': use found remote branch when given pattern matches only one remote branch" {
     fake-pass "git fetch --all"
-    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/master"
+    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/main"
     fake-pass "git checkout -B rremote origin/rremote"
 
     check git-elegant obtain-work rr
@@ -24,7 +24,7 @@ teardown() {
 
 @test "'obtain-work': use given local branch name when it is provided" {
     fake-pass "git fetch --all"
-    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/master"
+    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/main"
     fake-pass "git checkout -B myname origin/rremote"
 
     check git-elegant obtain-work rr myname
@@ -33,7 +33,7 @@ teardown() {
 
 @test "'obtain-work': raise 43 error when given pattern matches several remote branches" {
     fake-pass "git fetch --all"
-    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/master\nother-upstream/barr"
+    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/main\nother-upstream/barr"
 
     check git-elegant obtain-work rr
     [[ ${status} -eq 43 ]]
@@ -42,7 +42,7 @@ teardown() {
 
 @test "'obtain-work': raise 43 error when given pattern matches zero remote branches" {
     fake-pass "git fetch --all"
-    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/master\norigin/barr"
+    fake-pass "git for-each-ref --format='%(refname:short)' refs/remotes" "origin/rremote\norigin/main\norigin/barr"
 
     check git-elegant obtain-work aa
     [[ ${status} -eq 43 ]]

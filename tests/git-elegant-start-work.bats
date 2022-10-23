@@ -21,7 +21,7 @@ teardown() {
 
 @test "'start-work': updates upsteram branch before start a new work" {
     fake-fail "git pull"
-    fake-pass "git rev-parse --abbrev-ref master@{upstream}"
+    fake-pass "git rev-parse --abbrev-ref main@{upstream}"
     check git-elegant start-work test-feature
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "As the pull can't be completed, the current local version is used." ]]

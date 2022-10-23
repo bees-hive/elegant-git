@@ -2,7 +2,7 @@
 #description enables Elegant Git completion
 #
 # It's recommended to use this completion with the following Git completion file:
-# https://raw.githubusercontent.com/zsh-users/zsh/master/Completion/Unix/Command/_git
+# https://raw.githubusercontent.com/zsh-users/zsh/main/Completion/Unix/Command/_git
 
 _git-elegant (){
     # update this function if either new commands or options are added

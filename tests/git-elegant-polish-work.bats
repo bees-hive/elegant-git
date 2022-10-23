@@ -16,12 +16,12 @@ teardown() {
 @test "'polish-work': exit code is 42 when the command is run against default protected branch" {
     check git-elegant polish-work
     [[ ${status} -eq 42 ]]
-    [[ ${lines[@]} =~ "The protected 'master' branch history can't be rewritten." ]]
+    [[ ${lines[@]} =~ "The protected 'main' branch history can't be rewritten." ]]
     [[ ${lines[@]} =~ "Please read more on https://elegant-git.bees-hive.org." ]]
 }
 
 @test "'polish-work': exit code is 42 when the command is run against custom protected branch" {
-    repo "git config --local elegant-git.protected-branches \"master some\""
+    repo "git config --local elegant-git.protected-branches \"main some\""
     repo "git checkout -b some"
     check git-elegant polish-work
     [[ ${status} -eq 42 ]]
@@ -33,7 +33,7 @@ teardown() {
     repo "git checkout -b no-new-commits"
     check git-elegant polish-work
     [[ ${status} -eq 0 ]]
-    [[ ${lines[@]} =~ "There are no new commits comparing to 'master' branch." ]]
+    [[ ${lines[@]} =~ "There are no new commits comparing to 'main' branch." ]]
 }
 
 @test "'polish-work': a rebase process works when there are new commits" {

@@ -8,7 +8,7 @@ load addons-repo
 setup() {
     repo-new
     fake-pass "git fetch"
-    fake-pass "git rebase origin/master"
+    fake-pass "git rebase origin/main"
 }
 
 teardown() {
@@ -35,12 +35,12 @@ teardown() {
 @test "'deliver-work': exit code is 42 when the command is run against default protected branch" {
     check git-elegant deliver-work
     [[ ${status} -eq 42 ]]
-    [[ ${lines[@]} =~ "The push of the protected 'master' branch is prohibited." ]]
+    [[ ${lines[@]} =~ "The push of the protected 'main' branch is prohibited." ]]
     [[ ${lines[@]} =~ "Consider using 'git elegant accept-work' or use plain 'git push'." ]]
 }
 
 @test "'deliver-work': exit code is 42 when the command is run against custom protected branch" {
-    repo "git config --local elegant-git.protected-branches \"master some\""
+    repo "git config --local elegant-git.protected-branches \"main some\""
     repo "git checkout -b some"
     check git-elegant deliver-work
     [[ ${status} -eq 42 ]]

@@ -29,10 +29,10 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --local user.email elegant-git@example.com" ]]
     [[ ${lines[@]} =~ "What is the command to launching an editor? {vi}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local core.editor vi" ]]
-    [[ ${lines[@]} =~ "What is the default branch? {master}:" ]]
-    [[ ${lines[@]} =~ "==>> git config --local elegant-git.default-branch master" ]]
-    [[ ${lines[@]} =~ "What are protected branches (split with space)? {master}:" ]]
-    [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches master" ]]
+    [[ ${lines[@]} =~ "What is the default branch? {main}:" ]]
+    [[ ${lines[@]} =~ "==>> git config --local elegant-git.default-branch main" ]]
+    [[ ${lines[@]} =~ "What are protected branches (split with space)? {main}:" ]]
+    [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches main" ]]
 }
 
 @test "'acquire-repository': basics with user-provided values are configured as expected" {
@@ -48,9 +48,9 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --local user.email the@email" ]]
     [[ ${lines[@]} =~ "What is the command to launching an editor? {vi}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local core.editor someeditor" ]]
-    [[ ${lines[@]} =~ "What is the default branch? {master}:" ]]
+    [[ ${lines[@]} =~ "What is the default branch? {main}:" ]]
     [[ ${lines[@]} =~ "==>> git config --local elegant-git.default-branch my-branch" ]]
-    [[ ${lines[@]} =~ "What are protected branches (split with space)? {master}:" ]]
+    [[ ${lines[@]} =~ "What are protected branches (split with space)? {main}:" ]]
     [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches a b" ]]
 }
 
@@ -127,8 +127,8 @@ teardown() {
     [[ ${lines[@]} =~ "==>> git config --local user.name Elegant Git" ]]
     [[ ${lines[@]} =~ "What is your user email? {elegant-git@example.com}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local user.email elegant-git@example.com" ]]
-    [[ ${lines[@]} =~ "What are protected branches (split with space)? {master}: " ]]
-    [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches master" ]]
+    [[ ${lines[@]} =~ "What are protected branches (split with space)? {main}: " ]]
+    [[ ${lines[@]} =~ "==>> git config --local elegant-git.protected-branches main" ]]
     [[ ${lines[@]} =~ "What is the command to launching an editor? {my-text-editor}: " ]]
     [[ ${lines[@]} =~ "==>> git config --local core.editor my-text-editor" ]]
     [[ ! ${lines[@]} =~ "==>> git config --local core.commentChar |" ]]
@@ -140,8 +140,8 @@ teardown() {
     read-answer "The User"
     read-answer "the@email"
     read-answer "someeditor"
-    read-answer "master"
-    read-answer "master"
+    read-answer "main"
+    read-answer "main"
     read-answer "thekey"
     fake-pass "gpg --list-secret-keys --keyid-format long the@email" "some dummy keys"
     check git-elegant acquire-repository

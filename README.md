@@ -3,7 +3,7 @@
 [ab]: https://img.shields.io/badge/Choose%20issue-any-blue
 [al]: https://github.com/bees-hive/elegant-git/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc+no%3Aassignee
 [cb]: https://img.shields.io/github/commits-since/bees-hive/elegant-git/latest?label=Commits%20for%20next%20release
-[cl]: https://github.com/bees-hive/elegant-git/commits/master
+[cl]: https://github.com/bees-hive/elegant-git/commits/main
 [vb]: https://img.shields.io/github/v/tag/bees-hive/elegant-git?label=Last%20release
 [vl]: https://github.com/bees-hive/elegant-git/releases/latest
 [lb]: https://img.shields.io/github/license/bees-hive/elegant-git

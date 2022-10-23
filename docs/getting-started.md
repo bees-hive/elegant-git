@@ -1,7 +1,7 @@
 # Installation via Bash script
 Run the follwing command and follow the instructions
 ```bash
-curl https://raw.githubusercontent.com/bees-hive/elegant-git/master/install.bash | $(which bash)
+curl -sL install.elegant-git.bees-hive.org | $(which bash)
 ```
 
 Elegant Git will be installed in `~/.elegant-git` directory. That's why if you want to remove

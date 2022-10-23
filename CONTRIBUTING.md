@@ -56,7 +56,7 @@ for the first contribution.
 The project is released based on a decision of the maintainers or a request from the community (a
 comment in a pull request or an issue). And [Semantic Versioning 2.0][semver] is used as a control
 mechanism of version numbers. Such release approach requires ready-to-release contributions within
-a single pull request. This allows releasing `master` branch at any point of time.
+a single pull request. This allows releasing `main` branch at any point of time.
 
 ## Documentation management
 All project-related documentation is stored along with source code. It is
@@ -128,7 +128,7 @@ A newly created pull request will be prepopulated from a template. You have to
 update issue number (if it affects several issues, please specify all) and
 complete checklist. After, feel free to add more comments if you want.
 
-A pull requests must be targeted into the `master` branch (a default one).
+A pull requests must be targeted into the `main` branch (a default one).
 
 Once the pull request is created, please make sure [status checks][status-checks] are passing.
 

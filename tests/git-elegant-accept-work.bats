@@ -8,8 +8,8 @@ setup() {
     repo-new
     repo "git checkout -b __eg; git checkout -"
     fake-pass "git elegant obtain-work test-feature __eg"
-    fake-pass "git rebase origin/master"
-    fake-pass "git push origin master:master"
+    fake-pass "git rebase origin/main"
+    fake-pass "git push origin main:main"
 }
 
 teardown() {
@@ -58,8 +58,8 @@ teardown() {
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "git fetch --all" ]]
     [[ ${lines[@]} =~ "git checkout -B __eg local-work" ]]
-    [[ ${lines[@]} =~ "git rebase master" ]]
-    [[ ${lines[@]} =~ "git checkout master" ]]
+    [[ ${lines[@]} =~ "git rebase main" ]]
+    [[ ${lines[@]} =~ "git checkout main" ]]
     [[ ${lines[@]} =~ "git merge --ff-only __eg" ]]
     [[ ${lines[@]} =~ "git branch --delete --force __eg" ]]
     [[ ! ${lines[@]} =~ "git push" ]]

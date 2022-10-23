@@ -14,7 +14,7 @@ else
     cat <<MESSAGE
 Instructions:
 
-    open       https://github.com/bees-hive/homebrew-hive/blob/master/Formula/elegant-git.rb
+    open       https://github.com/bees-hive/homebrew-hive/blob/main/Formula/elegant-git.rb
     update
         git tag:     ${TAG}
         git commit:  ${COMMIT}

@@ -39,7 +39,7 @@ Approximate commands flow is
 \`\`\`bash
 ==>> git elegant deliver-work
 git fetch
-git rebase origin/master
+git rebase origin/main
 git push --set-upstream --force origin task-123:task-123
 \`\`\`
 MESSAGE

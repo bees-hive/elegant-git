@@ -31,7 +31,7 @@ teardown() {
     [[ ${lines[@]} =~ "What is the command to launching an editor? {vi}: " ]]
     [[ ${lines[@]} =~ "==>> git config --global core.editor vi" ]]
     [[ ! ${lines[@]} =~ "What are protected branches (split with space)?" ]]
-    [[ ! ${lines[@]} =~ "==>> git config --global elegant-git.protected-branches master" ]]
+    [[ ! ${lines[@]} =~ "==>> git config --global elegant-git.protected-branches main" ]]
 }
 
 @test "'acquire-git': standards are configured as expected on Windows" {
@@ -111,7 +111,7 @@ teardown() {
     repo git config --global user.name aaaa
     repo git config --global user.email aaaa
     repo git config --global core.editor aaaa
-    repo git config --global elegant-git.protected-branches master
+    repo git config --global elegant-git.protected-branches main
     check git-elegant acquire-git
     [[ ${status} -eq 0 ]]
     [[ ${lines[@]} =~ "==>> git config --global user.name aaaa" ]]

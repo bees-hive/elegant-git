@@ -10,7 +10,7 @@ Main capabilities
 Used philosophy
 
 - actual work is allowed in custom branches only
-- all pushes to `master` are strictly controlled
+- all pushes to `main` are strictly controlled
 - all commands, which modify a state of Git, are printed
 - declarative interaction matters
 

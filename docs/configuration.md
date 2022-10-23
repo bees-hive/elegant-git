@@ -85,13 +85,13 @@ For now, only `gpg` is supported. If you need other tools, please [create a new 
 The Elegant Git configuration keys:
 
 - `elegant-git.protected-branches` defines the protected branches (if there are multiple values, they
-should be separarated with space). By default, the `master` branch treats as protected. The "protected"
+should be separarated with space). By default, the `main` branch treats as protected. The "protected"
 means that Elegant Git commands for a branch state modification (such as `save-work`, `polish-work`,
 etc.) are prohibited to work if the current branch is protected. Also, the protected branches cannot
 be removed while running Elegant Git commands for serving a repository.
 - `elegant-git.acquired` defines whether a user was applied global configuration or not (see
 [approach](#approach) for the details).
-- `elegant-git.default-branch` defines the name of the default development branch. By default, the `master`
+- `elegant-git.default-branch` defines the name of the default development branch. By default, the `main`
 branch treats as the default one. Depending on an Elegant Git command, it can be a source branch to create
 a new branch from, a destination branch to rebase work in, a base branch to compare with, a release branch,
 and can be used in other ways. In other words, the default development branch is "a golden source" of

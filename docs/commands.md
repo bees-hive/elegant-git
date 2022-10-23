@@ -90,10 +90,10 @@ Approximate commands flow is
 ==>> git elegant accept-work task-123
 git fetch --all
 git checkout --force -B __eg origin/task-123
-git rebase origin/master
-git checkout master
+git rebase origin/main
+git checkout main
 git merge --ff-only __eg
-git push origin master:master
+git push origin main:main
 git branch --delete --force __eg
 git push origin --delete task-123
 ```
@@ -230,7 +230,7 @@ Approximate commands flow is
 ```bash
 ==>> git elegant deliver-work
 git fetch
-git rebase origin/master
+git rebase origin/main
 git push --set-upstream --force origin task-123:task-123
 ```
 
@@ -368,7 +368,7 @@ does not have any commits nowadays. So, it is useless.
 Approximate commands flow is
 ```bash
 ==>> git elegant prune-repository
-git checkout master
+git checkout main
 git fetch --all
 git rebase
 git branch --delete --force task-24
@@ -406,7 +406,7 @@ to execution and restore after.
 Approximate commands flow is
 ```bash
 ==>> git elegant release-work 1.2.0
-git checkout master
+git checkout main
 git pull --tags
 git tag --annotate --file tag-message --edit 1.2.0
 git push --tags
@@ -498,7 +498,7 @@ modifications, and available stashes.
 Approximate commands flow is
 ```bash
 ==>> git elegant show-work
-git log --oneline master..@
+git log --oneline main..@
 git status --short
 git stash list
 ```
@@ -551,7 +551,7 @@ Approximate commands flow is
 ```bash
 ==>> git elegant start-work task-123
 git stash save elegant-git
-git checkout master
+git checkout main
 git pull
 git checkout -b task-123
 git stash apply stash^{/elegant-git}

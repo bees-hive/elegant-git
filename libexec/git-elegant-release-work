@@ -36,7 +36,7 @@ to execution and restore after.
 Approximate commands flow is
 \`\`\`bash
 ==>> git elegant release-work 1.2.0
-git checkout master
+git checkout main
 git pull --tags
 git tag --annotate --file tag-message --edit 1.2.0
 git push --tags

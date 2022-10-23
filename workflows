@@ -35,9 +35,18 @@ bats_worker_tags=(
 
 --publish-worker() {
     info-text "Select image to push:"
-    select tag in $(docker image ls --filter reference=${1} --format "{{.Repository}}:{{.Tag}}") exit; do
+    local images="$(docker image ls --filter reference=${1} --format "{{.Repository}}:{{.Tag}}")"
+    select tag in exit all ${images[*]}; do
         if test ${tag} = "exit"; then break; fi
-        docker push ${tag}
+        if test ${tag} = "all"
+        then
+          for image in ${images}
+          do
+            docker push ${image}
+          done
+        else
+          docker push ${tag}
+        fi
     done
 }
 
@@ -130,7 +139,7 @@ publish-bats-worker() {
 }
 
 testing() {
-    --bats-workers some-bats some_tests "$@"
+    --bats-workers some-bats .workflows/bats/bats-workflows.bash some_tests "$@"
     --report-containerized-jobs
 }
 
@@ -156,7 +165,7 @@ test-installation() {
 }
 
 ci() {
-    --bats-workers all-bats all_tests
+    --bats-workers all-bats .workflows/bats/bats-workflows.bash all_tests
     test-commands-docs
     test-docs-site
     test-installation

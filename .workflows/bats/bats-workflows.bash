@@ -18,7 +18,7 @@ usage: ${BASH_SOURCE[0]} <command>
 Available commands:
     help            prints this message
     all_tests       runs all Bats tests
-    some_tests      runs Bats tests matchinh a pattern
+    some_tests      runs Bats tests that matches a pattern
 
 MESSAGE
 }
