@@ -5,15 +5,19 @@ import qualified Elegit.Git.Action        as GA
 import           Universum
 
 -- | Exectuion description of the AquireRepository action
--- 
--- `>>=` operator executes action on the left and passes the result value to the action on the right.
 cmd :: (MonadFree GA.GitF m) => Text -> m ()
 cmd repo = do
     GA.cloneRepository repo
 
-    GA.prompt "Your username"       >>= GA.updateConfig "user.name"
-    GA.prompt "Your email"          >>= GA.updateConfig "user.email"
-    GA.prompt "Default code editor" >>= GA.updateConfig "core.editor"
+    GA.defaultUsername
+        >>= GA.promptDefault "Your username"
+        >>= GA.updateConfig "user.name"
+    GA.defaultEmail
+        >>= GA.promptDefault "Your email"
+        >>= GA.updateConfig "user.email"
+    GA.defaultEditor
+        >>= GA.promptDefault "Default code editor"
+        >>= GA.updateConfig "core.editor"
 
     GA.updateConfig "core.commentChar" "|"
     GA.updateConfig "apply.whitespace" "fix"

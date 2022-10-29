@@ -14,11 +14,23 @@ executeGit = foldF executeGitF
 --
 executeGitF :: GA.GitF a -> IO a
 executeGitF arg = case arg of
+    GA.DefaultUsername next ->
+        return $ next "My Name"
+    GA.DefaultEmail next ->
+        return $ next "example@gmail.com"
+    GA.DefaultEditor next ->
+        return $ next "vim"
     GA.CurrentBranch next -> do
         return $ next "current"
-    GA.Prompt name next -> do
-        putText (name <> ": ")
-        next <$> getLine
+
+    GA.Prompt name defM next -> do
+        let prompt = case defM of
+                        Just def -> name <> " {" <> def <> "}"
+                        Nothing  -> name
+        putText (prompt <> ": ")
+        input <- getLine
+        let value = if null input then fromMaybe "" defM else input
+        return $ next value
     GA.UpdateConfig name value next -> do
         putTextLn $ "git config " <> name <> " " <> value
         return next

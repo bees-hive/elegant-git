@@ -1,7 +1,7 @@
 module Elegit.Cli.Action.AquireRepositorySpec where
 
 import           Elegit.Cli.Action.AquireRepository
-import           Elegit.Git.Runner.ExecutionSummary
+import           Elegit.Git.Runner.Simulated
 import           Test.Hspec
 import           Universum
 
@@ -14,9 +14,9 @@ spec = do
 
       collectImpureCommands (cmd repoName) `shouldBe`
         [ CloneRepositoryCommand repoName
-        , UpdateConfigCommand "user.name" "asdasd"
-        , UpdateConfigCommand "user.email" "asdasd"
-        , UpdateConfigCommand "core.editor" "asdasd"
+        , UpdateConfigCommand "user.name" "username"
+        , UpdateConfigCommand "user.email" "email"
+        , UpdateConfigCommand "core.editor" "editor"
         , UpdateConfigCommand "core.commentChar" "|"
         , UpdateConfigCommand "apply.whitespace" "fix"
         , UpdateConfigCommand "fetch.prune" "true"

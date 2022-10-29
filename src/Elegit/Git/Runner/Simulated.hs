@@ -1,6 +1,6 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts   #-}
-module Elegit.Git.Runner.ExecutionSummary
+module Elegit.Git.Runner.Simulated
     ( collectImpureCommands
     , GitCommand(..)
     ) where
@@ -30,14 +30,21 @@ collectImpureCommands action =
 -- We use `tell` function to store the command in `DList GitCommand`. `DList` can be treated
 -- as just plain list (`[]`) but that has O(1) `append` operation instead of the O(n) of the `[]`.
 --
--- Note that we are in the context of the `Writer` monad and we need to wrap the value `a` in 
+-- Note that we are in the context of the `Writer` monad and we need to wrap the value `a` in
 -- `Writer`. To lift any value into a monad you should use `return`.
 collectImpureCommandsF :: GA.GitF a -> Writer (DList GitCommand) a
 collectImpureCommandsF cmd = case cmd of
+    GA.DefaultUsername next ->
+        return $ next "username"
+    GA.DefaultEmail next ->
+        return $ next "email"
+    GA.DefaultEditor next ->
+        return $ next "editor"
     GA.CurrentBranch next ->
         return $ next "current"
-    GA.Prompt _ next -> do
-        return $ next "asdasd"
+
+    GA.Prompt _ defM next -> do
+        return $ next (fromMaybe "asdasd" defM)
     GA.UpdateConfig name value next -> do
         tell $ singleton $ UpdateConfigCommand name value
         return next

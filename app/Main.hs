@@ -1,7 +1,7 @@
 module Main (main) where
 
-import Universum
-import Lib
+import           Lib
+import           Universum
 
 main :: IO ()
 main = someFunc

@@ -28,8 +28,8 @@ library
       Elegit.Cli.Action.AquireRepository
       Elegit.Cli.Parser
       Elegit.Git.Action
-      Elegit.Git.Runner.ExecutionSummary
       Elegit.Git.Runner.Real
+      Elegit.Git.Runner.Simulated
       Lib
   other-modules:
       Paths_elegant_git
