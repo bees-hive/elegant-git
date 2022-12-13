@@ -15,9 +15,13 @@ import           Universum
 data GitCommand
     = UpdateConfigCommand Text Text
     | CloneRepositoryCommand Text
+    | ReportInfo Text
+    | PrintText Text
     deriving stock (Show, Eq)
 
 -- | Collects a summary of execution as a list of `GitCommand`s.
+--
+-- TODO: Create a parametrized state to mimic a in-memory git repository.
 collectImpureCommands :: GA.FreeGit () -> [GitCommand]
 collectImpureCommands action =
     DList.toList $ runIdentity $ execWriterT $ foldF collectImpureCommandsF action
@@ -42,6 +46,22 @@ collectImpureCommandsF cmd = case cmd of
         return $ next "editor"
     GA.CurrentBranch next ->
         return $ next "current"
+    GA.BranchUpstream _branch next ->
+        return $ next (Just "origin")
+
+    GA.Log _lType _target next ->
+        return $ next ["commit 1"]
+    GA.Status _sType next ->
+        return $ next ["M t.txt"]
+    GA.StashList next ->
+        return $ next ["stash@{0}: WIP on current: fc84d95"]
+
+    GA.ReportInfo content next -> do
+        tell $ singleton $ ReportInfo content
+        return next
+    GA.PrintText content next -> do
+        tell $ singleton $ PrintText content
+        return next
 
     GA.Prompt _ defM next -> do
         return $ next (fromMaybe "asdasd" defM)

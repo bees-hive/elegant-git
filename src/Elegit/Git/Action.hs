@@ -61,15 +61,38 @@ import           Universum
 --
 data GitF a
     = CurrentBranch (Text -> a)
+    | BranchUpstream Text (Maybe Text -> a)
     | DefaultUsername (Text -> a)
     | DefaultEmail (Text -> a)
     | DefaultEditor (Text -> a)
 
     | Prompt Text (Maybe Text) (Text -> a)
 
+    | Log LogType Text ([Text] -> a)
+    | Status StatusType ([Text] -> a)
+    | StashList ([Text] -> a)
+
+    | ReportInfo Text a
+    | PrintText Text a
+
     | UpdateConfig Text Text a
     | CloneRepository Text a
     deriving stock (Functor)
+
+
+-- | Represents types of git status output
+--
+-- `StatusShort` is the same as "--short" option.
+data StatusType
+    = StatusShort
+
+
+-- | Represents types of git log output
+--
+-- `LogOneLine` is the same as "--oneline" option.
+data LogType
+    = LogOneLine
+
 
 -- | Type alias to the `Free` `GitF` monad.
 type FreeGit t = F GitF t
@@ -96,6 +119,14 @@ updateConfig name value = liftF $ UpdateConfig name value ()
 cloneRepository :: (MonadFree GitF m) => Text -> m ()
 cloneRepository repo = liftF $ CloneRepository repo ()
 
+status :: (MonadFree GitF m) => StatusType -> m [Text]
+status sType = liftF $ Status sType id
+
+log :: (MonadFree GitF m) => LogType -> Text -> m [Text]
+log lType lTarget = liftF $ Log lType lTarget id
+
+stashList :: (MonadFree GitF m) => m [Text]
+stashList = liftF $ StashList id
 
 prompt :: (MonadFree GitF m) => Text -> m Text
 prompt name = liftF $ Prompt name Nothing id
@@ -106,6 +137,9 @@ promptDefault name def = liftF $ Prompt name (Just def) id
 currentBranch :: (MonadFree GitF m) => m Text
 currentBranch = liftF $ CurrentBranch id
 
+branchUpstream :: (MonadFree GitF m) => Text -> m (Maybe Text)
+branchUpstream bName = liftF $ BranchUpstream bName id
+
 defaultUsername :: (MonadFree GitF m) => m Text
 defaultUsername = liftF $ DefaultUsername id
 
@@ -114,3 +148,21 @@ defaultEmail = liftF $ DefaultEmail id
 
 defaultEditor :: (MonadFree GitF m) => m Text
 defaultEditor = liftF $ DefaultEditor id
+
+-- |
+--
+-- Maybe we should not report content, but rather format it as info.
+reportInfo :: (MonadFree GitF m) => Text -> m ()
+reportInfo content = liftF $ ReportInfo content ()
+
+print :: (MonadFree GitF m) => Text -> m ()
+print content = liftF $ PrintText content ()
+
+
+-- Derived actions
+
+
+freshestDefaultBranch :: (MonadFree GitF m) => m Text
+freshestDefaultBranch = do
+    -- TODO: Port elegant git logic
+    return "origin/main"

@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.35.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Elegit.Cli.Action.AquireRepository
+      Elegit.Cli.Action.ShowWork
       Elegit.Cli.Parser
       Elegit.Git.Action
       Elegit.Git.Runner.Real
@@ -43,13 +44,18 @@ library
   build-depends:
       base >=4.7 && <5
     , dlist
+    , fmt
     , free
     , mtl
+    , optparse-applicative
+    , safe-exceptions
+    , text
     , transformers
+    , typed-process
     , universum
   default-language: Haskell2010
 
-executable elegant-git-exe
+executable git-elegant
   main-is: Main.hs
   other-modules:
       Paths_elegant_git
@@ -64,9 +70,14 @@ executable elegant-git-exe
       base >=4.7 && <5
     , dlist
     , elegant-git
+    , fmt
     , free
     , mtl
+    , optparse-applicative
+    , safe-exceptions
+    , text
     , transformers
+    , typed-process
     , universum
   default-language: Haskell2010
 
@@ -75,6 +86,7 @@ test-suite elegant-git-test
   main-is: Spec.hs
   other-modules:
       Elegit.Cli.Action.AquireRepositorySpec
+      Elegit.Cli.Action.ShowWorkSpec
       Paths_elegant_git
   hs-source-dirs:
       test
@@ -87,9 +99,14 @@ test-suite elegant-git-test
       base >=4.7 && <5
     , dlist
     , elegant-git
+    , fmt
     , free
     , hspec
     , mtl
+    , optparse-applicative
+    , safe-exceptions
+    , text
     , transformers
+    , typed-process
     , universum
   default-language: Haskell2010

@@ -21,11 +21,18 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+
 - universum
+- text
+- safe-exceptions
+- fmt
 - transformers
 - mtl
 - free
 - dlist
+
+- optparse-applicative
+- typed-process
 
 default-extensions:
 - FlexibleContexts
@@ -46,7 +53,7 @@ library:
   source-dirs: src
 
 executables:
-  elegant-git-exe:
+  git-elegant:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
