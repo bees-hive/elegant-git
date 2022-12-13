@@ -38,12 +38,6 @@ collectImpureCommands action =
 -- `Writer`. To lift any value into a monad you should use `return`.
 collectImpureCommandsF :: GA.GitF a -> Writer (DList GitCommand) a
 collectImpureCommandsF cmd = case cmd of
-    GA.DefaultUsername next ->
-        return $ next "username"
-    GA.DefaultEmail next ->
-        return $ next "email"
-    GA.DefaultEditor next ->
-        return $ next "editor"
     GA.CurrentBranch next ->
         return $ next "current"
     GA.BranchUpstream _branch next ->
@@ -61,13 +55,4 @@ collectImpureCommandsF cmd = case cmd of
         return next
     GA.PrintText content next -> do
         tell $ singleton $ PrintText content
-        return next
-
-    GA.Prompt _ defM next -> do
-        return $ next (fromMaybe "asdasd" defM)
-    GA.UpdateConfig name value next -> do
-        tell $ singleton $ UpdateConfigCommand name value
-        return next
-    GA.CloneRepository repo next -> do
-        tell $ singleton $ CloneRepositoryCommand repo
         return next

@@ -28,13 +28,6 @@ executeGit = foldF executeGitF
 --
 executeGitF :: (MonadCatch m, MonadIO m) => GA.GitF a -> m a
 executeGitF arg = case arg of
-    GA.DefaultUsername next ->
-        return $ next "My Name"
-    GA.DefaultEmail next ->
-        return $ next "example@gmail.com"
-    GA.DefaultEditor next ->
-        return $ next "nvim"
-
     GA.CurrentBranch next -> do
         mCurrentBranch <- runGit "rev-parse --abbrev-ref @"
         case mCurrentBranch of
@@ -71,19 +64,4 @@ executeGitF arg = case arg of
         return next
     GA.PrintText content next -> do
         putTextLn content
-        return next
-
-    GA.Prompt name defM next -> do
-        let prompt = case defM of
-                        Just def -> name <> " {" <> def <> "}"
-                        Nothing  -> name
-        putText (prompt <> ": ")
-        input <- getLine
-        let value = if null input then fromMaybe "" defM else input
-        return $ next value
-    GA.UpdateConfig name value next -> do
-        putTextLn $ "git config " <> name <> " " <> value
-        return next
-    GA.CloneRepository repo next -> do
-        putTextLn $ "git clone " <> repo
         return next

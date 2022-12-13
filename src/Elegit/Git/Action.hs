@@ -62,21 +62,12 @@ import           Universum
 data GitF a
     = CurrentBranch (Text -> a)
     | BranchUpstream Text (Maybe Text -> a)
-    | DefaultUsername (Text -> a)
-    | DefaultEmail (Text -> a)
-    | DefaultEditor (Text -> a)
-
-    | Prompt Text (Maybe Text) (Text -> a)
-
     | Log LogType Text ([Text] -> a)
     | Status StatusType ([Text] -> a)
     | StashList ([Text] -> a)
 
     | ReportInfo Text a
     | PrintText Text a
-
-    | UpdateConfig Text Text a
-    | CloneRepository Text a
     deriving stock (Functor)
 
 
@@ -113,12 +104,6 @@ type FreeGit t = F GitF t
 --   value.
 -- * Otherwise just use `id` function.
 
-updateConfig :: (MonadFree GitF m) => Text -> Text -> m ()
-updateConfig name value = liftF $ UpdateConfig name value ()
-
-cloneRepository :: (MonadFree GitF m) => Text -> m ()
-cloneRepository repo = liftF $ CloneRepository repo ()
-
 status :: (MonadFree GitF m) => StatusType -> m [Text]
 status sType = liftF $ Status sType id
 
@@ -128,26 +113,11 @@ log lType lTarget = liftF $ Log lType lTarget id
 stashList :: (MonadFree GitF m) => m [Text]
 stashList = liftF $ StashList id
 
-prompt :: (MonadFree GitF m) => Text -> m Text
-prompt name = liftF $ Prompt name Nothing id
-
-promptDefault :: (MonadFree GitF m) => Text -> Text -> m Text
-promptDefault name def = liftF $ Prompt name (Just def) id
-
 currentBranch :: (MonadFree GitF m) => m Text
 currentBranch = liftF $ CurrentBranch id
 
 branchUpstream :: (MonadFree GitF m) => Text -> m (Maybe Text)
 branchUpstream bName = liftF $ BranchUpstream bName id
-
-defaultUsername :: (MonadFree GitF m) => m Text
-defaultUsername = liftF $ DefaultUsername id
-
-defaultEmail :: (MonadFree GitF m) => m Text
-defaultEmail = liftF $ DefaultEmail id
-
-defaultEditor :: (MonadFree GitF m) => m Text
-defaultEditor = liftF $ DefaultEditor id
 
 -- |
 --
