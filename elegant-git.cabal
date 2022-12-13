@@ -27,6 +27,7 @@ library
   exposed-modules:
       Elegit.Cli.Action.AquireRepository
       Elegit.Cli.Action.ShowWork
+      Elegit.Cli.Command
       Elegit.Cli.Parser
       Elegit.Git.Action
       Elegit.Git.Runner.Real

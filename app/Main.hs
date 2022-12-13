@@ -4,4 +4,4 @@ import           Lib
 import           Universum
 
 main :: IO ()
-main = someFunc
+main = runCli
