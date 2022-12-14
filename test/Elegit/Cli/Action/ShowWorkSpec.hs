@@ -7,6 +7,7 @@ import           Test.Hspec
 import           Universum
 
 
+defaultRepository :: GRepository
 defaultRepository =
   let branch = GBranch
                { _gbName = "haskell"
@@ -60,10 +61,11 @@ spec = do
         )
     it "prints stash" $ do
       let
-        repo = defaultRepository & grStashes .~ [ GStash { _gsName = "WIP"
-                                                         , _gsBranchName = "haskell"
-                                                         }
-                                                ]
+        stash = GStash
+          { _gsName = "WIP"
+          , _gsBranchName = "haskell"
+          }
+        repo = defaultRepository & grStashes .~ [stash]
 
       runGitActionPure repo ShowWork.cmd `shouldBe`
         ( repo

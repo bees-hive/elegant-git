@@ -1,7 +1,6 @@
 module Elegit.Cli.Parser where
 
 import           Elegit.Cli.Command  (ElegitCommand (ShowWorkCommand))
-import           Elegit.Git.Action
 import           Options.Applicative
 import           Universum
 
