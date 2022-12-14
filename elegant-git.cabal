@@ -46,6 +46,9 @@ library
     , dlist
     , fmt
     , free
+    , microlens
+    , microlens-mtl
+    , microlens-th
     , mtl
     , optparse-applicative
     , safe-exceptions
@@ -72,6 +75,9 @@ executable git-elegant
     , elegant-git
     , fmt
     , free
+    , microlens
+    , microlens-mtl
+    , microlens-th
     , mtl
     , optparse-applicative
     , safe-exceptions
@@ -101,6 +107,9 @@ test-suite elegant-git-test
     , fmt
     , free
     , hspec
+    , microlens
+    , microlens-mtl
+    , microlens-th
     , mtl
     , optparse-applicative
     , safe-exceptions

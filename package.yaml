@@ -30,6 +30,9 @@ dependencies:
 - mtl
 - free
 - dlist
+- microlens
+- microlens-mtl
+- microlens-th
 
 - optparse-applicative
 - typed-process

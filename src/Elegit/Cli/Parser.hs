@@ -23,7 +23,5 @@ dayToDayContributionsCommand =
 
 cli :: ParserInfo ElegitCommand
 cli = flip info mempty $
-    (hsubparser $
-        dayToDayContributionsCommand
-    ) <**> helper
+    hsubparser dayToDayContributionsCommand <**> helper
 
