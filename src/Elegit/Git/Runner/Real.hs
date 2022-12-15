@@ -11,9 +11,11 @@ import           Universum
 
 runGit :: (MonadCatch m, MonadIO m) => Text -> m (Maybe Text)
 runGit cmd = do
-    (eCode, outputBS, errBS) <- readProcess $ proc "git" (toString <$> words cmd)
+    (eCode, outputBS, _errBS) <- readProcess $ proc "git" (toString <$> words cmd)
     case eCode of
-      ExitFailure _ -> throwString $ decodeUtf8 errBS
+      ExitFailure _ -> do
+          -- TODO: Know what error is expected and log unexpected ones.
+          return Nothing
       ExitSuccess -> do
           let output = stripEnd $ decodeUtf8 outputBS
           return $ if null output then Nothing else Just output
