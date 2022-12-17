@@ -59,10 +59,11 @@ import           Universum
 --     no return value.
 --     Note as Haskell is lazy, you can simplify any function of type @() -> a@ to just @a@.
 --
+-- TODO: Use records
 data GitF a
     = CurrentBranch (Text -> a)
     | BranchUpstream Text (Maybe Text -> a)
-    | Log LogType Text ([Text] -> a)
+    | Log LogType Text Text ([Text] -> a)
     | Status StatusType ([Text] -> a)
     | StashList ([Text] -> a)
 
@@ -107,8 +108,8 @@ type FreeGit t = F GitF t
 status :: (MonadFree GitF m) => StatusType -> m [Text]
 status sType = liftF $ Status sType id
 
-log :: (MonadFree GitF m) => LogType -> Text -> m [Text]
-log lType lTarget = liftF $ Log lType lTarget id
+log :: (MonadFree GitF m) => LogType -> Text -> Text -> m [Text]
+log lType lBase lTarget = liftF $ Log lType lBase lTarget id
 
 stashList :: (MonadFree GitF m) => m [Text]
 stashList = liftF $ StashList id
@@ -135,4 +136,4 @@ print content = liftF $ PrintText content ()
 freshestDefaultBranch :: (MonadFree GitF m) => m Text
 freshestDefaultBranch = do
     -- TODO: Port elegant git logic
-    return "origin/main"
+    return "main"

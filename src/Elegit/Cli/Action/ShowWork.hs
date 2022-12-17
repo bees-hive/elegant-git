@@ -12,7 +12,7 @@ cmd = do
     currentBranch <- GA.currentBranch
     mCurrentUpstream <- GA.branchUpstream currentBranch
     branchWithLatestChanges <- GA.freshestDefaultBranch
-    logs <- GA.log GA.LogOneLine (fmt $ ""+|branchWithLatestChanges|+".."+|currentBranch|+"")
+    logs <- GA.log GA.LogOneLine branchWithLatestChanges currentBranch
     changes <- GA.status GA.StatusShort
     stashes <- GA.stashList
 

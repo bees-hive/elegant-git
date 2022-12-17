@@ -1,5 +1,6 @@
 module Elegit.Cli.Action.ShowWorkSpec where
 
+import qualified Data.List.NonEmpty          as NE
 import qualified Elegit.Cli.Action.ShowWork  as ShowWork
 import           Elegit.Git.Runner.Simulated
 import           Lens.Micro
@@ -9,14 +10,24 @@ import           Universum
 
 defaultRepository :: GRepository
 defaultRepository =
-  let branch = GBranch
-               { _gbName = "haskell"
-               , _gbUpstream = Nothing
-               }
+  let
+    commit = GCommit
+      { _gcName = "Init commit"
+      }
+    mainBranch = GBranch
+      { _gbName = "main"
+      , _gbUpstream = Nothing
+      , _gbCommit = pure commit
+      }
+    currentBranch = GBranch
+      { _gbName = "haskell"
+      , _gbUpstream = Nothing
+      , _gbCommit = pure commit
+      }
   in GRepository
      { _grRemotes = []
-     , _grBranches = [branch]
-     , _grCurrentBranch = branch^.gbName
+     , _grBranches = [mainBranch, currentBranch]
+     , _grCurrentBranch = currentBranch^.gbName
      , _grModifiedFiles = []
      , _grUnstagedFiles = []
      , _grStashes = [ ]
@@ -74,5 +85,21 @@ spec = do
           , ReportInfo ""
           , ReportInfo ">>> Available stashes:"
           , PrintText "stash@{0}: WIP on haskell"
+          ]
+        )
+    it "prints log" $ do
+      let
+        newCommit = GCommit {_gcName = "Updates"}
+
+        repo = defaultRepository & grBranches . each . filtered ((== "haskell") . view gbName) . gbCommit %~ NE.cons newCommit
+
+      runGitActionPure repo ShowWork.cmd `shouldBe`
+        ( repo
+        , [ ReportInfo ">>> Branch refs:"
+          , ReportInfo "local: haskell"
+          , ReportInfo ""
+          , ReportInfo ">>> New commits (comparing to main branch):"
+          , PrintText "Updates"
+          , ReportInfo ""
           ]
         )

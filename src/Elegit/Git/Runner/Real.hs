@@ -41,13 +41,13 @@ executeGitF arg = case arg of
         mUpstreamBranch <- runGit (fmt "rev-parse --abbrev-ref "+|branch|+"@{upstream}")
         return $ next mUpstreamBranch
 
-    GA.Log lType target next -> do
+    GA.Log lType base target next -> do
         let
             logArg :: Text
             logArg = case lType of
                        GA.LogOneLine -> "--oneline"
 
-        logs <- lines . fromMaybe "" <$> runGit (fmt "-c color.ui=always log "+|logArg|+" "+|target|+"")
+        logs <- lines . fromMaybe "" <$> runGit (fmt "-c color.ui=always log "+|logArg|+" "+|base|+".."+|target|+"")
         return $ next logs
     GA.Status sType next -> do
         let
