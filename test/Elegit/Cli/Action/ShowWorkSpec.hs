@@ -4,14 +4,21 @@ import qualified Data.List.NonEmpty          as NE
 import qualified Elegit.Cli.Action.ShowWork  as ShowWork
 import           Elegit.Git.Runner.Simulated
 import           Lens.Micro
-import           Lens.Micro.Mtl
 import           Test.Hspec
 import           Universum                   hiding (view, (%~), (.~), (^.))
 
 
 defaultRepository :: GRepository
 defaultRepository =
-  let
+  GRepository
+     { _grRemotes = []
+     , _grBranches = [mainBranch, currentBranch]
+     , _grCurrentBranch = currentBranch^.gbName
+     , _grModifiedFiles = []
+     , _grUnstagedFiles = []
+     , _grStashes = [ ]
+     }
+  where
     commit = GCommit
       { _gcName = "Init commit"
       }
@@ -25,14 +32,6 @@ defaultRepository =
       , _gbUpstream = Nothing
       , _gbCommit = pure commit
       }
-  in GRepository
-     { _grRemotes = []
-     , _grBranches = [mainBranch, currentBranch]
-     , _grCurrentBranch = currentBranch^.gbName
-     , _grModifiedFiles = []
-     , _grUnstagedFiles = []
-     , _grStashes = [ ]
-     }
 
 spec :: Spec
 spec = do
@@ -62,7 +61,7 @@ spec = do
         )
     it "prints remote" $ do
       let
-        repo = defaultRepository & grBranches.mapped.gbUpstream ?~ "origin/haskell"
+        repo = defaultRepository & grBranches.each.filtered (\b -> b^.gbName == "haskell").gbUpstream ?~ "origin/haskell"
       runGitActionPure repo ShowWork.cmd `shouldBe`
         ( repo
         , [ ReportInfo ">>> Branch refs:"
@@ -92,7 +91,7 @@ spec = do
       let
         newCommit = GCommit {_gcName = "Updates"}
 
-        repo = defaultRepository & grBranches . each . filtered ((== "haskell") . view gbName) . gbCommit %~ NE.cons newCommit
+        repo = defaultRepository & grBranches.each.filtered (\b -> b^.gbName == "haskell").gbCommit %~ NE.cons newCommit
 
       runGitActionPure repo ShowWork.cmd `shouldBe`
         ( repo

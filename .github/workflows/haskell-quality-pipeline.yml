@@ -4,7 +4,6 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -13,6 +12,7 @@ env:
   GHC_VERSION: 9.2.4
   STACK_VERSION: 2.7.3
   HLINT_VERSION: 3.3.6
+  STYLISH_HASKELL_VERSION: v0.14.3.0
 
 jobs:
   tests:
@@ -37,12 +37,23 @@ jobs:
         ghc-version: '${{ env.GHC_VERSION }}'
         enable-stack: true
         stack-version: '${{ env.STACK_VERSION }}'
+    - name: Install stylish-haskell
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        echo "Installing stylish-haskell v${{ env.STYLISH_HASKELL_VERSION }}"
+        wget -O /tmp/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}.tar.gz https://github.com/haskell/stylish-haskell/releases/download/${{ env.STYLISH_HASKELL_VERSION }}/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}-linux-x86_64.tar.gz
+        tar -xf /tmp/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}.tar.gz -C /tmp
+        cp /tmp/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}-linux-x86_64/stylish-haskell ~/.ghcup/bin/stylish-haskell
     - name: Install hlint
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
+        echo "Installing hlint v${{ env.HLINT_VERSION }}"
         wget -O /tmp/hlint-${{ env.HLINT_VERSION }}.tar.gz https://github.com/ndmitchell/hlint/releases/download/v${{ env.HLINT_VERSION }}/hlint-${{ env.HLINT_VERSION }}-x86_64-linux.tar.gz
         tar -xf /tmp/hlint-${{ env.HLINT_VERSION }}.tar.gz -C /tmp
         cp /tmp/hlint-${{ env.HLINT_VERSION }}/hlint ~/.ghcup/bin/hlint
+    - name: Run stylish-haskell
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: stylish-haskell src app test/Elegit/* -r > /dev/null
     - name: Run hlint
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: hlint .

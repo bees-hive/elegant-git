@@ -5,8 +5,7 @@ import           Control.Monad.Free.Church
 import           Data.Text                 (stripEnd)
 import qualified Elegit.Git.Action         as GA
 import           Fmt
-import           System.Process.Typed      (ExitCode (ExitFailure, ExitSuccess),
-                                            proc, readProcess)
+import           System.Process.Typed      (ExitCode (ExitFailure, ExitSuccess), proc, readProcess)
 import           Universum
 
 runGit :: (MonadIO m) => Text -> m (Maybe Text)

@@ -12,68 +12,62 @@ import           Fmt
 import           Lens.Micro
 import           Lens.Micro.Mtl
 import           Lens.Micro.TH
-import           Universum                   as U hiding (preuse, use, view,
-                                                   (%~), (^.))
+import           Universum                   as U hiding (preuse, use, view, (%~), (^.))
 
 -- | Describes all the metrics we collect from the git action execution
 data GitCommand
-    = UpdateConfigCommand Text Text
-    | CloneRepositoryCommand Text
-    | ReportInfo Text
-    | PrintText Text
-    deriving stock (Show, Eq)
+  = UpdateConfigCommand Text Text
+  | CloneRepositoryCommand Text
+  | ReportInfo Text
+  | PrintText Text
+  deriving stock (Eq, Show)
 
 -- TODO: Add commit hash.
 newtype GCommit
-    = GCommit
-        { _gcName :: Text
-        }
-    deriving (Show, Eq)
+  = GCommit { _gcName :: Text }
+  deriving (Eq, Show)
 
 makeLenses ''GCommit
 
 
 data GBranch
-    = GBranch
-        { _gbName     :: Text
-        , _gbUpstream :: Maybe Text
-        , _gbCommit   :: NonEmpty GCommit
-        }
-    deriving (Show, Eq)
+  = GBranch
+      { _gbName     :: Text
+      , _gbUpstream :: Maybe Text
+      , _gbCommit   :: NonEmpty GCommit
+      }
+  deriving (Eq, Show)
 
 makeLenses ''GBranch
 
 
 data GStash
-    = GStash
-        { _gsName       :: Text
-        , _gsBranchName :: Text
-        }
-    deriving (Show, Eq)
+  = GStash
+      { _gsName       :: Text
+      , _gsBranchName :: Text
+      }
+  deriving (Eq, Show)
 
 makeLenses ''GStash
 
 
 newtype GRemote
-    = GRemote
-        { _grmName :: Text
-        -- , _grmUrl :: Text
-        }
-    deriving (Show, Eq)
+  = GRemote { _grmName :: Text }
+  deriving (Eq, Show)
 
 makeLenses ''GRemote
 
 
 data GRepository
-    = GRepository
-        { _grRemotes       :: [GRemote]
-        , _grBranches      :: [GBranch]
-        , _grCurrentBranch :: Text
-        , _grStashes       :: [GStash]
-        , _grModifiedFiles :: [Text]
-        , _grUnstagedFiles :: [Text]
-        }
-    deriving (Show, Eq)
+  = GRepository
+      { _grRemotes       :: [GRemote]
+      , _grBranches      :: [GBranch]
+      , _grCurrentBranch :: Text
+      , _grStashes       :: [GStash]
+      , _grModifiedFiles :: [Text]
+      , _grUnstagedFiles :: [Text]
+      }
+  deriving (Eq, Show)
 
 
 -- greatestCommonAncestor :: [GCommit] -> [GCommit] -> Maybe GCommit

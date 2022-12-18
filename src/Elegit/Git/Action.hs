@@ -61,29 +61,28 @@ import           Universum
 --
 -- TODO: Use records
 data GitF a
-    = CurrentBranch (Text -> a)
-    | BranchUpstream Text (Maybe Text -> a)
-    | Log LogType Text Text ([Text] -> a)
-    | Status StatusType ([Text] -> a)
-    | StashList ([Text] -> a)
-
-    | ReportInfo Text a
-    | PrintText Text a
-    deriving stock (Functor)
+  = CurrentBranch (Text -> a)
+  | BranchUpstream Text (Maybe Text -> a)
+  | Log LogType Text Text ([Text] -> a)
+  | Status StatusType ([Text] -> a)
+  | StashList ([Text] -> a)
+  | ReportInfo Text a
+  | PrintText Text a
+  deriving stock (Functor)
 
 
 -- | Represents types of git status output
 --
 -- `StatusShort` is the same as "--short" option.
 data StatusType
-    = StatusShort
+  = StatusShort
 
 
 -- | Represents types of git log output
 --
 -- `LogOneLine` is the same as "--oneline" option.
 data LogType
-    = LogOneLine
+  = LogOneLine
 
 
 -- | Type alias to the `Free` `GitF` monad.

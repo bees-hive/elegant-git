@@ -1,7 +1,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 module Elegit.Cli.Action.ShowWork
-    ( cmd
-    , cli
+    ( cli
+    , cmd
     ) where
 
 import           Control.Monad.Free.Class
@@ -54,7 +54,7 @@ cmd = do
     GA.reportInfo (fmt "local: "+|currentBranch|+"")
     case mCurrentUpstream of
       Just currentUpstream -> GA.reportInfo (fmt "remote: "+|currentUpstream|+"")
-      Nothing -> pass
+      Nothing              -> pass
 
     GA.reportInfo ""
 
