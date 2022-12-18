@@ -9,7 +9,7 @@ import           System.Process.Typed      (ExitCode (ExitFailure, ExitSuccess),
                                             proc, readProcess)
 import           Universum
 
-runGit :: (MonadCatch m, MonadIO m) => Text -> m (Maybe Text)
+runGit :: (MonadIO m) => Text -> m (Maybe Text)
 runGit cmd = do
     (eCode, outputBS, _errBS) <- readProcess $ proc "git" (toString <$> words cmd)
     case eCode of

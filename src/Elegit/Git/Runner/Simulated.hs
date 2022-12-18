@@ -10,8 +10,9 @@ import qualified Data.List.NonEmpty          as NE
 import qualified Elegit.Git.Action           as GA
 import           Fmt
 import           Lens.Micro
+import           Lens.Micro.Mtl
 import           Lens.Micro.TH
-import           Universum                   as U
+import           Universum  as U hiding ((^.), (%~), use, preuse, view)
 
 -- | Describes all the metrics we collect from the git action execution
 data GitCommand

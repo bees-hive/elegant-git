@@ -4,8 +4,9 @@ import qualified Data.List.NonEmpty          as NE
 import qualified Elegit.Cli.Action.ShowWork  as ShowWork
 import           Elegit.Git.Runner.Simulated
 import           Lens.Micro
+import           Lens.Micro.Mtl
 import           Test.Hspec
-import           Universum
+import           Universum hiding ((^.), (.~), (%~), view)
 
 
 defaultRepository :: GRepository
