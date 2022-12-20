@@ -6,7 +6,7 @@ import           Elegit.Git.Runner.Simulated
 import           Lens.Micro
 import           Lens.Micro.Mtl
 import           Test.Hspec
-import           Universum hiding ((^.), (.~), (%~), view)
+import           Universum                   hiding (view, (%~), (.~), (^.))
 
 
 defaultRepository :: GRepository

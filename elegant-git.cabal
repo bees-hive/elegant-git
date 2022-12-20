@@ -94,6 +94,8 @@ test-suite elegant-git-test
   main-is: Spec.hs
   other-modules:
       Elegit.Cli.Action.ShowWorkSpec
+      Elegit.Cli.Parser.ShowWorkSpec
+      Elegit.Cli.Parser.Util
       Elegit.Git.Runner.SimulatedSpec
       Paths_elegant_git
   hs-source-dirs:

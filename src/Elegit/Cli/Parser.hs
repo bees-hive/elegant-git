@@ -19,3 +19,11 @@ cli :: ParserInfo ElegitCommand
 cli = flip info mempty $
     hsubparser dayToDayContributionsCommand <**> helper
 
+
+cliPrefs :: ParserPrefs
+cliPrefs = prefs $
+  mconcat [ showHelpOnError
+          , showHelpOnEmpty
+          , noBacktrack
+          ]
+

@@ -12,7 +12,8 @@ import           Fmt
 import           Lens.Micro
 import           Lens.Micro.Mtl
 import           Lens.Micro.TH
-import           Universum  as U hiding ((^.), (%~), use, preuse, view)
+import           Universum                   as U hiding (preuse, use, view,
+                                                   (%~), (^.))
 
 -- | Describes all the metrics we collect from the git action execution
 data GitCommand
