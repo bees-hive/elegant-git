@@ -1,6 +1,7 @@
 module Elegit.Cli.Parser where
 
-import qualified Elegit.Cli.Action.ShowWork as ShowWork
+import qualified Elegit.Cli.Action.AcquireRepository as AcquireRepository
+import qualified Elegit.Cli.Action.ShowWork          as ShowWork
 import           Elegit.Cli.Command
 import           Options.Applicative
 import           Universum
@@ -13,6 +14,7 @@ dayToDayContributionsCommand :: Command ElegitCommand
 dayToDayContributionsCommand =
     commandGroup "make day-to-day contributions"
     <> ShowWork.cli
+    <> AcquireRepository.cli
 
 
 cli :: ParserInfo ElegitCommand

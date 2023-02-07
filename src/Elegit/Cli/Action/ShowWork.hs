@@ -50,24 +50,25 @@ cmd = do
     changes <- GA.status GA.StatusShort
     stashes <- GA.stashList
 
-    GA.reportInfo ">>> Branch refs:"
-    GA.reportInfo (fmt "local: "+|currentBranch|+"")
+    GA.print =<< GA.formatInfo ">>> Branch refs:"
+    GA.print =<< GA.formatInfo (fmt "local: "+|currentBranch|+"")
     case mCurrentUpstream of
-      Just currentUpstream -> GA.reportInfo (fmt "remote: "+|currentUpstream|+"")
-      Nothing              -> pass
+      Nothing -> pass
+      Just currentUpstream ->
+          GA.print =<< GA.formatInfo (fmt "remote: "+|currentUpstream|+"")
 
-    GA.reportInfo ""
+    GA.print ""
 
     unless (null logs) $ do
-        GA.reportInfo (fmt ">>> New commits (comparing to "+|branchWithLatestChanges|+" branch):")
+        GA.print =<< GA.formatInfo (fmt ">>> New commits (comparing to "+|branchWithLatestChanges|+" branch):")
         GA.print $ T.intercalate "\n" logs
-        GA.reportInfo ""
+        GA.print ""
 
     unless (null changes) $ do
-        GA.reportInfo ">>> Uncommitted modifications:"
+        GA.print =<< GA.formatInfo ">>> Uncommitted modifications:"
         GA.print $ T.intercalate "\n" changes
-        GA.reportInfo ""
+        GA.print ""
 
     unless (null stashes) $ do
-        GA.reportInfo ">>> Available stashes:"
+        GA.print =<< GA.formatInfo ">>> Available stashes:"
         GA.print $ T.intercalate "\n" stashes
