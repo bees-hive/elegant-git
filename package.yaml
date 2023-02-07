@@ -31,9 +31,12 @@ dependencies:
 - mtl
 - free
 - dlist
+- containers
+- unordered-containers
 - microlens
 - microlens-mtl
 - microlens-th
+- utility-ht
 
 - optparse-applicative
 - typed-process

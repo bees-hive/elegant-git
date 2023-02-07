@@ -31,7 +31,9 @@ module Elegit.Git.Action where
 
 import           Control.Monad.Free
 import           Control.Monad.Free.Church
-import           Universum
+import qualified Data.Text                 as T
+import           Fmt
+import           Universum                 hiding (print)
 
 -- | The declaration of all posible actions we can do in the git action.
 --
@@ -41,24 +43,6 @@ import           Universum
 -- We can use records later to better comunicate the purpose of each field by
 -- providing a name.
 --
--- === How to understand this structure:
---
--- Each case consists of the data and the return type
---
---   * @CurrentBranch (Text -> a)@:
---     The `CurrentBranch` has no data associated with it, because we have only 1 field
---     and the last field indicates the result type
---     In the @Text -> a@ we specify that we provide the value of type `Text` to the
---     next computation. TLDR: If you want to provide value of type @t@ from your command
---     directly - follow the @(t -> a)@ placeholder. If you don't provide any value, you
---     should use the @(() -> a)@ type.
---     In haskell @()@ represents the type `Unit` and has only one value @()@.
---
---   * @UpdateConfig Text Text (() -> a)@:
---     Here you can see that the action `UpdateConfig` has 2 fields of type `Text` and
---     no return value.
---     Note as Haskell is lazy, you can simplify any function of type @() -> a@ to just @a@.
---
 -- TODO: Use records
 data GitF a
   = CurrentBranch (Text -> a)
@@ -66,7 +50,13 @@ data GitF a
   | Log LogType Text Text ([Text] -> a)
   | Status StatusType ([Text] -> a)
   | StashList ([Text] -> a)
-  | ReportInfo Text a
+  | ReadConfig ConfigScope Text (Maybe Text -> a)
+  | AliasesToRemove ConfigScope (Maybe (NonEmpty Text) -> a)
+  | SetConfig ConfigScope Text Text a
+  | UnsetConfig ConfigScope Text a
+  | Prompt Text (Maybe Text) (Text -> a)
+  | FormatInfo Text (Text -> a)
+  | FormatCommand Text (Text -> a)
   | PrintText Text a
   deriving stock (Functor)
 
@@ -76,6 +66,12 @@ data GitF a
 -- `StatusShort` is the same as "--short" option.
 data StatusType
   = StatusShort
+
+
+data ConfigScope
+  = LocalConfig
+  | GlobalConfig
+  | AutoConfig
 
 
 -- | Represents types of git log output
@@ -104,35 +100,98 @@ type FreeGit t = F GitF t
 --   value.
 -- * Otherwise just use `id` function.
 
-status :: (MonadFree GitF m) => StatusType -> m [Text]
+status :: MonadFree GitF m => StatusType -> m [Text]
 status sType = liftF $ Status sType id
 
-log :: (MonadFree GitF m) => LogType -> Text -> Text -> m [Text]
+log :: MonadFree GitF m => LogType -> Text -> Text -> m [Text]
 log lType lBase lTarget = liftF $ Log lType lBase lTarget id
 
-stashList :: (MonadFree GitF m) => m [Text]
+stashList :: MonadFree GitF m => m [Text]
 stashList = liftF $ StashList id
 
-currentBranch :: (MonadFree GitF m) => m Text
+currentBranch :: MonadFree GitF m => m Text
 currentBranch = liftF $ CurrentBranch id
 
-branchUpstream :: (MonadFree GitF m) => Text -> m (Maybe Text)
+branchUpstream :: MonadFree GitF m => Text -> m (Maybe Text)
 branchUpstream bName = liftF $ BranchUpstream bName id
 
--- |
---
--- Maybe we should not report content, but rather format it as info.
-reportInfo :: (MonadFree GitF m) => Text -> m ()
-reportInfo content = liftF $ ReportInfo content ()
+readConfig :: MonadFree GitF m => ConfigScope -> Text -> m (Maybe Text)
+readConfig cScope cName = liftF $ ReadConfig cScope cName id
 
-print :: (MonadFree GitF m) => Text -> m ()
+-- TODO: Check if it's better or even possible to get all configurations and filter then ourself.
+-- This would improve testability of this, as now we rely on the fact that we make a correct cli call
+-- to find config with regex in the `Real.hs`.
+aliasesToRemove :: MonadFree GitF m => ConfigScope -> m (Maybe (NonEmpty Text))
+aliasesToRemove cScope = liftF $ AliasesToRemove cScope id
+
+setConfig :: MonadFree GitF m => ConfigScope -> Text -> Text -> m ()
+setConfig cScope cName cValue = liftF $ SetConfig cScope cName cValue ()
+
+unsetConfig :: MonadFree GitF m => ConfigScope -> Text -> m ()
+unsetConfig cScope cName = liftF $ UnsetConfig cScope cName ()
+
+promptDefault :: MonadFree GitF m => Text -> Maybe Text -> m Text
+promptDefault pText pDefault = liftF $ Prompt pText pDefault id
+
+formatInfo :: MonadFree GitF m => Text -> m Text
+formatInfo content = liftF $ FormatInfo content id
+
+formatCommand :: MonadFree GitF m => Text -> m Text
+formatCommand cmd = liftF $ FormatCommand cmd id
+
+print :: MonadFree GitF m => Text -> m ()
 print content = liftF $ PrintText content ()
-
 
 -- Derived actions
 
+configScopeText :: ConfigScope -> Text
+configScopeText LocalConfig  = "--local"
+configScopeText GlobalConfig = "--global"
+configScopeText AutoConfig   = ""
 
-freshestDefaultBranch :: (MonadFree GitF m) => m Text
+setConfigVerbose :: MonadFree GitF m => ConfigScope -> Text -> Text -> m ()
+setConfigVerbose cScope cName cValue = do
+  setConfig cScope cName cValue
+  -- TODO: Generate these messages only in a single place and reuse in `Real.hs`
+  print =<< formatCommand ("git config "+|configScopeText cScope|+" "+|cName|+" "+|cValue|+"")
+
+unsetConfigVerbose :: MonadFree GitF m => ConfigScope -> Text -> m ()
+unsetConfigVerbose cScope cName = do
+  unsetConfig cScope cName
+  -- TODO: Generate these messages only in a single place and reuse in `Real.hs`
+  print =<< formatCommand ("git config "+|configScopeText cScope|+" --unset "+|cName|+"")
+
+freshestDefaultBranch :: MonadFree GitF m => m Text
 freshestDefaultBranch = do
-    -- TODO: Port elegant git logic
+    -- TODO: Port bash logic
     return "main"
+
+isGitAcquired :: MonadFree GitF m => m Bool
+isGitAcquired = do
+    isJust <$> readConfig LocalConfig "elegant.acquired"
+
+formatInfoBox :: (MonadFree GitF m) => Text -> m Text
+formatInfoBox content =
+  formatInfo
+    (""+|box|+"\n== "+|content|+" ==\n"+|box|+"")
+    where
+      contentLength :: Int
+      contentLength = length content
+      box = T.replicate (3 + contentLength + 3) "="
+
+
+removeAliases :: MonadFree GitF m => ConfigScope -> m ()
+removeAliases cScope = do
+    whenJustM (aliasesToRemove cScope) $ \aliases -> do
+      print =<< formatInfo "Removing old Elegant Git aliases..."
+      mapM_ (unsetConfigVerbose cScope) aliases
+
+
+removeObsoleteConfiguration :: MonadFree GitF m => ConfigScope -> m ()
+removeObsoleteConfiguration cScope = do
+  print =<< formatInfoBox "Removing obsolete configurations..."
+  whenM isGitAcquired $ do
+    print =<< formatInfo "Removing old Elegnat Git configuration keys..."
+    unsetConfigVerbose cScope "elegant.acquired"
+
+  removeAliases cScope

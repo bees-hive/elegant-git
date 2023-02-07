@@ -8,17 +8,23 @@ import           Test.Hspec
 import           Universum                   hiding (view, (%~), (.~), (^.))
 
 
-defaultRepository :: GRepository
-defaultRepository =
-  GRepository
-     { _grRemotes = []
-     , _grBranches = [mainBranch, currentBranch]
-     , _grCurrentBranch = currentBranch^.gbName
-     , _grModifiedFiles = []
-     , _grUnstagedFiles = []
-     , _grStashes = [ ]
-     }
+defaultGit :: InMemoryGit
+defaultGit =
+  imGit
   where
+    imGit = IMGit
+      { _gConfig = mempty
+      , _gRepository = repo
+      }
+    repo = GRepository
+       { _grRemotes = []
+       , _grBranches = [mainBranch, currentBranch]
+       , _grCurrentBranch = currentBranch^.gbName
+       , _grModifiedFiles = []
+       , _grUnstagedFiles = []
+       , _grStashes = [ ]
+       , _grConfig = mempty
+       }
     commit = GCommit
       { _gcName = "Init commit"
       }
@@ -37,37 +43,40 @@ spec :: Spec
 spec = do
   describe "cmd" $ do
     it "prints state of HEAD branch" $ do
-      runGitActionPure defaultRepository ShowWork.cmd `shouldBe`
-        ( defaultRepository
-        , [ ReportInfo ">>> Branch refs:"
-          , ReportInfo "local: haskell"
-          , ReportInfo ""
+      runGitActionPure defaultGit ShowWork.cmd `shouldBe`
+        ( defaultGit
+        , [ PrintText ">>> Branch refs:"
+          , PrintText "local: haskell"
+          , PrintText ""
           ]
         )
     it "print status when files changed" $ do
       let
-        repo = defaultRepository & grModifiedFiles .~ ["app/Main.hs"]
-                                 & grUnstagedFiles .~ ["tmp.txt"]
-      runGitActionPure repo ShowWork.cmd `shouldBe`
-        ( repo
-        , [ ReportInfo ">>> Branch refs:"
-          , ReportInfo "local: haskell"
-          , ReportInfo ""
-          , ReportInfo ">>> Uncommitted modifications:"
+        imGit = defaultGit &
+            gRepository %~ \repo ->
+              repo & grModifiedFiles .~ ["app/Main.hs"]
+                   & grUnstagedFiles .~ ["tmp.txt"]
+      runGitActionPure imGit ShowWork.cmd `shouldBe`
+        ( imGit
+        , [ PrintText ">>> Branch refs:"
+          , PrintText "local: haskell"
+          , PrintText ""
+          , PrintText ">>> Uncommitted modifications:"
           , PrintText "M app/Main.hs"
           , PrintText "?? tmp.txt"
-          , ReportInfo ""
+          , PrintText ""
           ]
         )
     it "prints remote" $ do
       let
-        repo = defaultRepository & grBranches.each.filtered (\b -> b^.gbName == "haskell").gbUpstream ?~ "origin/haskell"
-      runGitActionPure repo ShowWork.cmd `shouldBe`
-        ( repo
-        , [ ReportInfo ">>> Branch refs:"
-          , ReportInfo "local: haskell"
-          , ReportInfo "remote: origin/haskell"
-          , ReportInfo ""
+        imGit = defaultGit
+          & gRepository.grBranches.each.filtered (\b -> b^.gbName == "haskell").gbUpstream ?~ "origin/haskell"
+      runGitActionPure imGit ShowWork.cmd `shouldBe`
+        ( imGit
+        , [ PrintText ">>> Branch refs:"
+          , PrintText "local: haskell"
+          , PrintText "remote: origin/haskell"
+          , PrintText ""
           ]
         )
     it "prints stash" $ do
@@ -76,14 +85,14 @@ spec = do
           { _gsName = "WIP"
           , _gsBranchName = "haskell"
           }
-        repo = defaultRepository & grStashes .~ [stash]
+        imGit = defaultGit & gRepository.grStashes .~ [stash]
 
-      runGitActionPure repo ShowWork.cmd `shouldBe`
-        ( repo
-        , [ ReportInfo ">>> Branch refs:"
-          , ReportInfo "local: haskell"
-          , ReportInfo ""
-          , ReportInfo ">>> Available stashes:"
+      runGitActionPure imGit ShowWork.cmd `shouldBe`
+        ( imGit
+        , [ PrintText ">>> Branch refs:"
+          , PrintText "local: haskell"
+          , PrintText ""
+          , PrintText ">>> Available stashes:"
           , PrintText "stash@{0}: WIP on haskell"
           ]
         )
@@ -91,15 +100,15 @@ spec = do
       let
         newCommit = GCommit {_gcName = "Updates"}
 
-        repo = defaultRepository & grBranches.each.filtered (\b -> b^.gbName == "haskell").gbCommit %~ NE.cons newCommit
+        imGit = defaultGit & gRepository.grBranches.each.filtered (\b -> b^.gbName == "haskell").gbCommit %~ NE.cons newCommit
 
-      runGitActionPure repo ShowWork.cmd `shouldBe`
-        ( repo
-        , [ ReportInfo ">>> Branch refs:"
-          , ReportInfo "local: haskell"
-          , ReportInfo ""
-          , ReportInfo ">>> New commits (comparing to main branch):"
+      runGitActionPure imGit ShowWork.cmd `shouldBe`
+        ( imGit
+        , [ PrintText ">>> Branch refs:"
+          , PrintText "local: haskell"
+          , PrintText ""
+          , PrintText ">>> New commits (comparing to main branch):"
           , PrintText "Updates"
-          , ReportInfo ""
+          , PrintText ""
           ]
         )
