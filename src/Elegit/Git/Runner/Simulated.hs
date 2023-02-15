@@ -119,14 +119,14 @@ runGitActionPure imGit action =
 -- `Writer`. To lift any value into a monad you should use `return`.
 collectImpureCommandsF :: (MonadState InMemoryGit m, MonadWriter (DList GitCommand) m) => GA.GitF a -> m a
 collectImpureCommandsF cmd = case cmd of
-  GA.CurrentBranch next -> do
+  GA.CurrentBranch GA.GCurrentBranchData next -> do
     currentBranchName <- use $ localRepository . grCurrentBranch
     return $ next currentBranchName
-  GA.BranchUpstream branch next -> do
+  GA.BranchUpstream (GA.GBranchUpstreamData branch) next -> do
     branchM <- preuse $ localRepository . branchWithName branch
     return $ next (branchM >>= _gbUpstream)
 
-  GA.Log lType base target next -> do
+  GA.Log (GA.GLogData lType base target) next -> do
     case lType of
       GA.LogOneLine -> do
         mBaseBranch <- preuse $ localRepository . branchWithName base
@@ -138,7 +138,7 @@ collectImpureCommandsF cmd = case cmd of
           let baseBranchHead = baseBranch ^. gbCommit.to U.head
           return $ view gcName <$> commitDifference baseBranchHead (NE.toList $ targetBranch^.gbCommit)
 
-  GA.Status sType next -> do
+  GA.Status (GA.GStatusData sType) next -> do
     case sType of
       GA.StatusShort -> do
         modifiedFiles <- use $ localRepository . grModifiedFiles
@@ -150,13 +150,13 @@ collectImpureCommandsF cmd = case cmd of
           unstaged = (\unstagedFile -> fmt "?? "+|unstagedFile|+"") <$> unstagedFiles
         return $ next (modified <> unstaged)
 
-  GA.StashList next -> do
+  GA.StashList GA.GStashListData next -> do
     stashes <- use $ localRepository . grStashes
     return $ next
       [ fmt "stash@{"+||i||+"}: "+|(stash^.gsName)|+" on "+|(stash^.gsBranchName)|+"" | (i, stash) <- zip [(0 :: Int)..] stashes
       ] -- this is excessive, I guess? @teggotic
 
-  GA.AliasesToRemove cScope next -> do
+  GA.AliasesToRemove (GA.GAliasesToRemoveData cScope) next -> do
     case cScope of
      GA.LocalConfig -> do
        cfg <- use $ localRepository . grConfig
@@ -168,7 +168,7 @@ collectImpureCommandsF cmd = case cmd of
        -- TODO: Maybe work with local as default. Or narrow options
        error "scope AutoConfig is not supported by AliasesToRemove"
 
-  GA.ReadConfig cScope cName next -> do
+  GA.ReadConfig (GA.GReadConfigData cScope cName) next -> do
     localCfg <- use localConfig
     globalCfg <- use globalConfig
     let
@@ -183,7 +183,7 @@ collectImpureCommandsF cmd = case cmd of
           GA.AutoConfig   ->
             return $ next $ localValue <|> globalValue
 
-  GA.SetConfig cScope cName cValue next -> do
+  GA.SetConfig (GA.GSetConfigData cScope cName cValue) next -> do
     case cScope of
      GA.LocalConfig -> do
       localConfig %= HS.insert cName cValue
@@ -193,7 +193,7 @@ collectImpureCommandsF cmd = case cmd of
       localConfig %= HS.insert cName cValue
     return next
 
-  GA.UnsetConfig cScope cName next -> do
+  GA.UnsetConfig (GA.GUnsetConfigData cScope cName) next -> do
     case cScope of
      GA.LocalConfig -> do
       localConfig %= HS.delete cName

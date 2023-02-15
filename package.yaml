@@ -24,6 +24,7 @@ dependencies:
 
 - universum
 - string-qq
+- exceptions
 - text
 - safe-exceptions
 - fmt
