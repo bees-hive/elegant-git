@@ -30,6 +30,7 @@ library
       Elegit.Cli.Command
       Elegit.Cli.Parser
       Elegit.Git.Action
+      Elegit.Git.Exec
       Elegit.Git.Runner.Real
       Elegit.Git.Runner.Simulated
       Lib
@@ -46,6 +47,7 @@ library
       base >=4.7 && <5
     , containers
     , dlist
+    , exceptions
     , fmt
     , free
     , microlens
@@ -79,6 +81,7 @@ executable git-elegant
     , containers
     , dlist
     , elegant-git
+    , exceptions
     , fmt
     , free
     , microlens
@@ -119,6 +122,7 @@ test-suite elegant-git-test
     , containers
     , dlist
     , elegant-git
+    , exceptions
     , fmt
     , free
     , hspec
