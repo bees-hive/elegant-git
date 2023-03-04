@@ -4,8 +4,8 @@ import           Control.Monad.Catch  as MC
 import           Data.Text            (stripEnd)
 import           Elegit.Git.Action
 import           GHC.IO.Handle        (hFlush)
-import           System.Process.Typed (ExitCode (ExitFailure, ExitSuccess), proc, readProcess)
-import           Universum
+import           System.Process.Typed (ExitCode (ExitFailure, ExitSuccess), ProcessConfig, proc, readProcess)
+import           Universum            as U
 
 
 newtype GitExecT m a
@@ -23,19 +23,25 @@ data GitCommand
   | GCSC GSetConfigData
   | GCUC GUnsetConfigData
   | GCATR GAliasesToRemoveData
+  | GCGKL GGPGKeyListData
+
+
+procText :: Text -> [Text] -> ProcessConfig () () ()
+procText name args = proc (toString name) (toString <$> args)
 
 
 -- TODO: cover with tests
-gitCommandArgs :: GitCommand -> [Text]
-gitCommandArgs (GCCB gc)  = commandArgs gc
-gitCommandArgs (GCBU gc)  = commandArgs gc
-gitCommandArgs (GCL gc)   = "-c":"color.ui=always":commandArgs gc
-gitCommandArgs (GCS gc)   = "-c":"color.status=always":commandArgs gc
-gitCommandArgs (GCSL gc)  = commandArgs gc
-gitCommandArgs (GCRC gc)  = commandArgs gc
-gitCommandArgs (GCSC gc)  = commandArgs gc
-gitCommandArgs (GCUC gc)  = commandArgs gc
-gitCommandArgs (GCATR gc) = commandArgs gc
+procFromCmd :: GitCommand -> ProcessConfig () () ()
+procFromCmd (GCCB gc)  = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCBU gc)  = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCL gc)   = procText (toolName gc) ("-c":"color.ui=always":commandArgs gc)
+procFromCmd (GCS gc)   = procText (toolName gc) ("-c":"color.status=always":commandArgs gc)
+procFromCmd (GCSL gc)  = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCRC gc)  = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCSC gc)  = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCUC gc)  = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCATR gc) = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCGKL gc) = procText (toolName gc) (commandArgs gc)
 
 
 class Monad m => MonadGitExec m where
@@ -46,7 +52,7 @@ class Monad m => MonadGitExec m where
 
 instance MonadIO m => MonadGitExec (GitExecT m) where
   execGit gc = do
-    (eCode, outputBS, _errBS) <- readProcess $ proc "git" (toString <$> gitCommandArgs gc)
+    (eCode, outputBS, _errBS) <- readProcess $ procFromCmd gc
     case eCode of
       -- TODO: Handle error codes per `gc`
       ExitFailure _ -> do

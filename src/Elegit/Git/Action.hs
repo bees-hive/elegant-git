@@ -148,6 +148,15 @@ instance RenderGitCommand GAliasesToRemoveData where
                 LocalConfig  -> "--local"
                 AutoConfig   -> ""
 
+newtype GGPGKeyListData
+  = GGPGKeyListData { email :: Text }
+
+instance RenderGitCommand GGPGKeyListData where
+  toolName _ = "gpg"
+
+  commandArgs (GGPGKeyListData gEmail) =
+    ["--list-secret-keys", "--keyid-format", "long", gEmail]
+
 -- | The declaration of all posible actions we can do in the git action.
 --
 -- This describes the data of the action, and whether it can return any value
@@ -165,6 +174,7 @@ data GitF a
   | AliasesToRemove GAliasesToRemoveData (Maybe (NonEmpty Text) -> a)
   | SetConfig GSetConfigData a
   | UnsetConfig GUnsetConfigData a
+  | GPGListKeys GGPGKeyListData (Maybe (NonEmpty Text) -> a)
   | Prompt Text (Maybe Text) (Text -> a)
   | FormatInfo Text (Text -> a)
   | FormatCommand Text (Text -> a)
@@ -241,6 +251,9 @@ setConfig cScope cName cValue = liftF $ SetConfig (GSetConfigData cScope cName c
 unsetConfig :: MonadFree GitF m => ConfigScope -> Text -> m ()
 unsetConfig cScope cName = liftF $ UnsetConfig (GUnsetConfigData cScope cName) ()
 
+gpgListKeys :: MonadFree GitF m => Text -> m (Maybe (NonEmpty Text))
+gpgListKeys gEmail = liftF $ GPGListKeys (GGPGKeyListData gEmail) id
+
 promptDefault :: MonadFree GitF m => Text -> Maybe Text -> m Text
 promptDefault pText pDefault = liftF $ Prompt pText pDefault id
 
@@ -267,6 +280,12 @@ unsetConfigVerbose :: MonadFree GitF m => ConfigScope -> Text -> m ()
 unsetConfigVerbose cScope cName = do
   unsetConfig cScope cName
   print =<< formatGitCommand (GUnsetConfigData cScope cName)
+
+gpgListKeysVerbose :: MonadFree GitF m => Text -> m (Maybe (NonEmpty Text))
+gpgListKeysVerbose gEmail = do
+  gpgKeys <- gpgListKeys gEmail
+  print =<< formatGitCommand (GGPGKeyListData gEmail)
+  return gpgKeys
 
 freshestDefaultBranch :: MonadFree GitF m => m Text
 freshestDefaultBranch = do

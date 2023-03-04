@@ -41,6 +41,9 @@ executeGitF arg = case arg of
     stashes <- lines . fromMaybe "" <$> execGit (GCSL gc)
     return $ next stashes
 
+  GA.GPGListKeys gc next -> do
+    mGpgKeys <- execGit (GCGKL gc)
+    return $ next (mGpgKeys >>= nonEmpty . lines)
   GA.AliasesToRemove gc next -> do
     oldAliasesM <- execGit (GCATR gc)
     return $ next (oldAliasesM >>= nonEmpty . lines)

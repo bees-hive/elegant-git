@@ -89,6 +89,24 @@ signatureOutputBlock =
   [ PrintText "=============================="
   , PrintText "== Configuring signature... =="
   , PrintText "=============================="
+  , PrintText "==>> gpg --list-secret-keys --keyid-format long test"
+  , PrintText "3AA5C34371567BD2"
+  , PrintText ""
+  , PrintText "From the list of GPG keys above, copy the GPG key ID you'd like to use."
+  , PrintText "It will be"
+  , PrintText "    3AA5C34371567BD2"
+  , PrintText "for the output like this"
+  , PrintText "    sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]"
+  , PrintText "    A330C91F8EC4BC7AECFA63E03AA5C34371567BD2"
+  , PrintText "    uid                          Hubot"
+  , PrintText ""
+  , PrintText "If you don't want to configure signature, just hit Enter button."
+  , Prompt "Please pass a key that has to sign objects of the current repository:  {}: test"
+  , PrintText "==>> git config --local user.signingkey \"test\""
+  , PrintText "==>> git config --local gpg.program \"$(type -p gpg)\""
+  , PrintText "==>> git config --local commit.gpgsign \"true\""
+  , PrintText "==>> git config --local tag.forceSignAnnotated \"true\""
+  , PrintText "==>> git config --local tag.gpgSign \"true\""
   ]
 
 configuredStandards :: HashMap Text Text
@@ -132,6 +150,15 @@ configuredAliases =
   , ("alias.start-work",         "elegant start-work")
   ]
 
+configuredGpg :: HashMap Text Text
+configuredGpg =
+  [ ("user.signingkey","test")
+  , ("tag.gpgSign","true")
+  , ("gpg.program","$(type -p gpg)")
+  , ("commit.gpgsign","true")
+  , ("tag.forceSignAnnotated","true")
+  ]
+
 spec :: Spec
 spec = do
   describe "cmd" $ do
@@ -139,7 +166,7 @@ spec = do
       let
         repoWithNewConfig = defaultGit
           & gRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases)
+            (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure defaultGit AcquireRepository.cmd `shouldBe`
         ( repoWithNewConfig
@@ -176,7 +203,7 @@ spec = do
 
         repoWithNewConfig = git
           & gRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases)
+            (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`
         ( repoWithNewConfig
@@ -211,7 +238,7 @@ spec = do
 
         repoWithNewConfig = git
           & gRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases)
+            (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`
         ( repoWithNewConfig
@@ -248,7 +275,7 @@ spec = do
           & gRepository.grConfig %~
             delete "elegant.acquired"
           & gRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases)
+            (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`
         ( repoWithNewConfig
@@ -287,7 +314,7 @@ spec = do
 
         repoWithNewConfig = git
           & gRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases)
+            (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`
         ( repoWithNewConfig

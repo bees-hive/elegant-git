@@ -156,6 +156,10 @@ collectImpureCommandsF cmd = case cmd of
       [ fmt "stash@{"+||i||+"}: "+|(stash^.gsName)|+" on "+|(stash^.gsBranchName)|+"" | (i, stash) <- zip [(0 :: Int)..] stashes
       ] -- this is excessive, I guess? @teggotic
 
+  GA.GPGListKeys (GA.GGPGKeyListData _email) next -> do
+    -- Ideally we want to see this
+    return $ next (Just ("3AA5C34371567BD2":|[]))
+
   GA.AliasesToRemove (GA.GAliasesToRemoveData cScope) next -> do
     case cScope of
      GA.LocalConfig -> do

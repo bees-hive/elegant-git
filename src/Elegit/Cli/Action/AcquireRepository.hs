@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase  #-}
 {-# LANGUAGE QuasiQuotes #-}
 module Elegit.Cli.Action.AcquireRepository
     ( cli
@@ -149,9 +150,36 @@ configureAliases cScope = do
             ]
 
 
--- TODO: port bash logic
 setupGPGSignature :: (MonadFree GA.GitF m) => m ()
-setupGPGSignature = pass
+setupGPGSignature = do
+    whenJustM (GA.readConfig GA.LocalConfig (configName UserEmailKey)) $ \userEmail -> do
+        GA.gpgListKeysVerbose userEmail >>= \case
+            Nothing -> do
+                GA.print =<< GA.formatInfo "There is no gpg key for the given email."
+                GA.print =<< GA.formatInfo "A signature is not configured."
+            Just gpgKeysOutput -> do
+                mapM_ GA.print gpgKeysOutput
+                GA.print ""
+                GA.print =<< GA.formatInfo "From the list of GPG keys above, copy the GPG key ID you'd like to use."
+                GA.print =<< GA.formatInfo "It will be"
+                GA.print =<< GA.formatInfo "    3AA5C34371567BD2"
+                GA.print =<< GA.formatInfo "for the output like this"
+                GA.print =<< GA.formatInfo "    sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]"
+                GA.print =<< GA.formatInfo "    A330C91F8EC4BC7AECFA63E03AA5C34371567BD2"
+                GA.print =<< GA.formatInfo "    uid                          Hubot"
+                GA.print =<< GA.formatInfo ""
+                GA.print =<< GA.formatInfo "If you don't want to configure signature, just hit Enter button."
+                -- TODO: We could parse IDs out of the gpg output.
+                -- Then could ask for the index into list of keys instead?
+                key <- GA.promptDefault "Please pass a key that has to sign objects of the current repository: " (Just "")
+                if null key
+                   then GA.print =<< GA.formatInfo "The signature is not configured as the empty key is provided."
+                   else do
+                       GA.setConfigVerbose GA.LocalConfig "user.signingkey" key
+                       GA.setConfigVerbose GA.LocalConfig "gpg.program" "$(type -p gpg)"
+                       GA.setConfigVerbose GA.LocalConfig "commit.gpgsign" "true"
+                       GA.setConfigVerbose GA.LocalConfig "tag.forceSignAnnotated" "true"
+                       GA.setConfigVerbose GA.LocalConfig "tag.gpgSign" "true"
 
 
 -- | Execution description of the AcquireRepository action
