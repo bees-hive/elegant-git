@@ -38,19 +38,27 @@ import           Universum                 hiding (print)
 
 -- TODO: maybe, cover with tests
 class RenderGitCommand c where
-  renderGC :: c -> Text
+  commandArgs :: c -> [Text]
+  toolName :: c -> Text
+  toolName _ = "git"
+
+renderGC :: RenderGitCommand c => c -> Text
+renderGC c = toolName c|+" "+|renderedArgs|+""
+  where
+    renderedArgs = T.intercalate " " (commandArgs c)
 
 data GCurrentBranchData
   = GCurrentBranchData
 
 instance RenderGitCommand GCurrentBranchData where
-  renderGC _ = "rev-parse --abbrev-ref @"
+  commandArgs _ = ["rev-parse", "--abbrev-ref", "@"]
 
 newtype GBranchUpstreamData
   = GBranchUpstreamData { branch :: Text }
 
 instance RenderGitCommand GBranchUpstreamData where
-  renderGC (GBranchUpstreamData branchName) = "rev-parse --abbrev-ref "+|branchName|+"@{upstream}"
+  commandArgs (GBranchUpstreamData branchName) =
+    ["rev-parse", "--abbrev-ref", branchName, "@{upstream}"]
 
 data GLogData
   = GLogData
@@ -59,7 +67,8 @@ data GLogData
       , target  :: Text
       }
 instance RenderGitCommand GLogData where
-  renderGC (GLogData lType baseName targetName) = "log "+|logArg|+" "+|baseName|+".."+|targetName|+""
+  commandArgs (GLogData lType baseName targetName) =
+    ["log ", logArg, ""+|baseName|+".."+|targetName|+""]
     where
       logArg :: Text
       logArg = case lType of
@@ -69,7 +78,7 @@ newtype GStatusData
   = GStatusData { statusType :: StatusType }
 
 instance RenderGitCommand GStatusData where
-  renderGC (GStatusData sType) = "status "+|statusFormat|+""
+  commandArgs (GStatusData sType) = ["status", statusFormat]
     where
       statusFormat :: Text
       statusFormat = case sType of
@@ -78,7 +87,7 @@ instance RenderGitCommand GStatusData where
 data GStashListData
   = GStashListData
 instance RenderGitCommand GStashListData where
-  renderGC _ = "stash list"
+  commandArgs _ = ["stash", "list"]
 
 data GReadConfigData
   = GReadConfigData
@@ -87,7 +96,7 @@ data GReadConfigData
       }
 
 instance RenderGitCommand GReadConfigData where
-  renderGC (GReadConfigData cScope cName) = "config "+|scopeText|+" --get "+|cName|+""
+  commandArgs (GReadConfigData cScope cName) = ["config", scopeText, "--get", cName]
     where
       scopeText :: Text
       scopeText = case cScope of
@@ -103,7 +112,7 @@ data GSetConfigData
       }
 
 instance RenderGitCommand GSetConfigData where
-  renderGC (GSetConfigData cScope cName cValue) = "config "+|scopeText|+" "+|cName|+" "+|cValue|+""
+  commandArgs (GSetConfigData cScope cName cValue) = ["config", scopeText, cName, "\""+|cValue|+"\""]
     where
       scopeText :: Text
       scopeText = case cScope of
@@ -118,7 +127,7 @@ data GUnsetConfigData
       }
 
 instance RenderGitCommand GUnsetConfigData where
-  renderGC (GUnsetConfigData cScope cName) = "config "+|scopeText|+" --unset "+|cName|+""
+  commandArgs (GUnsetConfigData cScope cName) = ["config", scopeText, "--unset", cName]
     where
       scopeText :: Text
       scopeText = case cScope of
@@ -130,7 +139,8 @@ newtype GAliasesToRemoveData
   = GAliasesToRemoveData { scope :: ConfigScope }
 
 instance RenderGitCommand GAliasesToRemoveData where
-  renderGC (GAliasesToRemoveData cScope) = "config "+|scopeText|+" --name-only --get-regexp \"^alias.\" \"^elegant ([-a-z]+)$\""
+  commandArgs (GAliasesToRemoveData cScope) =
+    ["config", scopeText, "--name-only", "--get-regexp", "\"^alias.\"", "\"^elegant ([-a-z]+)$\""]
     where
       scopeText :: Text
       scopeText = case cScope of
@@ -246,7 +256,7 @@ print content = liftF $ PrintText content ()
 -- Derived actions
 
 formatGitCommand :: (RenderGitCommand gc, MonadFree GitF m) => gc -> m Text
-formatGitCommand gc = formatCommand ("git "+|renderGC gc|+"")
+formatGitCommand gc = formatCommand (renderGC gc)
 
 setConfigVerbose :: MonadFree GitF m => ConfigScope -> Text -> Text -> m ()
 setConfigVerbose cScope cName cValue = do

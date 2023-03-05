@@ -3,7 +3,6 @@ module Elegit.Git.Exec where
 import           Control.Monad.Catch  as MC
 import           Data.Text            (stripEnd)
 import           Elegit.Git.Action
-import           Fmt
 import           GHC.IO.Handle        (hFlush)
 import           System.Process.Typed (ExitCode (ExitFailure, ExitSuccess), proc, readProcess)
 import           Universum
@@ -27,16 +26,16 @@ data GitCommand
 
 
 -- TODO: cover with tests
-renderGitCommand :: GitCommand -> Text
-renderGitCommand (GCCB gc)  = renderGC gc
-renderGitCommand (GCBU gc)  = renderGC gc
-renderGitCommand (GCL gc)   = "-c color.ui=always "+|renderGC gc|+""
-renderGitCommand (GCS gc)   = "-c color.status=always "+|renderGC gc|+""
-renderGitCommand (GCSL gc)  = renderGC gc
-renderGitCommand (GCRC gc)  = renderGC gc
-renderGitCommand (GCSC gc)  = renderGC gc
-renderGitCommand (GCUC gc)  = renderGC gc
-renderGitCommand (GCATR gc) = renderGC gc
+gitCommandArgs :: GitCommand -> [Text]
+gitCommandArgs (GCCB gc)  = commandArgs gc
+gitCommandArgs (GCBU gc)  = commandArgs gc
+gitCommandArgs (GCL gc)   = "-c":"color.ui=always":commandArgs gc
+gitCommandArgs (GCS gc)   = "-c":"color.status=always":commandArgs gc
+gitCommandArgs (GCSL gc)  = commandArgs gc
+gitCommandArgs (GCRC gc)  = commandArgs gc
+gitCommandArgs (GCSC gc)  = commandArgs gc
+gitCommandArgs (GCUC gc)  = commandArgs gc
+gitCommandArgs (GCATR gc) = commandArgs gc
 
 
 class Monad m => MonadGitExec m where
@@ -47,7 +46,7 @@ class Monad m => MonadGitExec m where
 
 instance MonadIO m => MonadGitExec (GitExecT m) where
   execGit gc = do
-    (eCode, outputBS, _errBS) <- readProcess $ proc "git" (toString <$> words (renderGitCommand gc))
+    (eCode, outputBS, _errBS) <- readProcess $ proc "git" (toString <$> gitCommandArgs gc)
     case eCode of
       -- TODO: Handle error codes per `gc`
       ExitFailure _ -> do
