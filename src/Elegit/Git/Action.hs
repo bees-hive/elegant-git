@@ -96,7 +96,9 @@ data GReadConfigData
       }
 
 instance RenderGitCommand GReadConfigData where
-  commandArgs (GReadConfigData cScope cName) = ["config", scopeText, "--get", cName]
+  commandArgs (GReadConfigData cScope cName) =
+    filter (not . null)
+      ["config", scopeText, "--get", cName]
     where
       scopeText :: Text
       scopeText = case cScope of
@@ -112,7 +114,9 @@ data GSetConfigData
       }
 
 instance RenderGitCommand GSetConfigData where
-  commandArgs (GSetConfigData cScope cName cValue) = ["config", scopeText, cName, "\""+|cValue|+"\""]
+  commandArgs (GSetConfigData cScope cName cValue) =
+    filter (not . null)
+      ["config", scopeText, cName, cValue]
     where
       scopeText :: Text
       scopeText = case cScope of
@@ -140,13 +144,21 @@ newtype GAliasesToRemoveData
 
 instance RenderGitCommand GAliasesToRemoveData where
   commandArgs (GAliasesToRemoveData cScope) =
-    ["config", scopeText, "--name-only", "--get-regexp", "\"^alias.\"", "\"^elegant ([-a-z]+)$\""]
+    ["config", scopeText, "--name-only", "--get-regexp", "^alias.", "^elegant ([-a-z]+)$"]
     where
       scopeText :: Text
       scopeText = case cScope of
                 GlobalConfig -> "--global"
                 LocalConfig  -> "--local"
                 AutoConfig   -> ""
+
+newtype GPathToToolData
+  = GPathToToolData { name :: Text }
+
+instance RenderGitCommand GPathToToolData where
+  toolName _ = "type"
+
+  commandArgs (GPathToToolData toolName') = ["-p", toolName']
 
 newtype GGPGKeyListData
   = GGPGKeyListData { email :: Text }
@@ -175,7 +187,8 @@ data GitF a
   | SetConfig GSetConfigData a
   | UnsetConfig GUnsetConfigData a
   | GPGListKeys GGPGKeyListData (Maybe (NonEmpty Text) -> a)
-  | Prompt Text (Maybe Text) (Text -> a)
+  | PathToTool GPathToToolData (Maybe Text -> a)
+  | Prompt PromptConfig (Text -> a)
   | FormatInfo Text (Text -> a)
   | FormatCommand Text (Text -> a)
   | PrintText Text a
@@ -204,6 +217,21 @@ data LogType
 
 -- | Type alias to the `Free` `GitF` monad.
 type FreeGit t = F GitF t
+
+
+-- TODO: Make `OneTime` separate to improve the return type of the prompt
+-- OneTime should return `Maybe Text` instead of `Text` to indicate 2 possible states.
+-- Default would always return Text, as there is no possibity to go forward otherwise.
+data PromptType
+  = PromptOneTime
+  | PromptDefault (Maybe Text)
+
+
+data PromptConfig
+  = PromptConfig
+      { question   :: Text
+      , promptType :: PromptType
+      }
 
 -- | You should consider following code as a boilerplate
 --
@@ -254,8 +282,14 @@ unsetConfig cScope cName = liftF $ UnsetConfig (GUnsetConfigData cScope cName) (
 gpgListKeys :: MonadFree GitF m => Text -> m (Maybe (NonEmpty Text))
 gpgListKeys gEmail = liftF $ GPGListKeys (GGPGKeyListData gEmail) id
 
+pathToTool :: MonadFree GitF m => Text -> m (Maybe Text)
+pathToTool toolName' = liftF $ PathToTool (GPathToToolData toolName') id
+
 promptDefault :: MonadFree GitF m => Text -> Maybe Text -> m Text
-promptDefault pText pDefault = liftF $ Prompt pText pDefault id
+promptDefault pText pDefault = liftF $ Prompt (PromptConfig pText (PromptDefault pDefault)) id
+
+promptOneTime :: MonadFree GitF m => Text -> m Text
+promptOneTime pText = liftF $ Prompt (PromptConfig pText PromptOneTime) id
 
 formatInfo :: MonadFree GitF m => Text -> m Text
 formatInfo content = liftF $ FormatInfo content id

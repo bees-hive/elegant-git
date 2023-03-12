@@ -207,7 +207,7 @@ collectImpureCommandsF cmd = case cmd of
       localConfig %= HS.delete cName
     return next
 
-  GA.Prompt prompt pDefaultM next -> do
+  GA.Prompt (GA.PromptConfig prompt pType) next -> do
     let
       -- TODO: Make configurable
       hardcodedAnswer :: Text
@@ -219,18 +219,23 @@ collectImpureCommandsF cmd = case cmd of
 
       message :: Text
       message =
-        case pDefaultM of
-         Just pDefault -> fmt ""+|prompt|+" {"+|pDefault|+"}: "
-         Nothing       -> fmt ""+|prompt|+": "
+        case pType of
+          GA.PromptOneTime                 -> fmt ""+|prompt|+": "
+          GA.PromptDefault (Just pDefault) -> fmt ""+|prompt|+" {"+|pDefault|+"}: "
+          GA.PromptDefault Nothing         -> fmt ""+|prompt|+": "
 
-    answer <- case pDefaultM of
-       Nothing -> until (not . null) promptAnswer
-       Just pDefault -> do
+    answer <- case pType of
+        GA.PromptOneTime                 -> promptAnswer
+        GA.PromptDefault Nothing         -> until (not . null) promptAnswer
+        GA.PromptDefault (Just pDefault) -> do
          answer <- promptAnswer
          if null answer
            then return pDefault
            else return answer
     return $ next answer
+
+  GA.PathToTool (GA.GPathToToolData toolName) next -> do
+    return $ next $ Just ("/usr/bin/"+|toolName|+"")
 
   GA.FormatInfo content next -> do
     return $ next content

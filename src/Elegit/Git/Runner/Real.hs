@@ -41,6 +41,10 @@ executeGitF arg = case arg of
     stashes <- lines . fromMaybe "" <$> execGit (GCSL gc)
     return $ next stashes
 
+  GA.PathToTool gc next -> do
+    path <- execGit (GCPTT gc)
+    return $ next path
+
   GA.GPGListKeys gc next -> do
     mGpgKeys <- execGit (GCGKL gc)
     return $ next (mGpgKeys >>= nonEmpty . lines)
@@ -55,7 +59,7 @@ executeGitF arg = case arg of
   GA.UnsetConfig gc next -> do
     U.void $ execGit (GCUC gc)
     return next
-  GA.Prompt prompt pDefaultM next -> do
+  GA.Prompt (GA.PromptConfig prompt pType) next -> do
     let
       askPrompt = do
         pText (colored Purple Normal message)
@@ -63,14 +67,16 @@ executeGitF arg = case arg of
 
       message :: Text
       message =
-        case pDefaultM of
-          Just pDefault -> fmt ""+|prompt|+" {"+|pDefault|+"}: "
-          Nothing       -> fmt ""+|prompt|+": "
+        case pType of
+          GA.PromptOneTime                 -> fmt ""+|prompt|+": "
+          GA.PromptDefault (Just pDefault) -> fmt ""+|prompt|+" {"+|pDefault|+"}: "
+          GA.PromptDefault Nothing         -> fmt ""+|prompt|+": "
 
     answer <-
-      case pDefaultM of
-        Nothing -> until (not . null) askPrompt
-        Just pDefault -> do
+      case pType of
+        GA.PromptOneTime                 -> askPrompt
+        GA.PromptDefault Nothing         -> until (not . null) askPrompt
+        GA.PromptDefault (Just pDefault) -> do
           answer <- askPrompt
           if null answer
              then return pDefault

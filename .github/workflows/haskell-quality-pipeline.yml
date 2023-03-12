@@ -27,15 +27,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/cache@v3
-      name: Cache .ghcup
-      id: haskell-env-cache
-      with:
-        path: ~/.ghcup
-        key: ${{ runner.os }}-ghcup-global-${{ env.GHCUP_VERSION }}-${{ env.STACK_VERSION }}
-        restore-keys: |
-          ${{ runner.os }}-ghcup-global-${{ env.GHCUP_VERSION }}-
-          ${{ runner.os }}-ghcup-global-
-    - uses: actions/cache@v3
       name: Cache .stack
       id: haskell-deps-cache
       with:

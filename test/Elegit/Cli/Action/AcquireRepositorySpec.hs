@@ -47,14 +47,14 @@ standardsOutputBlock =
   [ PrintText [s|==============================|]
   , PrintText [s|== Configuring standards... ==|]
   , PrintText [s|==============================|]
-  , PrintText [s|==>> git config --local core.commentChar "|"|]
-  , PrintText [s|==>> git config --local apply.whitespace "fix"|]
-  , PrintText [s|==>> git config --local fetch.prune "true"|]
-  , PrintText [s|==>> git config --local fetch.pruneTags "false"|]
-  , PrintText [s|==>> git config --local core.autocrlf "input"|]
-  , PrintText [s|==>> git config --local pull.rebase "true"|]
-  , PrintText [s|==>> git config --local rebase.autoStash "false"|]
-  , PrintText [s|==>> git config --local credential.helper "osxkeychain"|]
+  , PrintText [s|==>> git config --local core.commentChar ||]
+  , PrintText [s|==>> git config --local apply.whitespace fix|]
+  , PrintText [s|==>> git config --local fetch.prune true|]
+  , PrintText [s|==>> git config --local fetch.pruneTags false|]
+  , PrintText [s|==>> git config --local core.autocrlf input|]
+  , PrintText [s|==>> git config --local pull.rebase true|]
+  , PrintText [s|==>> git config --local rebase.autoStash false|]
+  , PrintText [s|==>> git config --local credential.helper osxkeychain|]
   ]
 
 aliasesOutputBlock :: [GitCommand]
@@ -62,51 +62,51 @@ aliasesOutputBlock =
   [ PrintText [s|============================|]
   , PrintText [s|== Configuring aliases... ==|]
   , PrintText [s|============================|]
-  , PrintText [s|==>> git config --local alias.accept-work "elegant accept-work"|]
-  , PrintText [s|==>> git config --local alias.acquire-git "elegant acquire-git"|]
-  , PrintText [s|==>> git config --local alias.acquire-repository "elegant acquire-repository"|]
-  , PrintText [s|==>> git config --local alias.actualize-work "elegant actualize-work"|]
-  , PrintText [s|==>> git config --local alias.amend-work "elegant amend-work"|]
-  , PrintText [s|==>> git config --local alias.clone-repository "elegant clone-repository"|]
-  , PrintText [s|==>> git config --local alias.deliver-work "elegant deliver-work"|]
-  , PrintText [s|==>> git config --local alias.init-repository "elegant init-repository"|]
-  , PrintText [s|==>> git config --local alias.make-workflow "elegant make-workflow"|]
-  , PrintText [s|==>> git config --local alias.obtain-work "elegant obtain-work"|]
-  , PrintText [s|==>> git config --local alias.polish-work "elegant polish-work"|]
-  , PrintText [s|==>> git config --local alias.polish-workflow "elegant polish-workflow"|]
-  , PrintText [s|==>> git config --local alias.prune-repository "elegant prune-repository"|]
-  , PrintText [s|==>> git config --local alias.release-work "elegant release-work"|]
-  , PrintText [s|==>> git config --local alias.save-work "elegant save-work"|]
-  , PrintText [s|==>> git config --local alias.show-commands "elegant show-commands"|]
-  , PrintText [s|==>> git config --local alias.show-release-notes "elegant show-release-notes"|]
-  , PrintText [s|==>> git config --local alias.show-work "elegant show-work"|]
-  , PrintText [s|==>> git config --local alias.show-workflows "elegant show-workflows"|]
-  , PrintText [s|==>> git config --local alias.start-work "elegant start-work"|]
+  , PrintText [s|==>> git config --local alias.accept-work elegant accept-work|]
+  , PrintText [s|==>> git config --local alias.acquire-git elegant acquire-git|]
+  , PrintText [s|==>> git config --local alias.acquire-repository elegant acquire-repository|]
+  , PrintText [s|==>> git config --local alias.actualize-work elegant actualize-work|]
+  , PrintText [s|==>> git config --local alias.amend-work elegant amend-work|]
+  , PrintText [s|==>> git config --local alias.clone-repository elegant clone-repository|]
+  , PrintText [s|==>> git config --local alias.deliver-work elegant deliver-work|]
+  , PrintText [s|==>> git config --local alias.init-repository elegant init-repository|]
+  , PrintText [s|==>> git config --local alias.make-workflow elegant make-workflow|]
+  , PrintText [s|==>> git config --local alias.obtain-work elegant obtain-work|]
+  , PrintText [s|==>> git config --local alias.polish-work elegant polish-work|]
+  , PrintText [s|==>> git config --local alias.polish-workflow elegant polish-workflow|]
+  , PrintText [s|==>> git config --local alias.prune-repository elegant prune-repository|]
+  , PrintText [s|==>> git config --local alias.release-work elegant release-work|]
+  , PrintText [s|==>> git config --local alias.save-work elegant save-work|]
+  , PrintText [s|==>> git config --local alias.show-commands elegant show-commands|]
+  , PrintText [s|==>> git config --local alias.show-release-notes elegant show-release-notes|]
+  , PrintText [s|==>> git config --local alias.show-work elegant show-work|]
+  , PrintText [s|==>> git config --local alias.show-workflows elegant show-workflows|]
+  , PrintText [s|==>> git config --local alias.start-work elegant start-work|]
   ]
 
 signatureOutputBlock :: [GitCommand]
 signatureOutputBlock =
-  [ PrintText "=============================="
-  , PrintText "== Configuring signature... =="
-  , PrintText "=============================="
-  , PrintText "==>> gpg --list-secret-keys --keyid-format long test"
-  , PrintText "3AA5C34371567BD2"
-  , PrintText ""
-  , PrintText "From the list of GPG keys above, copy the GPG key ID you'd like to use."
-  , PrintText "It will be"
-  , PrintText "    3AA5C34371567BD2"
-  , PrintText "for the output like this"
-  , PrintText "    sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]"
-  , PrintText "    A330C91F8EC4BC7AECFA63E03AA5C34371567BD2"
-  , PrintText "    uid                          Hubot"
-  , PrintText ""
-  , PrintText "If you don't want to configure signature, just hit Enter button."
-  , Prompt "Please pass a key that has to sign objects of the current repository:  {}: test"
-  , PrintText "==>> git config --local user.signingkey \"test\""
-  , PrintText "==>> git config --local gpg.program \"$(type -p gpg)\""
-  , PrintText "==>> git config --local commit.gpgsign \"true\""
-  , PrintText "==>> git config --local tag.forceSignAnnotated \"true\""
-  , PrintText "==>> git config --local tag.gpgSign \"true\""
+  [ PrintText [s|==============================|]
+  , PrintText [s|== Configuring signature... ==|]
+  , PrintText [s|==============================|]
+  , PrintText [s|==>> gpg --list-secret-keys --keyid-format long test|]
+  , PrintText [s|3AA5C34371567BD2|]
+  , PrintText [s||]
+  , PrintText [s|From the list of GPG keys above, copy the GPG key ID you'd like to use.|]
+  , PrintText [s|It will be|]
+  , PrintText [s|    3AA5C34371567BD2|]
+  , PrintText [s|for the output like this|]
+  , PrintText [s|    sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]|]
+  , PrintText [s|    A330C91F8EC4BC7AECFA63E03AA5C34371567BD2|]
+  , PrintText [s|    uid                          Hubot|]
+  , PrintText [s||]
+  , PrintText [s|If you don't want to configure signature, just hit Enter button.|]
+  , Prompt    [s|Please pass a key that has to sign objects of the current repository: test|]
+  , PrintText [s|==>> git config --local user.signingkey test|]
+  , PrintText [s|==>> git config --local gpg.program /usr/bin/gpg|]
+  , PrintText [s|==>> git config --local commit.gpgsign true|]
+  , PrintText [s|==>> git config --local tag.forceSignAnnotated true|]
+  , PrintText [s|==>> git config --local tag.gpgSign true|]
   ]
 
 configuredStandards :: HashMap Text Text
@@ -154,7 +154,7 @@ configuredGpg :: HashMap Text Text
 configuredGpg =
   [ ("user.signingkey","test")
   , ("tag.gpgSign","true")
-  , ("gpg.program","$(type -p gpg)")
+  , ("gpg.program","/usr/bin/gpg")
   , ("commit.gpgsign","true")
   , ("tag.forceSignAnnotated","true")
   ]
@@ -177,15 +177,15 @@ spec = do
           , PrintText [s|== Configuring basics... ==|]
           , PrintText [s|===========================|]
           , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name "test"|]
+          , PrintText [s|==>> git config --local user.name test|]
           , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email "test"|]
+          , PrintText [s|==>> git config --local user.email test|]
           , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor "test"|]
+          , PrintText [s|==>> git config --local core.editor test|]
           , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch "test"|]
+          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
           , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches "test"|]
+          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
           ]
          ++ standardsOutputBlock
          ++ aliasesOutputBlock
@@ -214,15 +214,15 @@ spec = do
           , PrintText [s|== Configuring basics... ==|]
           , PrintText [s|===========================|]
           , Prompt    [s|What is your user name? {test-name}: test|]
-          , PrintText [s|==>> git config --local user.name "test"|]
+          , PrintText [s|==>> git config --local user.name test|]
           , Prompt    [s|What is your email? {test-email}: test|]
-          , PrintText [s|==>> git config --local user.email "test"|]
+          , PrintText [s|==>> git config --local user.email test|]
           , Prompt    [s|What is the command to launching an editor? {test-editor}: test|]
-          , PrintText [s|==>> git config --local core.editor "test"|]
+          , PrintText [s|==>> git config --local core.editor test|]
           , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch "test"|]
+          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
           , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches "test"|]
+          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
           ]
          ++ standardsOutputBlock
          ++ aliasesOutputBlock
@@ -249,15 +249,15 @@ spec = do
           , PrintText [s|== Configuring basics... ==|]
           , PrintText [s|===========================|]
           , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name "test"|]
+          , PrintText [s|==>> git config --local user.name test|]
           , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email "test"|]
+          , PrintText [s|==>> git config --local user.email test|]
           , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor "test"|]
+          , PrintText [s|==>> git config --local core.editor test|]
           , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch "test"|]
+          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
           , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches "test"|]
+          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
           ]
          ++ standardsOutputBlock
          ++ aliasesOutputBlock
@@ -288,15 +288,15 @@ spec = do
           , PrintText [s|== Configuring basics... ==|]
           , PrintText [s|===========================|]
           , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name "test"|]
+          , PrintText [s|==>> git config --local user.name test|]
           , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email "test"|]
+          , PrintText [s|==>> git config --local user.email test|]
           , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor "test"|]
+          , PrintText [s|==>> git config --local core.editor test|]
           , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch "test"|]
+          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
           , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches "test"|]
+          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
           ]
          ++ standardsOutputBlock
          ++ aliasesOutputBlock
@@ -329,15 +329,15 @@ spec = do
           , PrintText [s|== Configuring basics... ==|]
           , PrintText [s|===========================|]
           , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name "test"|]
+          , PrintText [s|==>> git config --local user.name test|]
           , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email "test"|]
+          , PrintText [s|==>> git config --local user.email test|]
           , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor "test"|]
+          , PrintText [s|==>> git config --local core.editor test|]
           , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch "test"|]
+          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
           , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches "test"|]
+          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
           ]
          ++ standardsOutputBlock
          ++ aliasesOutputBlock

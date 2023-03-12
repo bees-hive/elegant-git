@@ -2,9 +2,10 @@ module Elegit.Git.Exec where
 
 import           Control.Monad.Catch  as MC
 import           Data.Text            (stripEnd)
+import qualified Data.Text            as T
 import           Elegit.Git.Action
 import           GHC.IO.Handle        (hFlush)
-import           System.Process.Typed (ExitCode (ExitFailure, ExitSuccess), ProcessConfig, proc, readProcess)
+import           System.Process.Typed (ExitCode (ExitFailure, ExitSuccess), ProcessConfig, proc, readProcess, shell)
 import           Universum            as U
 
 
@@ -24,24 +25,30 @@ data GitCommand
   | GCUC GUnsetConfigData
   | GCATR GAliasesToRemoveData
   | GCGKL GGPGKeyListData
+  | GCPTT GPathToToolData
 
 
-procText :: Text -> [Text] -> ProcessConfig () () ()
-procText name args = proc (toString name) (toString <$> args)
+procCmd :: Text -> [Text] -> ProcessConfig () () ()
+procCmd tName args = proc (toString tName) (toString <$> args)
+
+
+shellCmd :: Text -> [Text] -> ProcessConfig () () ()
+shellCmd tName args = shell $ toString $ T.intercalate " " (tName:args)
 
 
 -- TODO: cover with tests
 procFromCmd :: GitCommand -> ProcessConfig () () ()
-procFromCmd (GCCB gc)  = procText (toolName gc) (commandArgs gc)
-procFromCmd (GCBU gc)  = procText (toolName gc) (commandArgs gc)
-procFromCmd (GCL gc)   = procText (toolName gc) ("-c":"color.ui=always":commandArgs gc)
-procFromCmd (GCS gc)   = procText (toolName gc) ("-c":"color.status=always":commandArgs gc)
-procFromCmd (GCSL gc)  = procText (toolName gc) (commandArgs gc)
-procFromCmd (GCRC gc)  = procText (toolName gc) (commandArgs gc)
-procFromCmd (GCSC gc)  = procText (toolName gc) (commandArgs gc)
-procFromCmd (GCUC gc)  = procText (toolName gc) (commandArgs gc)
-procFromCmd (GCATR gc) = procText (toolName gc) (commandArgs gc)
-procFromCmd (GCGKL gc) = procText (toolName gc) (commandArgs gc)
+procFromCmd (GCCB gc)  = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCBU gc)  = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCL gc)   = procCmd (toolName gc) ("-c":"color.ui=always":commandArgs gc)
+procFromCmd (GCS gc)   = procCmd (toolName gc) ("-c":"color.status=always":commandArgs gc)
+procFromCmd (GCSL gc)  = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCRC gc)  = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCSC gc)  = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCUC gc)  = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCATR gc) = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCGKL gc) = procCmd (toolName gc) (commandArgs gc)
+procFromCmd (GCPTT gc) = shellCmd (toolName gc) (commandArgs gc)
 
 
 class Monad m => MonadGitExec m where
