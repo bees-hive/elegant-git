@@ -4,7 +4,7 @@ import           Control.Exception.Safe    (throwString)
 import           Control.Monad.Free.Church
 import           Control.Monad.HT
 import qualified Elegit.Git.Action         as GA
-import           Elegit.Git.Exec           (GitCommand (..), MonadGitExec (execGit, gLine, pText, pTextLn))
+import           Elegit.Git.Exec           (MonadGitExec (execGit, gLine, pText, pTextLn))
 import           Fmt
 import           Universum                 as U
 
@@ -15,49 +15,44 @@ executeGit = foldF executeGitF
 
 
 -- | Interpreter for the real world
---
--- Currently just prints the resulting commands without any execution.
---
 executeGitF :: (MonadCatch m, MonadGitExec m) => GA.GitF a -> m a
 executeGitF arg = case arg of
   GA.CurrentBranch gc next -> do
-    mCurrentBranch <- execGit (GCCB gc)
+    mCurrentBranch <- execGit gc
     case mCurrentBranch of
       Nothing -> throwString "No branch found. Seems like this repository was not initialized fully."
       Just currentBranch ->
         return $ next currentBranch
 
   GA.BranchUpstream gc next -> do
-    mUpstreamBranch <- execGit (GCBU gc)
+    mUpstreamBranch <- execGit gc
     return $ next mUpstreamBranch
 
   GA.Log gc next -> do
-    logs <- lines . fromMaybe "" <$> execGit (GCL gc)
+    logs <- fromMaybe [] <$> execGit gc
     return $ next logs
   GA.Status gc next -> do
-    changes <- lines . fromMaybe "" <$> execGit (GCS gc)
+    changes <- fromMaybe [] <$> execGit gc
     return $ next changes
   GA.StashList gc next -> do
-    stashes <- lines . fromMaybe "" <$> execGit (GCSL gc)
+    stashes <- fromMaybe [] <$> execGit gc
     return $ next stashes
 
   GA.PathToTool gc next -> do
-    path <- execGit (GCPTT gc)
+    path <- execGit gc
     return $ next path
 
   GA.GPGListKeys gc next -> do
-    mGpgKeys <- execGit (GCGKL gc)
-    return $ next (mGpgKeys >>= nonEmpty . lines)
+    next <$> execGit gc
   GA.AliasesToRemove gc next -> do
-    oldAliasesM <- execGit (GCATR gc)
-    return $ next (oldAliasesM >>= nonEmpty . lines)
+    next <$> execGit gc
   GA.ReadConfig gc next -> do
-    next <$> execGit (GCRC gc)
+    next <$> execGit gc
   GA.SetConfig gc next -> do
-    U.void $ execGit (GCSC gc)
+    U.void $ execGit gc
     return next
   GA.UnsetConfig gc next -> do
-    U.void $ execGit (GCUC gc)
+    U.void $ execGit gc
     return next
   GA.Prompt (GA.PromptConfig prompt pType) next -> do
     let

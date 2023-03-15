@@ -12,8 +12,14 @@ import           Universum
 runCli :: (MonadIO m, MonadCatch m) => m ()
 runCli = do
   cmd <- liftIO $ customExecParser P.cliPrefs P.cli
+  let
+    errHandler se = case se of
+                     Exc (Bug e cs) -> do
+                       putTextLn $ "Caught exception: " <> show e
+                       putStrLn $ prettyCallStack cs
+                     _ -> putTextLn $ "Caught exception: " <> show se
 
-  flip catch (\e -> putTextLn $ "Caught exception: " <> show (e :: SomeException) ) $
+  flip catch errHandler $
     runGitExecT $
     executeGit $
       case cmd of

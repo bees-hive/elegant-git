@@ -1,32 +1,17 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
+{-# LANGUAGE DefaultSignatures   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeFamilies        #-}
 module Elegit.Git.Exec where
 
 import           Control.Monad.Catch  as MC
-import           Data.Text            (stripEnd)
 import qualified Data.Text            as T
+import           Data.Text.Lazy       (stripEnd)
 import           Elegit.Git.Action
 import           GHC.IO.Handle        (hFlush)
-import           System.Process.Typed (ExitCode (ExitFailure, ExitSuccess), ProcessConfig, proc, readProcess, shell)
+import           System.IO.Error      (IOError)
+import           System.Process.Typed (ExitCode (ExitSuccess), ProcessConfig, proc, readProcess, shell)
 import           Universum            as U
-
-
-newtype GitExecT m a
-  = GitExecT { runGitExecT :: m a }
-
--- TODO: Improve code usability by creating a generic type-class which should have instance
--- for every possible command.
-data GitCommand
-  = GCCB GCurrentBranchData
-  | GCBU GBranchUpstreamData
-  | GCL GLogData
-  | GCS GStatusData
-  | GCSL GStashListData
-  | GCRC GReadConfigData
-  | GCSC GSetConfigData
-  | GCUC GUnsetConfigData
-  | GCATR GAliasesToRemoveData
-  | GCGKL GGPGKeyListData
-  | GCPTT GPathToToolData
-
 
 procCmd :: Text -> [Text] -> ProcessConfig () () ()
 procCmd tName args = proc (toString tName) (toString <$> args)
@@ -36,42 +21,145 @@ shellCmd :: Text -> [Text] -> ProcessConfig () () ()
 shellCmd tName args = shell $ toString $ T.intercalate " " (tName:args)
 
 
--- TODO: cover with tests
-procFromCmd :: GitCommand -> ProcessConfig () () ()
-procFromCmd (GCCB gc)  = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCBU gc)  = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCL gc)   = procCmd (toolName gc) ("-c":"color.ui=always":commandArgs gc)
-procFromCmd (GCS gc)   = procCmd (toolName gc) ("-c":"color.status=always":commandArgs gc)
-procFromCmd (GCSL gc)  = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCRC gc)  = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCSC gc)  = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCUC gc)  = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCATR gc) = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCGKL gc) = procCmd (toolName gc) (commandArgs gc)
-procFromCmd (GCPTT gc) = shellCmd (toolName gc) (commandArgs gc)
+class ExecutableCommand a where
+  type ExecutableCommandResult a :: Type
+
+  cmdExecArgs :: a -> [Text]
+  default cmdExecArgs :: RenderGitCommand a => a -> [Text]
+  cmdExecArgs = commandArgs
+
+  cmdExecToolName :: a -> Text
+  default cmdExecToolName :: RenderGitCommand a => a -> Text
+  cmdExecToolName = toolName
+
+  toProc :: a -> Text -> [Text] -> ProcessConfig () () ()
+
+  readGitOutput :: a -> (ExitCode, LText, LText) -> ExecutableCommandResult a
+
+instance ExecutableCommand GCurrentBranchData where
+  type ExecutableCommandResult GCurrentBranchData = Maybe Text
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GBranchUpstreamData where
+  type ExecutableCommandResult GBranchUpstreamData = Maybe Text
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GLogData where
+  type ExecutableCommandResult GLogData = Maybe [Text]
+
+  cmdExecArgs gc = "-c":"color.ui=always":commandArgs gc
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GStatusData where
+  type ExecutableCommandResult GStatusData = Maybe [Text]
+
+  cmdExecArgs gc = "-c":"color.status=always":commandArgs gc
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GStashListData where
+  type ExecutableCommandResult GStashListData = Maybe [Text]
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GGPGKeyListData where
+  type ExecutableCommandResult GGPGKeyListData = Maybe (NonEmpty Text)
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = nonEmpty . lines $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GAliasesToRemoveData where
+  type ExecutableCommandResult GAliasesToRemoveData = Maybe (NonEmpty Text)
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = nonEmpty . lines $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GReadConfigData where
+  type ExecutableCommandResult GReadConfigData = Maybe Text
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
+  readGitOutput _ _                      = Nothing
+
+instance ExecutableCommand GSetConfigData where
+  type ExecutableCommandResult GSetConfigData = Maybe ()
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, _, _) = pass
+  readGitOutput _ _                   = Nothing
+
+instance ExecutableCommand GUnsetConfigData where
+  type ExecutableCommandResult GUnsetConfigData = Maybe ()
+
+  toProc _ = procCmd
+
+  readGitOutput _ (ExitSuccess, _, _) = pass
+  readGitOutput _ _                   = Nothing
+
+instance ExecutableCommand GPathToToolData where
+  type ExecutableCommandResult GPathToToolData = Maybe Text
+
+  toProc _ = shellCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
+  readGitOutput _ _                      = Nothing
 
 
 class Monad m => MonadGitExec m where
-  execGit :: GitCommand -> m (Maybe Text)
+  execGit :: (ExecutableCommand a) => a -> m (ExecutableCommandResult a)
   pText :: Text -> m ()
   pTextLn :: Text -> m ()
   gLine :: m Text
 
-instance MonadIO m => MonadGitExec (GitExecT m) where
+
+newtype GitExecT m a
+  = GitExecT { runGitExecT :: m a }
+
+
+instance (MonadCatch m, MonadIO m) => MonadGitExec (GitExecT m) where
   execGit gc = do
-    (eCode, outputBS, _errBS) <- readProcess $ procFromCmd gc
-    case eCode of
-      -- TODO: Handle error codes per `gc`
-      ExitFailure _ -> do
-        return Nothing
-      ExitSuccess -> do
-        let output = stripEnd $ decodeUtf8 outputBS
-        return $ if null output then Nothing else Just output
+    let
+      cmdArgs = cmdExecArgs gc
+      cmdTool = cmdExecToolName gc
+    flip U.catch (\(e :: IOError) -> bug e) $ do
+      (eCode, stdoutBS, stderrBS) <- readProcess $ toProc gc cmdTool cmdArgs
+      return $
+        readGitOutput gc
+          ( eCode
+          , stripEnd $ decodeUtf8 stdoutBS
+          , stripEnd $ decodeUtf8 stderrBS
+          )
 
   pText t = do
     putText t
     liftIO $ hFlush stdout
+
   pTextLn = putTextLn
+
   gLine = getLine
 
 {- This is the boilerplate required by mtl to define custom monad transformer

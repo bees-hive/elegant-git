@@ -41,6 +41,7 @@ library
   default-extensions:
       FlexibleContexts
       OverloadedStrings
+      TypeApplications
       NoImplicitPrelude
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Werror=incomplete-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
@@ -74,6 +75,7 @@ executable git-elegant
   default-extensions:
       FlexibleContexts
       OverloadedStrings
+      TypeApplications
       NoImplicitPrelude
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Werror=incomplete-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
@@ -115,6 +117,7 @@ test-suite elegant-git-test
   default-extensions:
       FlexibleContexts
       OverloadedStrings
+      TypeApplications
       NoImplicitPrelude
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Werror=incomplete-patterns -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:

@@ -45,6 +45,7 @@ dependencies:
 default-extensions:
 - FlexibleContexts
 - OverloadedStrings
+- TypeApplications
 - NoImplicitPrelude
 
 ghc-options:
