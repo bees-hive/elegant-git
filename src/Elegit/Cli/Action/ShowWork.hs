@@ -5,6 +5,8 @@ module Elegit.Cli.Action.ShowWork
     ) where
 
 import           Control.Monad.Free.Class
+import           Control.Monad.Trans.Writer.CPS  (execWriter, tell)
+import qualified Data.DList                      as DL
 import           Data.String.QQ
 import qualified Data.Text                       as T
 import           Elegit.Cli.Command
@@ -35,40 +37,43 @@ git stash list
 
 cli :: Mod CommandFields ElegitCommand
 cli = command "show-work" $ info (pure ShowWorkCommand) $
-    mconcat [ progDescDoc (Just purpose )
-            , footerDoc (Just description )
-            ]
+  mconcat [ progDescDoc (Just purpose )
+          , footerDoc (Just description )
+          ]
 
 
 -- | Execution description of the ShowWork action
 cmd :: (MonadFree GA.GitF m) => m ()
 cmd = do
-    whenJustM GA.currentBranch $ \currentBranch -> do
-        mCurrentUpstream <- GA.branchUpstream currentBranch
-        branchWithLatestChanges <- GA.freshestDefaultBranch
-        logs <- GA.log GA.LogOneLine branchWithLatestChanges currentBranch
-        changes <- GA.status GA.StatusShort
-        stashes <- GA.stashList
+  whenJustM GA.currentBranch $ \currentBranch -> do
+    mCurrentUpstream <- GA.branchUpstream currentBranch
+    branchWithLatestChanges <- GA.freshestDefaultBranch
+    logs <- GA.log GA.LogOneLine branchWithLatestChanges currentBranch
+    changes <- GA.status GA.StatusShort
+    stashes <- GA.stashList
 
-        GA.print =<< GA.formatInfo ">>> Branch refs:"
-        GA.print =<< GA.formatInfo (fmt "local: "+|currentBranch|+"")
-        case mCurrentUpstream of
-          Nothing -> pass
-          Just currentUpstream ->
-              GA.print =<< GA.formatInfo (fmt "remote: "+|currentUpstream|+"")
+    GA.print =<< GA.formatInfo ">>> Branch refs:"
+    GA.print =<< GA.formatInfo (fmt "local: "+|currentBranch|+"")
+    whenJust mCurrentUpstream $ \currentUpstream ->
+      GA.print =<< GA.formatInfo (fmt "remote: "+|currentUpstream|+"")
 
-        GA.print ""
+    GA.emptyLine
 
-        unless (null logs) $ do
-            GA.print =<< GA.formatInfo (fmt ">>> New commits (comparing to "+|branchWithLatestChanges|+" branch):")
-            GA.print $ T.intercalate "\n" logs
-            GA.print ""
+    let
+      blocks = execWriter $ do
+        unless (null logs) $ tell $ DL.singleton $ do
+          GA.print =<< GA.formatInfo (">>> New commits (comparing to "+|branchWithLatestChanges|+" branch):")
+          GA.print $ T.intercalate "\n" logs
 
-        unless (null changes) $ do
-            GA.print =<< GA.formatInfo ">>> Uncommitted modifications:"
-            GA.print $ T.intercalate "\n" changes
-            GA.print ""
+        unless (null changes) $ tell $ DL.singleton $ do
+          GA.print =<< GA.formatInfo ">>> Uncommitted modifications:"
+          GA.print $ T.intercalate "\n" changes
 
-        unless (null stashes) $ do
-            GA.print =<< GA.formatInfo ">>> Available stashes:"
-            GA.print $ T.intercalate "\n" stashes
+        unless (null stashes) $ tell $ DL.singleton $ do
+          GA.print =<< GA.formatInfo ">>> Available stashes:"
+          GA.print $ T.intercalate "\n" stashes
+
+    -- Execute loggers printing new lines in only in-between
+    sequence_
+      $ intersperse GA.emptyLine
+      $ DL.toList blocks

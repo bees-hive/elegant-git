@@ -49,14 +49,14 @@ initialization of a new repository.|]
 
 cli :: Mod CommandFields ElegitCommand
 cli = command "init-repository" $ info (pure InitRepositoryCommand) $
-    mconcat [ progDescDoc (Just purpose )
-            , footerDoc (Just description )
-            ]
+  mconcat [ progDescDoc (Just purpose )
+          , footerDoc (Just description )
+          ]
 
 
 cmd :: (MonadFree GA.GitF m) => m ()
 cmd = do
-    GA.initRepositoryVerbose
-    AcquireRepository.cmd
-    GA.addInitialCommitVerbose initialCommitMessage
-    GA.print . unlines =<< GA.showVerbose GA.ShowHead
+  GA.initRepositoryVerbose
+  AcquireRepository.cmd
+  GA.addInitialCommitVerbose initialCommitMessage
+  GA.print . unlines =<< GA.showVerbose GA.ShowHead

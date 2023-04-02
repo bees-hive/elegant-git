@@ -64,7 +64,6 @@ spec = do
           , PrintText ">>> Uncommitted modifications:"
           , PrintText "M app/Main.hs"
           , PrintText "?? tmp.txt"
-          , PrintText ""
           ]
         )
     it "prints remote" $ do
@@ -113,6 +112,5 @@ spec = do
           , PrintText ""
           , PrintText ">>> New commits (comparing to main branch):"
           , PrintText "Updates"
-          , PrintText ""
           ]
         )
