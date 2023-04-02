@@ -1,6 +1,7 @@
 module Elegit.Cli.Parser where
 
 import qualified Elegit.Cli.Action.AcquireRepository as AcquireRepository
+import qualified Elegit.Cli.Action.InitRepository    as InitRepository
 import qualified Elegit.Cli.Action.ShowWork          as ShowWork
 import           Elegit.Cli.Command
 import           Options.Applicative
@@ -17,9 +18,17 @@ dayToDayContributionsCommand =
     <> AcquireRepository.cli
 
 
+enableElegantGitServices :: Command ElegitCommand
+enableElegantGitServices =
+    commandGroup "enable Elegant Git services"
+    <> InitRepository.cli
+
+
 cli :: ParserInfo ElegitCommand
 cli = flip info mempty $
-    hsubparser dayToDayContributionsCommand <**> helper
+    (hsubparser enableElegantGitServices
+     <|> hsubparser dayToDayContributionsCommand)
+    <**> helper
 
 
 cliPrefs :: ParserPrefs

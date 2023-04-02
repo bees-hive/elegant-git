@@ -5,4 +5,5 @@ import           Universum
 data ElegitCommand
   = ShowWorkCommand
   | AcquireRepositoryCommand
+  | InitRepositoryCommand
   deriving (Eq, Show)

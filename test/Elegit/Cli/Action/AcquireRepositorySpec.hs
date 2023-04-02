@@ -17,7 +17,7 @@ defaultGit =
   where
     imGit = IMGit
       { _gConfig = mempty
-      , _gRepository = repo
+      , _gRepository = Just repo
       }
     repo = GRepository
        { _grRemotes = []
@@ -30,6 +30,7 @@ defaultGit =
        }
     commit = GCommit
       { _gcName = "Init commit"
+      , _gcMessage = "Empty message"
       }
     mainBranch = GBranch
       { _gbName = "main"
@@ -165,7 +166,7 @@ spec = do
     it "prepares local git repository for further work" $ do
       let
         repoWithNewConfig = defaultGit
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
             (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure defaultGit AcquireRepository.cmd `shouldBe`
@@ -202,7 +203,7 @@ spec = do
             ]
 
         repoWithNewConfig = git
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
             (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`
@@ -232,12 +233,12 @@ spec = do
     it "does not alter unexpected config" $ do
       let
         git = defaultGit
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
             [ ("test.test",  "test")
             ]
 
         repoWithNewConfig = git
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
             (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`
@@ -267,14 +268,14 @@ spec = do
     it "removes obsolete configuration" $ do
       let
         git = defaultGit
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
             [ ("elegant.acquired",  "true")
             ]
 
         repoWithNewConfig = git
-          & gRepository.grConfig %~
+          & localRepository.grConfig %~
             delete "elegant.acquired"
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
             (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`
@@ -306,14 +307,14 @@ spec = do
     it "removes old aliases" $ do
       let
         git = defaultGit
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
           [ ("alias.polish-work",        "elegant polish-work")
           , ("alias.polish-workflow",    "elegant polish-workflow")
           , ("alias.prune-repository",   "elegant prune-repository")
           ]
 
         repoWithNewConfig = git
-          & gRepository.grConfig %~ union
+          & localRepository.grConfig %~ union
             (configuredStandards `union` configuredAliases `union` configuredGpg)
 
       runGitActionPure git AcquireRepository.cmd `shouldBe`

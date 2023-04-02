@@ -8,10 +8,11 @@ import           Control.Monad.Catch  as MC
 import qualified Data.Text            as T
 import           Data.Text.Lazy       (stripEnd)
 import           Elegit.Git.Action
-import           GHC.IO.Handle        (hFlush)
+import           GHC.IO.Handle        (hFlush, hFlushAll)
 import           System.IO.Error      (IOError)
 import           System.Process.Typed (ExitCode (ExitSuccess), ProcessConfig, proc, readProcess, shell)
 import           Universum            as U
+import           UnliftIO.Directory   (makeRelativeToCurrentDirectory, removeFile)
 
 procCmd :: Text -> [Text] -> ProcessConfig () () ()
 procCmd tName args = proc (toString tName) (toString <$> args)
@@ -128,19 +129,45 @@ instance ExecutableCommand GPathToToolData where
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
   readGitOutput _ _                      = Nothing
 
+instance ExecutableCommand GInitRepositoryData where
+  type ExecutableCommandResult GInitRepositoryData = Maybe ()
+
+  toProc _ = shellCmd
+
+  readGitOutput _ (ExitSuccess, _, _) = pass
+  readGitOutput _ _                   = Nothing
+
+instance ExecutableCommand GInitialCommitData where
+  type ExecutableCommandResult GInitialCommitData = Maybe ()
+
+  toProc _ = shellCmd
+
+  readGitOutput _ (ExitSuccess, _, _) = pass
+  readGitOutput _ _                   = Nothing
+
+instance ExecutableCommand GShowData where
+  type ExecutableCommandResult GShowData = Maybe [Text]
+
+  cmdExecArgs gc = "-c":"color.ui=always":commandArgs gc
+  toProc _ = shellCmd
+
+  readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines (toStrict gOut)
+  readGitOutput _ _                      = Nothing
+
 
 class Monad m => MonadGitExec m where
   execGit :: (ExecutableCommand a) => a -> m (ExecutableCommandResult a)
   pText :: Text -> m ()
   pTextLn :: Text -> m ()
   gLine :: m Text
+  withFileWithText :: Text -> Text -> m () -> m ()
 
 
 newtype GitExecT m a
   = GitExecT { runGitExecT :: m a }
 
 
-instance (MonadCatch m, MonadIO m) => MonadGitExec (GitExecT m) where
+instance (MonadMask m, MonadIO m) => MonadGitExec (GitExecT m) where
   execGit gc = do
     let
       cmdArgs = cmdExecArgs gc
@@ -150,9 +177,24 @@ instance (MonadCatch m, MonadIO m) => MonadGitExec (GitExecT m) where
       return $
         readGitOutput gc
           ( eCode
-          , stripEnd $ decodeUtf8 stdoutBS
-          , stripEnd $ decodeUtf8 stderrBS
+          , stripEnd $ decodeUtf8 @LText stdoutBS
+          , stripEnd $ decodeUtf8 @LText stderrBS
           )
+
+  withFileWithText fName content action = do
+    void $ U.bracket
+      (do
+        fPath <- makeRelativeToCurrentDirectory (toString fName)
+        fHandle <- openFile fPath WriteMode
+        return (fPath, fHandle))
+      (\(fPath, fHandle) -> do
+        hClose fHandle
+        removeFile fPath)
+      (\(_, fHandle) -> do
+        hPutStr fHandle content
+        liftIO $ hFlushAll fHandle
+        action)
+    pass
 
   pText t = do
     putText t
@@ -210,6 +252,21 @@ instance MonadThrow m => MonadThrow (GitExecT m) where
 instance MonadCatch m => MonadCatch (GitExecT m) where
   catch (GitExecT m) c = GitExecT $ m `MC.catch` \e -> runGitExecT (c e)
   {-# INLINE catch #-}
+
+instance MonadMask m => MonadMask (GitExecT m) where
+  mask a = GitExecT $ mask $ \u -> runGitExecT (a $ q u)
+    where q :: (m a -> m a) -> GitExecT m a -> GitExecT m a
+          q u (GitExecT b) = GitExecT (u b)
+  uninterruptibleMask a =
+    GitExecT $ uninterruptibleMask $ \u -> runGitExecT (a $ q u)
+      where q :: (m a -> m a) -> GitExecT m a -> GitExecT m a
+            q u (GitExecT b) = GitExecT (u b)
+
+  generalBracket acquire release use' = GitExecT $
+    generalBracket
+      (runGitExecT acquire)
+      (\resource exitCase -> runGitExecT (release resource exitCase))
+      (runGitExecT . use')
 
 instance (MonadIO m) => MonadIO (GitExecT m) where
   liftIO = liftGitExecT . liftIO

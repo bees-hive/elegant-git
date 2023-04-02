@@ -38,6 +38,7 @@ dependencies:
 - microlens-mtl
 - microlens-th
 - utility-ht
+- unliftio
 
 - optparse-applicative
 - typed-process

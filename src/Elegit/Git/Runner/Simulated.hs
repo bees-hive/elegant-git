@@ -1,5 +1,6 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE FlexibleContexts   #-}
+{-# LANGUAGE FlexibleInstances  #-}
 {-# LANGUAGE RankNTypes         #-}
 {-# LANGUAGE TemplateHaskell    #-}
 module Elegit.Git.Runner.Simulated where
@@ -9,14 +10,14 @@ import           Control.Monad.HT            (until)
 import           Control.Monad.Writer.Strict
 import           Data.DList                  as DList
 import qualified Data.HashMap.Strict         as HS
-import qualified Data.List.NonEmpty          as NE
 import qualified Data.Text                   as T
 import qualified Elegit.Git.Action           as GA
 import           Fmt
 import           Lens.Micro
 import           Lens.Micro.Mtl
 import           Lens.Micro.TH
-import           Universum                   as U hiding (Lens, Lens', Traversal', preuse, use, view, (%~), (^.))
+import           Universum                   as U hiding (Lens, Lens', Traversal', preuse, preview, use, view, (%~),
+                                                   (.~), (^.), (^?))
 
 -- | Describes all the metrics we collect from the git action execution
 data GitCommand
@@ -30,8 +31,11 @@ data GitCommand
 type GConfig = HashMap Text Text
 
 -- TODO: Add commit hash.
-newtype GCommit
-  = GCommit { _gcName :: Text }
+data GCommit
+  = GCommit
+      { _gcName    :: Text
+      , _gcMessage :: Text
+      }
   deriving (Eq, Show)
 
 makeLenses ''GCommit
@@ -41,7 +45,7 @@ data GBranch
   = GBranch
       { _gbName     :: Text
       , _gbUpstream :: Maybe Text
-      , _gbCommit   :: NonEmpty GCommit
+      , _gbCommit   :: [GCommit]
       }
   deriving (Eq, Show)
 
@@ -78,12 +82,32 @@ data GRepository
   deriving (Eq, Show)
 
 
+newRepository :: GRepository
+newRepository
+  = GRepository
+    { _grRemotes = []
+    , _grBranches =
+      [ GBranch
+        { _gbName     = "master"
+        , _gbUpstream = Nothing
+        , _gbCommit   = []
+        }
+      ]
+    , _grCurrentBranch = "master"
+    , _grStashes = []
+    , _grModifiedFiles = []
+    , _grUnstagedFiles = []
+    , _grConfig = mempty
+    }
+
+
+
 makeLenses ''GRepository
 
 
 data InMemoryGit
   = IMGit
-      { _gRepository :: GRepository
+      { _gRepository :: Maybe GRepository
       , _gConfig     :: GConfig
       }
   deriving (Eq, Show)
@@ -119,30 +143,43 @@ runGitActionPure imGit action =
 -- `Writer`. To lift any value into a monad you should use `return`.
 collectImpureCommandsF :: (MonadState InMemoryGit m, MonadWriter (DList GitCommand) m) => GA.GitF a -> m a
 collectImpureCommandsF cmd = case cmd of
+  GA.InitRepository _ next -> do
+    gRepository .= Just newRepository
+    return next
+  GA.AddInitialCommit (GA.GInitialCommitData message) next -> do
+    localRepository . branchWithName "master" . gbCommit %= (GCommit {_gcName = "Initial Commit", _gcMessage = message}:)
+    return next
+
+  GA.Show (GA.GShowData target) next -> do
+    result <- runMaybeT $ case target of
+      GA.ShowHead -> do
+        currentBranchName <- MaybeT $ preuse $ localRepository . grCurrentBranch
+        currentBranch <- MaybeT $ preuse $ localRepository . branchWithName currentBranchName
+        GCommit {_gcName = name, _gcMessage = message} <- MaybeT $ pure $ currentBranch ^? gbCommit._head
+        return $ [name, ""] ++ lines message
+    return $ next $ fromMaybe [] result
+
   GA.CurrentBranch GA.GCurrentBranchData next -> do
-    currentBranchName <- use $ localRepository . grCurrentBranch
-    return $ next currentBranchName
+    mCurrentBranchName <- preuse $ localRepository . grCurrentBranch
+    return $ next mCurrentBranchName
   GA.BranchUpstream (GA.GBranchUpstreamData branch) next -> do
     branchM <- preuse $ localRepository . branchWithName branch
     return $ next (branchM >>= _gbUpstream)
 
   GA.Log (GA.GLogData lType base target) next -> do
-    case lType of
+    result <- runMaybeT $ case lType of
       GA.LogOneLine -> do
-        mBaseBranch <- preuse $ localRepository . branchWithName base
-        mTargetBranch <- preuse $ localRepository . branchWithName target
-
-        return $ next $ fromMaybe [] $ do
-          baseBranch <- mBaseBranch
-          targetBranch <- mTargetBranch
-          let baseBranchHead = baseBranch ^. gbCommit.to U.head
-          return $ view gcName <$> commitDifference baseBranchHead (NE.toList $ targetBranch^.gbCommit)
+        baseBranch <- MaybeT $ preuse $ localRepository.branchWithName base
+        targetBranch <- MaybeT $ preuse $ localRepository.branchWithName target
+        baseBranchHead <- MaybeT $ pure $ baseBranch ^? gbCommit._head
+        return $ view gcName <$> commitDifference baseBranchHead (targetBranch^.gbCommit)
+    return $ next $ fromMaybe [] result
 
   GA.Status (GA.GStatusData sType) next -> do
     case sType of
       GA.StatusShort -> do
-        modifiedFiles <- use $ localRepository . grModifiedFiles
-        unstagedFiles <- use $ localRepository . grUnstagedFiles
+        modifiedFiles <- use $ localRepository.grModifiedFiles
+        unstagedFiles <- use $ localRepository.grUnstagedFiles
         let
           modified :: [Text]
           modified = (\modifiedFile -> fmt "M "+|modifiedFile|+"") <$> modifiedFiles
@@ -248,13 +285,13 @@ collectImpureCommandsF cmd = case cmd of
          else DList.fromList (PrintText <$> lines content)
     return next
 
-localRepository :: Lens' InMemoryGit GRepository
-localRepository = gRepository
+localRepository :: Traversal' InMemoryGit GRepository
+localRepository = gRepository . _Just
 
-localConfig :: Lens' InMemoryGit GConfig
+localConfig :: Traversal' InMemoryGit GConfig
 localConfig = localRepository . grConfig
 
-globalConfig :: Lens' InMemoryGit GConfig
+globalConfig :: Traversal' InMemoryGit GConfig
 globalConfig = gConfig
 
 branchWithName :: Text -> Traversal' GRepository GBranch
