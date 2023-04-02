@@ -34,7 +34,7 @@ import           Control.Monad.Free
 import           Control.Monad.Free.Church
 import qualified Data.Text                 as T
 import           Fmt
-import           Universum                 hiding (print)
+import           Universum                 hiding (print, show)
 
 -- TODO: maybe, cover with tests
 class RenderGitCommand c where
@@ -169,6 +169,35 @@ instance RenderGitCommand GGPGKeyListData where
   commandArgs (GGPGKeyListData gEmail) =
     ["--list-secret-keys", "--keyid-format", "long", gEmail]
 
+
+data GInitRepositoryData
+  = GInitRepositoryData
+
+instance RenderGitCommand GInitRepositoryData where
+  commandArgs _ = ["init"]
+
+
+newtype GInitialCommitData
+  = GInitialCommitData { commitMessage :: Text }
+
+instance RenderGitCommand GInitialCommitData where
+  commandArgs _ = ["commit", "--allow-empty", "--file", "a-message-of-initial-commit"]
+
+
+data ShowTarget
+  = ShowHead
+
+
+newtype GShowData
+  = GShowData { showType :: ShowTarget }
+
+instance RenderGitCommand GShowData where
+  commandArgs (GShowData sType) = ["show", showArg]
+    where
+      showArg :: Text
+      showArg = case sType of
+                  ShowHead -> "HEAD"
+
 -- | The declaration of all posible actions we can do in the git action.
 --
 -- This describes the data of the action, and whether it can return any value
@@ -177,8 +206,11 @@ instance RenderGitCommand GGPGKeyListData where
 -- We can use records later to better comunicate the purpose of each field by
 -- providing a name.
 data GitF a
-  = CurrentBranch GCurrentBranchData (Text -> a)
+  = InitRepository GInitRepositoryData a
+  | AddInitialCommit GInitialCommitData a
+  | CurrentBranch GCurrentBranchData (Maybe Text -> a)
   | BranchUpstream GBranchUpstreamData (Maybe Text -> a)
+  | Show GShowData ([Text] -> a)
   | Log GLogData ([Text] -> a)
   | Status GStatusData ([Text] -> a)
   | StashList GStashListData ([Text] -> a)
@@ -258,7 +290,7 @@ log lType lBase lTarget = liftF $ Log (GLogData lType lBase lTarget) id
 stashList :: MonadFree GitF m => m [Text]
 stashList = liftF $ StashList GStashListData id
 
-currentBranch :: MonadFree GitF m => m Text
+currentBranch :: MonadFree GitF m => m (Maybe Text)
 currentBranch = liftF $ CurrentBranch GCurrentBranchData id
 
 branchUpstream :: MonadFree GitF m => Text -> m (Maybe Text)
@@ -299,6 +331,15 @@ formatCommand cmd = liftF $ FormatCommand cmd id
 
 print :: MonadFree GitF m => Text -> m ()
 print content = liftF $ PrintText content ()
+
+initRepository :: MonadFree GitF m => m ()
+initRepository = liftF $ InitRepository GInitRepositoryData ()
+
+addInitialCommit :: MonadFree GitF m => Text -> m ()
+addInitialCommit cMessage = liftF $ AddInitialCommit (GInitialCommitData cMessage) ()
+
+show :: MonadFree GitF m => ShowTarget -> m [Text]
+show sTarget = liftF $ Show (GShowData sTarget) id
 
 -- Derived actions
 
@@ -355,3 +396,19 @@ removeObsoleteConfiguration cScope = do
     unsetConfigVerbose cScope "elegant.acquired"
 
   removeAliases cScope
+
+initRepositoryVerbose :: MonadFree GitF m => m ()
+initRepositoryVerbose = do
+  initRepository
+  print =<< formatGitCommand GInitRepositoryData
+
+addInitialCommitVerbose :: MonadFree GitF m => Text -> m ()
+addInitialCommitVerbose cMessage = do
+  addInitialCommit cMessage
+  print =<< formatGitCommand (GInitialCommitData cMessage)
+
+showVerbose :: MonadFree GitF m => ShowTarget -> m [Text]
+showVerbose sTarget = do
+  output <- show sTarget
+  print =<< formatGitCommand (GShowData sTarget)
+  return output

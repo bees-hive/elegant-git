@@ -43,32 +43,32 @@ cli = command "show-work" $ info (pure ShowWorkCommand) $
 -- | Execution description of the ShowWork action
 cmd :: (MonadFree GA.GitF m) => m ()
 cmd = do
-    currentBranch <- GA.currentBranch
-    mCurrentUpstream <- GA.branchUpstream currentBranch
-    branchWithLatestChanges <- GA.freshestDefaultBranch
-    logs <- GA.log GA.LogOneLine branchWithLatestChanges currentBranch
-    changes <- GA.status GA.StatusShort
-    stashes <- GA.stashList
+    whenJustM GA.currentBranch $ \currentBranch -> do
+        mCurrentUpstream <- GA.branchUpstream currentBranch
+        branchWithLatestChanges <- GA.freshestDefaultBranch
+        logs <- GA.log GA.LogOneLine branchWithLatestChanges currentBranch
+        changes <- GA.status GA.StatusShort
+        stashes <- GA.stashList
 
-    GA.print =<< GA.formatInfo ">>> Branch refs:"
-    GA.print =<< GA.formatInfo (fmt "local: "+|currentBranch|+"")
-    case mCurrentUpstream of
-      Nothing -> pass
-      Just currentUpstream ->
-          GA.print =<< GA.formatInfo (fmt "remote: "+|currentUpstream|+"")
+        GA.print =<< GA.formatInfo ">>> Branch refs:"
+        GA.print =<< GA.formatInfo (fmt "local: "+|currentBranch|+"")
+        case mCurrentUpstream of
+          Nothing -> pass
+          Just currentUpstream ->
+              GA.print =<< GA.formatInfo (fmt "remote: "+|currentUpstream|+"")
 
-    GA.print ""
-
-    unless (null logs) $ do
-        GA.print =<< GA.formatInfo (fmt ">>> New commits (comparing to "+|branchWithLatestChanges|+" branch):")
-        GA.print $ T.intercalate "\n" logs
         GA.print ""
 
-    unless (null changes) $ do
-        GA.print =<< GA.formatInfo ">>> Uncommitted modifications:"
-        GA.print $ T.intercalate "\n" changes
-        GA.print ""
+        unless (null logs) $ do
+            GA.print =<< GA.formatInfo (fmt ">>> New commits (comparing to "+|branchWithLatestChanges|+" branch):")
+            GA.print $ T.intercalate "\n" logs
+            GA.print ""
 
-    unless (null stashes) $ do
-        GA.print =<< GA.formatInfo ">>> Available stashes:"
-        GA.print $ T.intercalate "\n" stashes
+        unless (null changes) $ do
+            GA.print =<< GA.formatInfo ">>> Uncommitted modifications:"
+            GA.print $ T.intercalate "\n" changes
+            GA.print ""
+
+        unless (null stashes) $ do
+            GA.print =<< GA.formatInfo ">>> Available stashes:"
+            GA.print $ T.intercalate "\n" stashes

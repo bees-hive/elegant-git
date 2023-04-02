@@ -1,32 +1,39 @@
 module Elegit.Git.Runner.Real where
 
-import           Control.Exception.Safe    (throwString)
 import           Control.Monad.Free.Church
-import           Control.Monad.HT
+import           Control.Monad.HT          (until)
 import qualified Elegit.Git.Action         as GA
-import           Elegit.Git.Exec           (MonadGitExec (execGit, gLine, pText, pTextLn))
+import           Elegit.Git.Exec           (MonadGitExec (execGit, gLine, pText, pTextLn, withFileWithText))
 import           Fmt
-import           Universum                 as U
+import           Universum                 as U hiding (withFile)
 
 
 -- | Execute the action in the real world.
-executeGit :: (MonadCatch m, MonadGitExec m) => GA.FreeGit () -> m ()
+executeGit :: (MonadGitExec m) => GA.FreeGit () -> m ()
 executeGit = foldF executeGitF
 
 
 -- | Interpreter for the real world
-executeGitF :: (MonadCatch m, MonadGitExec m) => GA.GitF a -> m a
+executeGitF :: (MonadGitExec m) => GA.GitF a -> m a
 executeGitF arg = case arg of
+  GA.InitRepository gc next -> do
+    void $ execGit gc
+    return next
+  GA.AddInitialCommit gc@(GA.GInitialCommitData commitMessage) next -> do
+    withFileWithText "a-message-of-initial-commit" commitMessage $ do
+      void $ execGit gc
+    return next
   GA.CurrentBranch gc next -> do
     mCurrentBranch <- execGit gc
-    case mCurrentBranch of
-      Nothing -> throwString "No branch found. Seems like this repository was not initialized fully."
-      Just currentBranch ->
-        return $ next currentBranch
+    return $ next mCurrentBranch
 
   GA.BranchUpstream gc next -> do
     mUpstreamBranch <- execGit gc
     return $ next mUpstreamBranch
+
+  GA.Show gc next -> do
+    output <- execGit gc
+    return $ next $ fromMaybe [] output
 
   GA.Log gc next -> do
     logs <- fromMaybe [] <$> execGit gc

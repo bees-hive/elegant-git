@@ -11,10 +11,19 @@ spec = do
       let
         commit = GCommit
           { _gcName = "Initial"
+          , _gcMessage = "Empty message"
           }
       commitDifference commit [commit] `shouldBe` []
     it "should show 1 commit difference" $ do
       let
-        baseCommit = GCommit { _gcName = "Initial" }
-        updateCommit = GCommit { _gcName = "Update" }
+        baseCommit =
+          GCommit
+            { _gcName = "Initial"
+            , _gcMessage = "Empty message"
+            }
+        updateCommit =
+          GCommit
+            { _gcName = "Update"
+            , _gcMessage = "Empty message"
+            }
       commitDifference baseCommit [updateCommit, baseCommit] `shouldBe` [updateCommit]

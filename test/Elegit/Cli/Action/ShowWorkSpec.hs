@@ -1,6 +1,5 @@
 module Elegit.Cli.Action.ShowWorkSpec where
 
-import qualified Data.List.NonEmpty          as NE
 import qualified Elegit.Cli.Action.ShowWork  as ShowWork
 import           Elegit.Git.Runner.Simulated
 import           Lens.Micro
@@ -14,7 +13,7 @@ defaultGit =
   where
     imGit = IMGit
       { _gConfig = mempty
-      , _gRepository = repo
+      , _gRepository = pure repo
       }
     repo = GRepository
        { _grRemotes = []
@@ -27,6 +26,7 @@ defaultGit =
        }
     commit = GCommit
       { _gcName = "Init commit"
+      , _gcMessage = "Empty message"
       }
     mainBranch = GBranch
       { _gbName = "main"
@@ -53,7 +53,7 @@ spec = do
     it "print status when files changed" $ do
       let
         imGit = defaultGit &
-            gRepository %~ \repo ->
+            localRepository %~ \repo ->
               repo & grModifiedFiles .~ ["app/Main.hs"]
                    & grUnstagedFiles .~ ["tmp.txt"]
       runGitActionPure imGit ShowWork.cmd `shouldBe`
@@ -70,7 +70,7 @@ spec = do
     it "prints remote" $ do
       let
         imGit = defaultGit
-          & gRepository.grBranches.each.filtered (\b -> b^.gbName == "haskell").gbUpstream ?~ "origin/haskell"
+          & localRepository.grBranches.each.filtered (\b -> b^.gbName == "haskell").gbUpstream ?~ "origin/haskell"
       runGitActionPure imGit ShowWork.cmd `shouldBe`
         ( imGit
         , [ PrintText ">>> Branch refs:"
@@ -85,7 +85,7 @@ spec = do
           { _gsName = "WIP"
           , _gsBranchName = "haskell"
           }
-        imGit = defaultGit & gRepository.grStashes .~ [stash]
+        imGit = defaultGit & localRepository.grStashes .~ [stash]
 
       runGitActionPure imGit ShowWork.cmd `shouldBe`
         ( imGit
@@ -98,9 +98,13 @@ spec = do
         )
     it "prints log" $ do
       let
-        newCommit = GCommit {_gcName = "Updates"}
+        newCommit =
+          GCommit
+            { _gcName = "Updates"
+            , _gcMessage = "Empty message"
+            }
 
-        imGit = defaultGit & gRepository.grBranches.each.filtered (\b -> b^.gbName == "haskell").gbCommit %~ NE.cons newCommit
+        imGit = defaultGit & localRepository.branchWithName "haskell".gbCommit %~ (newCommit:)
 
       runGitActionPure imGit ShowWork.cmd `shouldBe`
         ( imGit
