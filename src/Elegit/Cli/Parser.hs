@@ -15,12 +15,12 @@ dayToDayContributionsCommand :: Command ElegitCommand
 dayToDayContributionsCommand =
     commandGroup "make day-to-day contributions"
     <> ShowWork.cli
-    <> AcquireRepository.cli
 
 
 enableElegantGitServices :: Command ElegitCommand
 enableElegantGitServices =
     commandGroup "enable Elegant Git services"
+    <> AcquireRepository.cli
     <> InitRepository.cli
 
 
