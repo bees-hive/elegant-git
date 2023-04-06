@@ -1,9 +1,9 @@
 module Main
-    ( main
-    ) where
+  ( main
+  ) where
 
-import           Lib
-import           Universum
+import Lib
+import Universum
 
 main :: IO ()
 main = runCli

@@ -1,21 +1,22 @@
 {-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE QuasiQuotes     #-}
+{-# LANGUAGE QuasiQuotes #-}
+
 module Elegit.Cli.Action.InitRepositorySpec where
 
-import           Data.HashMap.Strict              (union)
-import           Data.String.QQ
+import Data.HashMap.Strict (union)
+import Data.String.QQ
 import qualified Elegit.Cli.Action.InitRepository as InitRepository
-import           Elegit.Git.Runner.Simulated
-import           Lens.Micro
-import           Test.Hspec
-import           Universum                        hiding (view, (%~), (.~), (^.))
-
+import Elegit.Git.Runner.Simulated
+import Lens.Micro
+import Test.Hspec
+import Universum hiding (view, (%~), (.~), (^.))
 
 defaultGit :: InMemoryGit
 defaultGit =
   imGit
-  where
-    imGit = IMGit
+ where
+  imGit =
+    IMGit
       { _gConfig = mempty
       , _gRepository = Nothing
       }
@@ -79,7 +80,7 @@ signatureOutputBlock =
   , PrintText [s|    uid                          Hubot|]
   , PrintText [s||]
   , PrintText [s|If you don't want to configure signature, just hit Enter button.|]
-  , Prompt    [s|Please pass a key that has to sign objects of the current repository: test|]
+  , Prompt [s|Please pass a key that has to sign objects of the current repository: test|]
   , PrintText [s|==>> git config --local user.signingkey test|]
   , PrintText [s|==>> git config --local gpg.program /usr/bin/gpg|]
   , PrintText [s|==>> git config --local commit.gpgsign true|]
@@ -89,52 +90,52 @@ signatureOutputBlock =
 
 configuredStandards :: HashMap Text Text
 configuredStandards =
-  [ ("core.editor",                    "test")
-  , ("apply.whitespace",               "fix")
-  , ("fetch.pruneTags",                "false")
-  , ("core.autocrlf",                  "input")
-  , ("fetch.prune",                    "true")
-  , ("elegant-git.default-branch",     "test")
-  , ("user.email",                     "test")
-  , ("user.name",                      "test")
-  , ("pull.rebase",                    "true")
-  , ("rebase.autoStash",               "false")
-  , ("core.commentChar",               "|")
-  , ("credential.helper",              "osxkeychain")
+  [ ("core.editor", "test")
+  , ("apply.whitespace", "fix")
+  , ("fetch.pruneTags", "false")
+  , ("core.autocrlf", "input")
+  , ("fetch.prune", "true")
+  , ("elegant-git.default-branch", "test")
+  , ("user.email", "test")
+  , ("user.name", "test")
+  , ("pull.rebase", "true")
+  , ("rebase.autoStash", "false")
+  , ("core.commentChar", "|")
+  , ("credential.helper", "osxkeychain")
   , ("elegant-git.protected-branches", "test")
   ]
 
 configuredAliases :: HashMap Text Text
 configuredAliases =
-  [ ("alias.accept-work",        "elegant accept-work")
-  , ("alias.acquire-git",        "elegant acquire-git")
+  [ ("alias.accept-work", "elegant accept-work")
+  , ("alias.acquire-git", "elegant acquire-git")
   , ("alias.acquire-repository", "elegant acquire-repository")
-  , ("alias.actualize-work",     "elegant actualize-work")
-  , ("alias.amend-work",         "elegant amend-work")
-  , ("alias.clone-repository",   "elegant clone-repository")
-  , ("alias.deliver-work",       "elegant deliver-work")
-  , ("alias.init-repository",    "elegant init-repository")
-  , ("alias.make-workflow",      "elegant make-workflow")
-  , ("alias.obtain-work",        "elegant obtain-work")
-  , ("alias.polish-work",        "elegant polish-work")
-  , ("alias.polish-workflow",    "elegant polish-workflow")
-  , ("alias.prune-repository",   "elegant prune-repository")
-  , ("alias.release-work",       "elegant release-work")
-  , ("alias.save-work",          "elegant save-work")
-  , ("alias.show-commands",      "elegant show-commands")
+  , ("alias.actualize-work", "elegant actualize-work")
+  , ("alias.amend-work", "elegant amend-work")
+  , ("alias.clone-repository", "elegant clone-repository")
+  , ("alias.deliver-work", "elegant deliver-work")
+  , ("alias.init-repository", "elegant init-repository")
+  , ("alias.make-workflow", "elegant make-workflow")
+  , ("alias.obtain-work", "elegant obtain-work")
+  , ("alias.polish-work", "elegant polish-work")
+  , ("alias.polish-workflow", "elegant polish-workflow")
+  , ("alias.prune-repository", "elegant prune-repository")
+  , ("alias.release-work", "elegant release-work")
+  , ("alias.save-work", "elegant save-work")
+  , ("alias.show-commands", "elegant show-commands")
   , ("alias.show-release-notes", "elegant show-release-notes")
-  , ("alias.show-work",          "elegant show-work")
-  , ("alias.show-workflows",     "elegant show-workflows")
-  , ("alias.start-work",         "elegant start-work")
+  , ("alias.show-work", "elegant show-work")
+  , ("alias.show-workflows", "elegant show-workflows")
+  , ("alias.start-work", "elegant start-work")
   ]
 
 configuredGpg :: HashMap Text Text
 configuredGpg =
-  [ ("user.signingkey","test")
-  , ("tag.gpgSign","true")
-  , ("gpg.program","/usr/bin/gpg")
-  , ("commit.gpgsign","true")
-  , ("tag.forceSignAnnotated","true")
+  [ ("user.signingkey", "test")
+  , ("tag.gpgSign", "true")
+  , ("gpg.program", "/usr/bin/gpg")
+  , ("commit.gpgsign", "true")
+  , ("tag.forceSignAnnotated", "true")
   ]
 
 spec :: Spec
@@ -142,20 +143,21 @@ spec = do
   describe "cmd" $ do
     it "initializes new repository with standard configuration" $ do
       let
-        commit = GCommit
-          { _gcName = "Initial Commit"
-          , _gcMessage = "Add initial empty commit\n\nThis commit is the first commit in this working tree. It does not have\nany changes. However, it simplifies further work at least in the\nfollowing cases:\n- it's possible to create a branch now\n- it's possible to manage the second commit if it requires some\npolishing after creation\n\nThis commit is created automatically by Elegant Git after the\ninitialization of a new repository."
-          }
+        commit =
+          GCommit
+            { _gcName = "Initial Commit"
+            , _gcMessage = "Add initial empty commit\n\nThis commit is the first commit in this working tree. It does not have\nany changes. However, it simplifies further work at least in the\nfollowing cases:\n- it's possible to create a branch now\n- it's possible to manage the second commit if it requires some\npolishing after creation\n\nThis commit is created automatically by Elegant Git after the\ninitialization of a new repository."
+            }
         repository =
           GRepository
             { _grRemotes = []
             , _grBranches =
-              [ GBranch
-                { _gbName     = "master"
-                , _gbUpstream = Nothing
-                , _gbCommit   = [commit]
-                }
-              ]
+                [ GBranch
+                    { _gbName = "master"
+                    , _gbUpstream = Nothing
+                    , _gbCommit = [commit]
+                    }
+                ]
             , _grCurrentBranch = "master"
             , _grStashes = []
             , _grModifiedFiles = []
@@ -165,44 +167,43 @@ spec = do
         repoWithNewConfig =
           defaultGit & gRepository ?~ repository
 
-      runGitActionPure defaultGit InitRepository.cmd `shouldBe`
-        ( repoWithNewConfig
-        , [ PrintText [s|==>> git init|]
-          , PrintText [s|=========================================|]
-          , PrintText [s|== Removing obsolete configurations... ==|]
-          , PrintText [s|=========================================|]
-          , PrintText [s|===========================|]
-          , PrintText [s|== Configuring basics... ==|]
-          , PrintText [s|===========================|]
-          , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name test|]
-          , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email test|]
-          , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor test|]
-          , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
-          , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
-          ]
-         ++ standardsOutputBlock
-         ++ aliasesOutputBlock
-         ++ signatureOutputBlock
-         ++
-          [ PrintText [s|==>> git commit --allow-empty --file a-message-of-initial-commit|]
-          , PrintText [s|==>> git show HEAD|]
-          , PrintText [s|Initial Commit|]
-          , PrintText ""
-          , PrintText [s|Add initial empty commit|]
-          , PrintText ""
-          , PrintText [s|This commit is the first commit in this working tree. It does not have|]
-          , PrintText [s|any changes. However, it simplifies further work at least in the|]
-          , PrintText [s|following cases:|]
-          , PrintText [s|- it's possible to create a branch now|]
-          , PrintText [s|- it's possible to manage the second commit if it requires some|]
-          , PrintText [s|polishing after creation|]
-          , PrintText ""
-          , PrintText [s|This commit is created automatically by Elegant Git after the|]
-          , PrintText [s|initialization of a new repository.|]
-          ]
-        )
+      runGitActionPure defaultGit InitRepository.cmd
+        `shouldBe` ( repoWithNewConfig
+                   , [ PrintText [s|==>> git init|]
+                     , PrintText [s|=========================================|]
+                     , PrintText [s|== Removing obsolete configurations... ==|]
+                     , PrintText [s|=========================================|]
+                     , PrintText [s|===========================|]
+                     , PrintText [s|== Configuring basics... ==|]
+                     , PrintText [s|===========================|]
+                     , Prompt [s|What is your user name?: test|]
+                     , PrintText [s|==>> git config --local user.name test|]
+                     , Prompt [s|What is your email?: test|]
+                     , PrintText [s|==>> git config --local user.email test|]
+                     , Prompt [s|What is the command to launching an editor?: test|]
+                     , PrintText [s|==>> git config --local core.editor test|]
+                     , Prompt [s|What is the default branch? {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.default-branch test|]
+                     , Prompt [s|What are protected branches (split with space) {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
+                     ]
+                      ++ standardsOutputBlock
+                      ++ aliasesOutputBlock
+                      ++ signatureOutputBlock
+                      ++ [ PrintText [s|==>> git commit --allow-empty --file a-message-of-initial-commit|]
+                         , PrintText [s|==>> git show HEAD|]
+                         , PrintText [s|Initial Commit|]
+                         , PrintText ""
+                         , PrintText [s|Add initial empty commit|]
+                         , PrintText ""
+                         , PrintText [s|This commit is the first commit in this working tree. It does not have|]
+                         , PrintText [s|any changes. However, it simplifies further work at least in the|]
+                         , PrintText [s|following cases:|]
+                         , PrintText [s|- it's possible to create a branch now|]
+                         , PrintText [s|- it's possible to manage the second commit if it requires some|]
+                         , PrintText [s|polishing after creation|]
+                         , PrintText ""
+                         , PrintText [s|This commit is created automatically by Elegant Git after the|]
+                         , PrintText [s|initialization of a new repository.|]
+                         ]
+                   )

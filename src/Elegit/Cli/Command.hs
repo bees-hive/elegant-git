@@ -1,6 +1,6 @@
 module Elegit.Cli.Command where
 
-import           Universum
+import Universum
 
 data ElegitCommand
   = ShowWorkCommand

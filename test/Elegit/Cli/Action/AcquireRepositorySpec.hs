@@ -1,43 +1,48 @@
 {-# LANGUAGE OverloadedLists #-}
-{-# LANGUAGE QuasiQuotes     #-}
+{-# LANGUAGE QuasiQuotes #-}
+
 module Elegit.Cli.Action.AcquireRepositorySpec where
 
-import           Data.HashMap.Strict                 (delete, union)
-import           Data.String.QQ
+import Data.HashMap.Strict (delete, union)
+import Data.String.QQ
 import qualified Elegit.Cli.Action.AcquireRepository as AcquireRepository
-import           Elegit.Git.Runner.Simulated
-import           Lens.Micro
-import           Test.Hspec
-import           Universum                           hiding (view, (%~), (.~), (^.))
-
+import Elegit.Git.Runner.Simulated
+import Lens.Micro
+import Test.Hspec
+import Universum hiding (view, (%~), (.~), (^.))
 
 defaultGit :: InMemoryGit
 defaultGit =
   imGit
-  where
-    imGit = IMGit
+ where
+  imGit =
+    IMGit
       { _gConfig = mempty
       , _gRepository = Just repo
       }
-    repo = GRepository
-       { _grRemotes = []
-       , _grBranches = [mainBranch, currentBranch]
-       , _grCurrentBranch = currentBranch^.gbName
-       , _grModifiedFiles = []
-       , _grUnstagedFiles = []
-       , _grStashes = []
-       , _grConfig = []
-       }
-    commit = GCommit
+  repo =
+    GRepository
+      { _grRemotes = []
+      , _grBranches = [mainBranch, currentBranch]
+      , _grCurrentBranch = currentBranch ^. gbName
+      , _grModifiedFiles = []
+      , _grUnstagedFiles = []
+      , _grStashes = []
+      , _grConfig = []
+      }
+  commit =
+    GCommit
       { _gcName = "Init commit"
       , _gcMessage = "Empty message"
       }
-    mainBranch = GBranch
+  mainBranch =
+    GBranch
       { _gbName = "main"
       , _gbUpstream = Nothing
       , _gbCommit = pure commit
       }
-    currentBranch = GBranch
+  currentBranch =
+    GBranch
       { _gbName = "haskell"
       , _gbUpstream = Nothing
       , _gbCommit = pure commit
@@ -102,7 +107,7 @@ signatureOutputBlock =
   , PrintText [s|    uid                          Hubot|]
   , PrintText [s||]
   , PrintText [s|If you don't want to configure signature, just hit Enter button.|]
-  , Prompt    [s|Please pass a key that has to sign objects of the current repository: test|]
+  , Prompt [s|Please pass a key that has to sign objects of the current repository: test|]
   , PrintText [s|==>> git config --local user.signingkey test|]
   , PrintText [s|==>> git config --local gpg.program /usr/bin/gpg|]
   , PrintText [s|==>> git config --local commit.gpgsign true|]
@@ -112,52 +117,52 @@ signatureOutputBlock =
 
 configuredStandards :: HashMap Text Text
 configuredStandards =
-  [ ("core.editor",                    "test")
-  , ("apply.whitespace",               "fix")
-  , ("fetch.pruneTags",                "false")
-  , ("core.autocrlf",                  "input")
-  , ("fetch.prune",                    "true")
-  , ("elegant-git.default-branch",     "test")
-  , ("user.email",                     "test")
-  , ("user.name",                      "test")
-  , ("pull.rebase",                    "true")
-  , ("rebase.autoStash",               "false")
-  , ("core.commentChar",               "|")
-  , ("credential.helper",              "osxkeychain")
+  [ ("core.editor", "test")
+  , ("apply.whitespace", "fix")
+  , ("fetch.pruneTags", "false")
+  , ("core.autocrlf", "input")
+  , ("fetch.prune", "true")
+  , ("elegant-git.default-branch", "test")
+  , ("user.email", "test")
+  , ("user.name", "test")
+  , ("pull.rebase", "true")
+  , ("rebase.autoStash", "false")
+  , ("core.commentChar", "|")
+  , ("credential.helper", "osxkeychain")
   , ("elegant-git.protected-branches", "test")
   ]
 
 configuredAliases :: HashMap Text Text
 configuredAliases =
-  [ ("alias.accept-work",        "elegant accept-work")
-  , ("alias.acquire-git",        "elegant acquire-git")
+  [ ("alias.accept-work", "elegant accept-work")
+  , ("alias.acquire-git", "elegant acquire-git")
   , ("alias.acquire-repository", "elegant acquire-repository")
-  , ("alias.actualize-work",     "elegant actualize-work")
-  , ("alias.amend-work",         "elegant amend-work")
-  , ("alias.clone-repository",   "elegant clone-repository")
-  , ("alias.deliver-work",       "elegant deliver-work")
-  , ("alias.init-repository",    "elegant init-repository")
-  , ("alias.make-workflow",      "elegant make-workflow")
-  , ("alias.obtain-work",        "elegant obtain-work")
-  , ("alias.polish-work",        "elegant polish-work")
-  , ("alias.polish-workflow",    "elegant polish-workflow")
-  , ("alias.prune-repository",   "elegant prune-repository")
-  , ("alias.release-work",       "elegant release-work")
-  , ("alias.save-work",          "elegant save-work")
-  , ("alias.show-commands",      "elegant show-commands")
+  , ("alias.actualize-work", "elegant actualize-work")
+  , ("alias.amend-work", "elegant amend-work")
+  , ("alias.clone-repository", "elegant clone-repository")
+  , ("alias.deliver-work", "elegant deliver-work")
+  , ("alias.init-repository", "elegant init-repository")
+  , ("alias.make-workflow", "elegant make-workflow")
+  , ("alias.obtain-work", "elegant obtain-work")
+  , ("alias.polish-work", "elegant polish-work")
+  , ("alias.polish-workflow", "elegant polish-workflow")
+  , ("alias.prune-repository", "elegant prune-repository")
+  , ("alias.release-work", "elegant release-work")
+  , ("alias.save-work", "elegant save-work")
+  , ("alias.show-commands", "elegant show-commands")
   , ("alias.show-release-notes", "elegant show-release-notes")
-  , ("alias.show-work",          "elegant show-work")
-  , ("alias.show-workflows",     "elegant show-workflows")
-  , ("alias.start-work",         "elegant start-work")
+  , ("alias.show-work", "elegant show-work")
+  , ("alias.show-workflows", "elegant show-workflows")
+  , ("alias.start-work", "elegant start-work")
   ]
 
 configuredGpg :: HashMap Text Text
 configuredGpg =
-  [ ("user.signingkey","test")
-  , ("tag.gpgSign","true")
-  , ("gpg.program","/usr/bin/gpg")
-  , ("commit.gpgsign","true")
-  , ("tag.forceSignAnnotated","true")
+  [ ("user.signingkey", "test")
+  , ("tag.gpgSign", "true")
+  , ("gpg.program", "/usr/bin/gpg")
+  , ("commit.gpgsign", "true")
+  , ("tag.forceSignAnnotated", "true")
   ]
 
 spec :: Spec
@@ -165,182 +170,200 @@ spec = do
   describe "cmd" $ do
     it "prepares local git repository for further work" $ do
       let
-        repoWithNewConfig = defaultGit
-          & localRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases `union` configuredGpg)
+        repoWithNewConfig =
+          defaultGit
+            & localRepository . grConfig
+              %~ union
+                (configuredStandards `union` configuredAliases `union` configuredGpg)
 
-      runGitActionPure defaultGit AcquireRepository.cmd `shouldBe`
-        ( repoWithNewConfig
-        , [ PrintText [s|=========================================|]
-          , PrintText [s|== Removing obsolete configurations... ==|]
-          , PrintText [s|=========================================|]
-          , PrintText [s|===========================|]
-          , PrintText [s|== Configuring basics... ==|]
-          , PrintText [s|===========================|]
-          , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name test|]
-          , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email test|]
-          , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor test|]
-          , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
-          , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
-          ]
-         ++ standardsOutputBlock
-         ++ aliasesOutputBlock
-         ++ signatureOutputBlock
-        )
+      runGitActionPure defaultGit AcquireRepository.cmd
+        `shouldBe` ( repoWithNewConfig
+                   , [ PrintText [s|=========================================|]
+                     , PrintText [s|== Removing obsolete configurations... ==|]
+                     , PrintText [s|=========================================|]
+                     , PrintText [s|===========================|]
+                     , PrintText [s|== Configuring basics... ==|]
+                     , PrintText [s|===========================|]
+                     , Prompt [s|What is your user name?: test|]
+                     , PrintText [s|==>> git config --local user.name test|]
+                     , Prompt [s|What is your email?: test|]
+                     , PrintText [s|==>> git config --local user.email test|]
+                     , Prompt [s|What is the command to launching an editor?: test|]
+                     , PrintText [s|==>> git config --local core.editor test|]
+                     , Prompt [s|What is the default branch? {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.default-branch test|]
+                     , Prompt [s|What are protected branches (split with space) {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
+                     ]
+                      ++ standardsOutputBlock
+                      ++ aliasesOutputBlock
+                      ++ signatureOutputBlock
+                   )
 
     it "uses global config values as defaults for prompts" $ do
       let
-        git = defaultGit
-          & gConfig %~ union
-            [ ("core.editor", "test-editor")
-            , ("user.email",  "test-email")
-            , ("user.name",   "test-name")
-            ]
+        git =
+          defaultGit
+            & gConfig
+              %~ union
+                [ ("core.editor", "test-editor")
+                , ("user.email", "test-email")
+                , ("user.name", "test-name")
+                ]
 
-        repoWithNewConfig = git
-          & localRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases `union` configuredGpg)
+        repoWithNewConfig =
+          git
+            & localRepository . grConfig
+              %~ union
+                (configuredStandards `union` configuredAliases `union` configuredGpg)
 
-      runGitActionPure git AcquireRepository.cmd `shouldBe`
-        ( repoWithNewConfig
-        , [ PrintText [s|=========================================|]
-          , PrintText [s|== Removing obsolete configurations... ==|]
-          , PrintText [s|=========================================|]
-          , PrintText [s|===========================|]
-          , PrintText [s|== Configuring basics... ==|]
-          , PrintText [s|===========================|]
-          , Prompt    [s|What is your user name? {test-name}: test|]
-          , PrintText [s|==>> git config --local user.name test|]
-          , Prompt    [s|What is your email? {test-email}: test|]
-          , PrintText [s|==>> git config --local user.email test|]
-          , Prompt    [s|What is the command to launching an editor? {test-editor}: test|]
-          , PrintText [s|==>> git config --local core.editor test|]
-          , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
-          , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
-          ]
-         ++ standardsOutputBlock
-         ++ aliasesOutputBlock
-         ++ signatureOutputBlock
-        )
+      runGitActionPure git AcquireRepository.cmd
+        `shouldBe` ( repoWithNewConfig
+                   , [ PrintText [s|=========================================|]
+                     , PrintText [s|== Removing obsolete configurations... ==|]
+                     , PrintText [s|=========================================|]
+                     , PrintText [s|===========================|]
+                     , PrintText [s|== Configuring basics... ==|]
+                     , PrintText [s|===========================|]
+                     , Prompt [s|What is your user name? {test-name}: test|]
+                     , PrintText [s|==>> git config --local user.name test|]
+                     , Prompt [s|What is your email? {test-email}: test|]
+                     , PrintText [s|==>> git config --local user.email test|]
+                     , Prompt [s|What is the command to launching an editor? {test-editor}: test|]
+                     , PrintText [s|==>> git config --local core.editor test|]
+                     , Prompt [s|What is the default branch? {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.default-branch test|]
+                     , Prompt [s|What are protected branches (split with space) {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
+                     ]
+                      ++ standardsOutputBlock
+                      ++ aliasesOutputBlock
+                      ++ signatureOutputBlock
+                   )
 
     it "does not alter unexpected config" $ do
       let
-        git = defaultGit
-          & localRepository.grConfig %~ union
-            [ ("test.test",  "test")
-            ]
+        git =
+          defaultGit
+            & localRepository . grConfig
+              %~ union
+                [ ("test.test", "test")
+                ]
 
-        repoWithNewConfig = git
-          & localRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases `union` configuredGpg)
+        repoWithNewConfig =
+          git
+            & localRepository . grConfig
+              %~ union
+                (configuredStandards `union` configuredAliases `union` configuredGpg)
 
-      runGitActionPure git AcquireRepository.cmd `shouldBe`
-        ( repoWithNewConfig
-        , [ PrintText [s|=========================================|]
-          , PrintText [s|== Removing obsolete configurations... ==|]
-          , PrintText [s|=========================================|]
-          , PrintText [s|===========================|]
-          , PrintText [s|== Configuring basics... ==|]
-          , PrintText [s|===========================|]
-          , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name test|]
-          , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email test|]
-          , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor test|]
-          , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
-          , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
-          ]
-         ++ standardsOutputBlock
-         ++ aliasesOutputBlock
-         ++ signatureOutputBlock
-        )
+      runGitActionPure git AcquireRepository.cmd
+        `shouldBe` ( repoWithNewConfig
+                   , [ PrintText [s|=========================================|]
+                     , PrintText [s|== Removing obsolete configurations... ==|]
+                     , PrintText [s|=========================================|]
+                     , PrintText [s|===========================|]
+                     , PrintText [s|== Configuring basics... ==|]
+                     , PrintText [s|===========================|]
+                     , Prompt [s|What is your user name?: test|]
+                     , PrintText [s|==>> git config --local user.name test|]
+                     , Prompt [s|What is your email?: test|]
+                     , PrintText [s|==>> git config --local user.email test|]
+                     , Prompt [s|What is the command to launching an editor?: test|]
+                     , PrintText [s|==>> git config --local core.editor test|]
+                     , Prompt [s|What is the default branch? {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.default-branch test|]
+                     , Prompt [s|What are protected branches (split with space) {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
+                     ]
+                      ++ standardsOutputBlock
+                      ++ aliasesOutputBlock
+                      ++ signatureOutputBlock
+                   )
 
     it "removes obsolete configuration" $ do
       let
-        git = defaultGit
-          & localRepository.grConfig %~ union
-            [ ("elegant.acquired",  "true")
-            ]
+        git =
+          defaultGit
+            & localRepository . grConfig
+              %~ union
+                [ ("elegant.acquired", "true")
+                ]
 
-        repoWithNewConfig = git
-          & localRepository.grConfig %~
-            delete "elegant.acquired"
-          & localRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases `union` configuredGpg)
+        repoWithNewConfig =
+          git
+            & localRepository . grConfig
+              %~ delete "elegant.acquired"
+            & localRepository . grConfig
+              %~ union
+                (configuredStandards `union` configuredAliases `union` configuredGpg)
 
-      runGitActionPure git AcquireRepository.cmd `shouldBe`
-        ( repoWithNewConfig
-        , [ PrintText [s|=========================================|]
-          , PrintText [s|== Removing obsolete configurations... ==|]
-          , PrintText [s|=========================================|]
-          , PrintText [s|Removing old Elegnat Git configuration keys...|]
-          , PrintText [s|==>> git config --local --unset elegant.acquired|]
-          , PrintText [s|===========================|]
-          , PrintText [s|== Configuring basics... ==|]
-          , PrintText [s|===========================|]
-          , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name test|]
-          , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email test|]
-          , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor test|]
-          , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
-          , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
-          ]
-         ++ standardsOutputBlock
-         ++ aliasesOutputBlock
-         ++ signatureOutputBlock
-        )
+      runGitActionPure git AcquireRepository.cmd
+        `shouldBe` ( repoWithNewConfig
+                   , [ PrintText [s|=========================================|]
+                     , PrintText [s|== Removing obsolete configurations... ==|]
+                     , PrintText [s|=========================================|]
+                     , PrintText [s|Removing old Elegnat Git configuration keys...|]
+                     , PrintText [s|==>> git config --local --unset elegant.acquired|]
+                     , PrintText [s|===========================|]
+                     , PrintText [s|== Configuring basics... ==|]
+                     , PrintText [s|===========================|]
+                     , Prompt [s|What is your user name?: test|]
+                     , PrintText [s|==>> git config --local user.name test|]
+                     , Prompt [s|What is your email?: test|]
+                     , PrintText [s|==>> git config --local user.email test|]
+                     , Prompt [s|What is the command to launching an editor?: test|]
+                     , PrintText [s|==>> git config --local core.editor test|]
+                     , Prompt [s|What is the default branch? {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.default-branch test|]
+                     , Prompt [s|What are protected branches (split with space) {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
+                     ]
+                      ++ standardsOutputBlock
+                      ++ aliasesOutputBlock
+                      ++ signatureOutputBlock
+                   )
 
     it "removes old aliases" $ do
       let
-        git = defaultGit
-          & localRepository.grConfig %~ union
-          [ ("alias.polish-work",        "elegant polish-work")
-          , ("alias.polish-workflow",    "elegant polish-workflow")
-          , ("alias.prune-repository",   "elegant prune-repository")
-          ]
+        git =
+          defaultGit
+            & localRepository . grConfig
+              %~ union
+                [ ("alias.polish-work", "elegant polish-work")
+                , ("alias.polish-workflow", "elegant polish-workflow")
+                , ("alias.prune-repository", "elegant prune-repository")
+                ]
 
-        repoWithNewConfig = git
-          & localRepository.grConfig %~ union
-            (configuredStandards `union` configuredAliases `union` configuredGpg)
+        repoWithNewConfig =
+          git
+            & localRepository . grConfig
+              %~ union
+                (configuredStandards `union` configuredAliases `union` configuredGpg)
 
-      runGitActionPure git AcquireRepository.cmd `shouldBe`
-        ( repoWithNewConfig
-        , [ PrintText [s|=========================================|]
-          , PrintText [s|== Removing obsolete configurations... ==|]
-          , PrintText [s|=========================================|]
-          , PrintText [s|Removing old Elegant Git aliases...|]
-          , PrintText [s|==>> git config --local --unset alias.polish-work|]
-          , PrintText [s|==>> git config --local --unset alias.polish-workflow|]
-          , PrintText [s|==>> git config --local --unset alias.prune-repository|]
-          , PrintText [s|===========================|]
-          , PrintText [s|== Configuring basics... ==|]
-          , PrintText [s|===========================|]
-          , Prompt    [s|What is your user name?: test|]
-          , PrintText [s|==>> git config --local user.name test|]
-          , Prompt    [s|What is your email?: test|]
-          , PrintText [s|==>> git config --local user.email test|]
-          , Prompt    [s|What is the command to launching an editor?: test|]
-          , PrintText [s|==>> git config --local core.editor test|]
-          , Prompt    [s|What is the default branch? {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.default-branch test|]
-          , Prompt    [s|What are protected branches (split with space) {master}: test|]
-          , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
-          ]
-         ++ standardsOutputBlock
-         ++ aliasesOutputBlock
-         ++ signatureOutputBlock
-        )
+      runGitActionPure git AcquireRepository.cmd
+        `shouldBe` ( repoWithNewConfig
+                   , [ PrintText [s|=========================================|]
+                     , PrintText [s|== Removing obsolete configurations... ==|]
+                     , PrintText [s|=========================================|]
+                     , PrintText [s|Removing old Elegant Git aliases...|]
+                     , PrintText [s|==>> git config --local --unset alias.polish-work|]
+                     , PrintText [s|==>> git config --local --unset alias.polish-workflow|]
+                     , PrintText [s|==>> git config --local --unset alias.prune-repository|]
+                     , PrintText [s|===========================|]
+                     , PrintText [s|== Configuring basics... ==|]
+                     , PrintText [s|===========================|]
+                     , Prompt [s|What is your user name?: test|]
+                     , PrintText [s|==>> git config --local user.name test|]
+                     , Prompt [s|What is your email?: test|]
+                     , PrintText [s|==>> git config --local user.email test|]
+                     , Prompt [s|What is the command to launching an editor?: test|]
+                     , PrintText [s|==>> git config --local core.editor test|]
+                     , Prompt [s|What is the default branch? {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.default-branch test|]
+                     , Prompt [s|What are protected branches (split with space) {master}: test|]
+                     , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
+                     ]
+                      ++ standardsOutputBlock
+                      ++ aliasesOutputBlock
+                      ++ signatureOutputBlock
+                   )

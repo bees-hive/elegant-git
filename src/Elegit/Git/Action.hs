@@ -1,9 +1,12 @@
-{-# LANGUAGE DeriveFunctor         #-}
-{-# LANGUAGE DerivingStrategies    #-}
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 -----------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------
+
 -- |
 -- Module      :  Elegit.Git.Action
 --
@@ -25,16 +28,13 @@
 -- * "Church" is the implementation of the `Free` which has a better performance
 --   in the process of building the tree. Basically we use fancy way to build
 --   our tree only once.
---
------------------------------------------------------------------------------
 module Elegit.Git.Action where
 
-
-import           Control.Monad.Free
-import           Control.Monad.Free.Church
-import qualified Data.Text                 as T
-import           Fmt
-import           Universum                 hiding (print, show)
+import Control.Monad.Free
+import Control.Monad.Free.Church
+import qualified Data.Text as T
+import Fmt
+import Universum hiding (print, show)
 
 -- TODO: maybe, cover with tests
 class RenderGitCommand c where
@@ -43,9 +43,9 @@ class RenderGitCommand c where
   toolName _ = "git"
 
 renderGC :: RenderGitCommand c => c -> Text
-renderGC c = toolName c|+" "+|renderedArgs|+""
-  where
-    renderedArgs = T.intercalate " " (commandArgs c)
+renderGC c = toolName c |+ " " +| renderedArgs |+ ""
+ where
+  renderedArgs = T.intercalate " " (commandArgs c)
 
 data GCurrentBranchData
   = GCurrentBranchData
@@ -53,115 +53,108 @@ data GCurrentBranchData
 instance RenderGitCommand GCurrentBranchData where
   commandArgs _ = ["rev-parse", "--abbrev-ref", "@"]
 
-newtype GBranchUpstreamData
-  = GBranchUpstreamData { branch :: Text }
+newtype GBranchUpstreamData = GBranchUpstreamData {branch :: Text}
 
 instance RenderGitCommand GBranchUpstreamData where
   commandArgs (GBranchUpstreamData branchName) =
     ["rev-parse", "--abbrev-ref", branchName, "@{upstream}"]
 
-data GLogData
-  = GLogData
-      { logType :: LogType
-      , base    :: Text
-      , target  :: Text
-      }
+data GLogData = GLogData
+  { logType :: LogType
+  , base :: Text
+  , target :: Text
+  }
 instance RenderGitCommand GLogData where
   commandArgs (GLogData lType baseName targetName) =
-    ["log ", logArg, ""+|baseName|+".."+|targetName|+""]
-    where
-      logArg :: Text
-      logArg = case lType of
-                 LogOneLine -> "--oneline"
+    ["log ", logArg, "" +| baseName |+ ".." +| targetName |+ ""]
+   where
+    logArg :: Text
+    logArg = case lType of
+      LogOneLine -> "--oneline"
 
-newtype GStatusData
-  = GStatusData { statusType :: StatusType }
+newtype GStatusData = GStatusData {statusType :: StatusType}
 
 instance RenderGitCommand GStatusData where
   commandArgs (GStatusData sType) = ["status", statusFormat]
-    where
-      statusFormat :: Text
-      statusFormat = case sType of
-                       StatusShort -> "--short"
+   where
+    statusFormat :: Text
+    statusFormat = case sType of
+      StatusShort -> "--short"
 
 data GStashListData
   = GStashListData
 instance RenderGitCommand GStashListData where
   commandArgs _ = ["stash", "list"]
 
-data GReadConfigData
-  = GReadConfigData
-      { scope :: ConfigScope
-      , key   :: Text
-      }
+data GReadConfigData = GReadConfigData
+  { scope :: ConfigScope
+  , key :: Text
+  }
 
 instance RenderGitCommand GReadConfigData where
   commandArgs (GReadConfigData cScope cName) =
-    filter (not . null)
+    filter
+      (not . null)
       ["config", scopeText, "--get", cName]
-    where
-      scopeText :: Text
-      scopeText = case cScope of
-                LocalConfig  -> "--local"
-                GlobalConfig -> "--global"
-                AutoConfig   -> ""
+   where
+    scopeText :: Text
+    scopeText = case cScope of
+      LocalConfig -> "--local"
+      GlobalConfig -> "--global"
+      AutoConfig -> ""
 
-data GSetConfigData
-  = GSetConfigData
-      { scope :: ConfigScope
-      , key   :: Text
-      , value :: Text
-      }
+data GSetConfigData = GSetConfigData
+  { scope :: ConfigScope
+  , key :: Text
+  , value :: Text
+  }
 
 instance RenderGitCommand GSetConfigData where
   commandArgs (GSetConfigData cScope cName cValue) =
-    filter (not . null)
+    filter
+      (not . null)
       ["config", scopeText, cName, cValue]
-    where
-      scopeText :: Text
-      scopeText = case cScope of
-                GlobalConfig -> "--global"
-                LocalConfig  -> "--local"
-                AutoConfig   -> "--local"
+   where
+    scopeText :: Text
+    scopeText = case cScope of
+      GlobalConfig -> "--global"
+      LocalConfig -> "--local"
+      AutoConfig -> "--local"
 
-data GUnsetConfigData
-  = GUnsetConfigData
-      { scope :: ConfigScope
-      , key   :: Text
-      }
+data GUnsetConfigData = GUnsetConfigData
+  { scope :: ConfigScope
+  , key :: Text
+  }
 
 instance RenderGitCommand GUnsetConfigData where
   commandArgs (GUnsetConfigData cScope cName) = ["config", scopeText, "--unset", cName]
-    where
-      scopeText :: Text
-      scopeText = case cScope of
-                GlobalConfig -> "--global"
-                LocalConfig  -> "--local"
-                AutoConfig   -> "--local"
+   where
+    scopeText :: Text
+    scopeText = case cScope of
+      GlobalConfig -> "--global"
+      LocalConfig -> "--local"
+      AutoConfig -> "--local"
 
-newtype GAliasesToRemoveData
-  = GAliasesToRemoveData { scope :: ConfigScope }
+newtype GAliasesToRemoveData = GAliasesToRemoveData {scope :: ConfigScope}
 
 instance RenderGitCommand GAliasesToRemoveData where
   commandArgs (GAliasesToRemoveData cScope) =
     ["config", scopeText, "--name-only", "--get-regexp", "^alias.", "^elegant ([-a-z]+)$"]
-    where
-      scopeText :: Text
-      scopeText = case cScope of
-                GlobalConfig -> "--global"
-                LocalConfig  -> "--local"
-                AutoConfig   -> ""
+   where
+    scopeText :: Text
+    scopeText = case cScope of
+      GlobalConfig -> "--global"
+      LocalConfig -> "--local"
+      AutoConfig -> ""
 
-newtype GPathToToolData
-  = GPathToToolData { name :: Text }
+newtype GPathToToolData = GPathToToolData {name :: Text}
 
 instance RenderGitCommand GPathToToolData where
   toolName _ = "type"
 
   commandArgs (GPathToToolData toolName') = ["-p", toolName']
 
-newtype GGPGKeyListData
-  = GGPGKeyListData { email :: Text }
+newtype GGPGKeyListData = GGPGKeyListData {email :: Text}
 
 instance RenderGitCommand GGPGKeyListData where
   toolName _ = "gpg"
@@ -169,34 +162,28 @@ instance RenderGitCommand GGPGKeyListData where
   commandArgs (GGPGKeyListData gEmail) =
     ["--list-secret-keys", "--keyid-format", "long", gEmail]
 
-
 data GInitRepositoryData
   = GInitRepositoryData
 
 instance RenderGitCommand GInitRepositoryData where
   commandArgs _ = ["init"]
 
-
-newtype GInitialCommitData
-  = GInitialCommitData { commitMessage :: Text }
+newtype GInitialCommitData = GInitialCommitData {commitMessage :: Text}
 
 instance RenderGitCommand GInitialCommitData where
   commandArgs _ = ["commit", "--allow-empty", "--file", "a-message-of-initial-commit"]
 
-
 data ShowTarget
   = ShowHead
 
-
-newtype GShowData
-  = GShowData { showType :: ShowTarget }
+newtype GShowData = GShowData {showType :: ShowTarget}
 
 instance RenderGitCommand GShowData where
   commandArgs (GShowData sType) = ["show", showArg]
-    where
-      showArg :: Text
-      showArg = case sType of
-                  ShowHead -> "HEAD"
+   where
+    showArg :: Text
+    showArg = case sType of
+      ShowHead -> "HEAD"
 
 -- | The declaration of all posible actions we can do in the git action.
 --
@@ -226,19 +213,16 @@ data GitF a
   | PrintText Text a
   deriving stock (Functor)
 
-
 -- | Represents types of git status output
 --
 -- `StatusShort` is the same as "--short" option.
 data StatusType
   = StatusShort
 
-
 data ConfigScope
   = LocalConfig
   | GlobalConfig
   | AutoConfig
-
 
 -- | Represents types of git log output
 --
@@ -246,10 +230,8 @@ data ConfigScope
 data LogType
   = LogOneLine
 
-
 -- | Type alias to the `Free` `GitF` monad.
 type FreeGit t = F GitF t
-
 
 -- TODO: Make `OneTime` separate to improve the return type of the prompt
 -- OneTime should return `Maybe Text` instead of `Text` to indicate 2 possible states.
@@ -258,12 +240,10 @@ data PromptType
   = PromptOneTime
   | PromptDefault (Maybe Text)
 
-
-data PromptConfig
-  = PromptConfig
-      { question   :: Text
-      , promptType :: PromptType
-      }
+data PromptConfig = PromptConfig
+  { question :: Text
+  , promptType :: PromptType
+  }
 
 -- | You should consider following code as a boilerplate
 --
@@ -280,7 +260,6 @@ data PromptConfig
 -- * When our function has a continuation of type @(() -> a)@, you simply pass @()@ as the
 --   value.
 -- * Otherwise just use `id` function.
-
 status :: MonadFree GitF m => StatusType -> m [Text]
 status sType = liftF $ Status (GStatusData sType) id
 
@@ -367,29 +346,27 @@ gpgListKeysVerbose gEmail = do
 
 freshestDefaultBranch :: MonadFree GitF m => m Text
 freshestDefaultBranch = do
-    -- TODO: Port bash logic
-    return "main"
+  -- TODO: Port bash logic
+  return "main"
 
 isGitAcquired :: MonadFree GitF m => m Bool
 isGitAcquired = do
-    isJust <$> readConfig LocalConfig "elegant.acquired"
+  isJust <$> readConfig LocalConfig "elegant.acquired"
 
 formatInfoBox :: (MonadFree GitF m) => Text -> m Text
 formatInfoBox content =
   formatInfo
-    (""+|box|+"\n== "+|content|+" ==\n"+|box|+"")
-    where
-      contentLength :: Int
-      contentLength = length content
-      box = T.replicate (3 + contentLength + 3) "="
-
+    ("" +| box |+ "\n== " +| content |+ " ==\n" +| box |+ "")
+ where
+  contentLength :: Int
+  contentLength = length content
+  box = T.replicate (3 + contentLength + 3) "="
 
 removeAliases :: MonadFree GitF m => ConfigScope -> m ()
 removeAliases cScope = do
-    whenJustM (aliasesToRemove cScope) $ \aliases -> do
-      print =<< formatInfo "Removing old Elegant Git aliases..."
-      mapM_ (unsetConfigVerbose cScope) aliases
-
+  whenJustM (aliasesToRemove cScope) $ \aliases -> do
+    print =<< formatInfo "Removing old Elegant Git aliases..."
+    mapM_ (unsetConfigVerbose cScope) aliases
 
 removeObsoleteConfiguration :: MonadFree GitF m => ConfigScope -> m ()
 removeObsoleteConfiguration cScope = do

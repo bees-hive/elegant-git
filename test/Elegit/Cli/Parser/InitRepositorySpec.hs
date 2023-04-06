@@ -1,15 +1,17 @@
 {-# LANGUAGE QuasiQuotes #-}
+
 module Elegit.Cli.Parser.InitRepositorySpec where
 
-import           Data.String.QQ
-import           Elegit.Cli.Command     (ElegitCommand (..))
-import           Elegit.Cli.Parser.Util as P
-import           Test.Hspec
-import           Universum
-
+import Data.String.QQ
+import Elegit.Cli.Command (ElegitCommand (..))
+import Elegit.Cli.Parser.Util as P
+import Test.Hspec
+import Universum
 
 helpText :: Text
-helpText = "Usage: git elegant init-repository \n" <> [s|
+helpText =
+  "Usage: git elegant init-repository \n"
+    <> [s|
 
   Initializes a new repository and configures it.
 
@@ -29,10 +31,13 @@ git show
 ```|]
 
 invalidArgumentHelp :: Text
-invalidArgumentHelp = [s|
+invalidArgumentHelp =
+  [s|
 Invalid argument `test-arg'
 
-|] <> "Usage: git elegant init-repository \n" <> [s|
+|]
+    <> "Usage: git elegant init-repository \n"
+    <> [s|
 
   Initializes a new repository and configures it.
 
@@ -52,10 +57,13 @@ git show
 ```|]
 
 invalidOptionHelp :: Text
-invalidOptionHelp = [s|
+invalidOptionHelp =
+  [s|
 Invalid option `--test-arg'
 
-|] <> "Usage: git elegant init-repository \n" <> [s|
+|]
+    <> "Usage: git elegant init-repository \n"
+    <> [s|
 
   Initializes a new repository and configures it.
 

@@ -1,26 +1,25 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE DefaultSignatures   #-}
+{-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeFamilies        #-}
+{-# LANGUAGE TypeFamilies #-}
+
 module Elegit.Git.Exec where
 
-import           Control.Monad.Catch  as MC
-import qualified Data.Text            as T
-import           Data.Text.Lazy       (stripEnd)
-import           Elegit.Git.Action
-import           GHC.IO.Handle        (hFlush, hFlushAll)
-import           System.IO.Error      (IOError)
-import           System.Process.Typed (ExitCode (ExitSuccess), ProcessConfig, proc, readProcess, shell)
-import           Universum            as U
-import           UnliftIO.Directory   (makeRelativeToCurrentDirectory, removeFile)
+import Control.Monad.Catch as MC
+import qualified Data.Text as T
+import Data.Text.Lazy (stripEnd)
+import Elegit.Git.Action
+import GHC.IO.Handle (hFlush, hFlushAll)
+import System.IO.Error (IOError)
+import System.Process.Typed (ExitCode (ExitSuccess), ProcessConfig, proc, readProcess, shell)
+import Universum as U
+import UnliftIO.Directory (makeRelativeToCurrentDirectory, removeFile)
 
 procCmd :: Text -> [Text] -> ProcessConfig () () ()
 procCmd tName args = proc (toString tName) (toString <$> args)
 
-
 shellCmd :: Text -> [Text] -> ProcessConfig () () ()
-shellCmd tName args = shell $ toString $ T.intercalate " " (tName:args)
-
+shellCmd tName args = shell $ toString $ T.intercalate " " (tName : args)
 
 class ExecutableCommand a where
   type ExecutableCommandResult a :: Type
@@ -43,7 +42,7 @@ instance ExecutableCommand GCurrentBranchData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GBranchUpstreamData where
   type ExecutableCommandResult GBranchUpstreamData = Maybe Text
@@ -51,27 +50,27 @@ instance ExecutableCommand GBranchUpstreamData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GLogData where
   type ExecutableCommandResult GLogData = Maybe [Text]
 
-  cmdExecArgs gc = "-c":"color.ui=always":commandArgs gc
+  cmdExecArgs gc = "-c" : "color.ui=always" : commandArgs gc
 
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GStatusData where
   type ExecutableCommandResult GStatusData = Maybe [Text]
 
-  cmdExecArgs gc = "-c":"color.status=always":commandArgs gc
+  cmdExecArgs gc = "-c" : "color.status=always" : commandArgs gc
 
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GStashListData where
   type ExecutableCommandResult GStashListData = Maybe [Text]
@@ -79,7 +78,7 @@ instance ExecutableCommand GStashListData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GGPGKeyListData where
   type ExecutableCommandResult GGPGKeyListData = Maybe (NonEmpty Text)
@@ -87,7 +86,7 @@ instance ExecutableCommand GGPGKeyListData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = nonEmpty . lines $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GAliasesToRemoveData where
   type ExecutableCommandResult GAliasesToRemoveData = Maybe (NonEmpty Text)
@@ -95,7 +94,7 @@ instance ExecutableCommand GAliasesToRemoveData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = nonEmpty . lines $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GReadConfigData where
   type ExecutableCommandResult GReadConfigData = Maybe Text
@@ -103,7 +102,7 @@ instance ExecutableCommand GReadConfigData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GSetConfigData where
   type ExecutableCommandResult GSetConfigData = Maybe ()
@@ -111,7 +110,7 @@ instance ExecutableCommand GSetConfigData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, _, _) = pass
-  readGitOutput _ _                   = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GUnsetConfigData where
   type ExecutableCommandResult GUnsetConfigData = Maybe ()
@@ -119,7 +118,7 @@ instance ExecutableCommand GUnsetConfigData where
   toProc _ = procCmd
 
   readGitOutput _ (ExitSuccess, _, _) = pass
-  readGitOutput _ _                   = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GPathToToolData where
   type ExecutableCommandResult GPathToToolData = Maybe Text
@@ -127,7 +126,7 @@ instance ExecutableCommand GPathToToolData where
   toProc _ = shellCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ toStrict gOut
-  readGitOutput _ _                      = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GInitRepositoryData where
   type ExecutableCommandResult GInitRepositoryData = Maybe ()
@@ -135,7 +134,7 @@ instance ExecutableCommand GInitRepositoryData where
   toProc _ = shellCmd
 
   readGitOutput _ (ExitSuccess, _, _) = pass
-  readGitOutput _ _                   = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GInitialCommitData where
   type ExecutableCommandResult GInitialCommitData = Maybe ()
@@ -143,17 +142,16 @@ instance ExecutableCommand GInitialCommitData where
   toProc _ = shellCmd
 
   readGitOutput _ (ExitSuccess, _, _) = pass
-  readGitOutput _ _                   = Nothing
+  readGitOutput _ _ = Nothing
 
 instance ExecutableCommand GShowData where
   type ExecutableCommandResult GShowData = Maybe [Text]
 
-  cmdExecArgs gc = "-c":"color.ui=always":commandArgs gc
+  cmdExecArgs gc = "-c" : "color.ui=always" : commandArgs gc
   toProc _ = shellCmd
 
   readGitOutput _ (ExitSuccess, gOut, _) = pure $ lines (toStrict gOut)
-  readGitOutput _ _                      = Nothing
-
+  readGitOutput _ _ = Nothing
 
 class Monad m => MonadGitExec m where
   execGit :: (ExecutableCommand a) => a -> m (ExecutableCommandResult a)
@@ -162,10 +160,7 @@ class Monad m => MonadGitExec m where
   gLine :: m Text
   withFileWithText :: Text -> Text -> m () -> m ()
 
-
-newtype GitExecT m a
-  = GitExecT { runGitExecT :: m a }
-
+newtype GitExecT m a = GitExecT {runGitExecT :: m a}
 
 instance (MonadMask m, MonadIO m) => MonadGitExec (GitExecT m) where
   execGit gc = do
@@ -175,25 +170,30 @@ instance (MonadMask m, MonadIO m) => MonadGitExec (GitExecT m) where
     flip U.catch (\(e :: IOError) -> bug e) $ do
       (eCode, stdoutBS, stderrBS) <- readProcess $ toProc gc cmdTool cmdArgs
       return $
-        readGitOutput gc
+        readGitOutput
+          gc
           ( eCode
           , stripEnd $ decodeUtf8 @LText stdoutBS
           , stripEnd $ decodeUtf8 @LText stderrBS
           )
 
   withFileWithText fName content action = do
-    void $ U.bracket
-      (do
-        fPath <- makeRelativeToCurrentDirectory (toString fName)
-        fHandle <- openFile fPath WriteMode
-        return (fPath, fHandle))
-      (\(fPath, fHandle) -> do
-        hClose fHandle
-        removeFile fPath)
-      (\(_, fHandle) -> do
-        hPutStr fHandle content
-        liftIO $ hFlushAll fHandle
-        action)
+    void $
+      U.bracket
+        ( do
+            fPath <- makeRelativeToCurrentDirectory (toString fName)
+            fHandle <- openFile fPath WriteMode
+            return (fPath, fHandle)
+        )
+        ( \(fPath, fHandle) -> do
+            hClose fHandle
+            removeFile fPath
+        )
+        ( \(_, fHandle) -> do
+            hPutStr fHandle content
+            liftIO $ hFlushAll fHandle
+            action
+        )
     pass
 
   pText t = do
@@ -255,18 +255,21 @@ instance MonadCatch m => MonadCatch (GitExecT m) where
 
 instance MonadMask m => MonadMask (GitExecT m) where
   mask a = GitExecT $ mask $ \u -> runGitExecT (a $ q u)
-    where q :: (m a -> m a) -> GitExecT m a -> GitExecT m a
-          q u (GitExecT b) = GitExecT (u b)
+   where
+    q :: (m a -> m a) -> GitExecT m a -> GitExecT m a
+    q u (GitExecT b) = GitExecT (u b)
   uninterruptibleMask a =
     GitExecT $ uninterruptibleMask $ \u -> runGitExecT (a $ q u)
-      where q :: (m a -> m a) -> GitExecT m a -> GitExecT m a
-            q u (GitExecT b) = GitExecT (u b)
+   where
+    q :: (m a -> m a) -> GitExecT m a -> GitExecT m a
+    q u (GitExecT b) = GitExecT (u b)
 
-  generalBracket acquire release use' = GitExecT $
-    generalBracket
-      (runGitExecT acquire)
-      (\resource exitCase -> runGitExecT (release resource exitCase))
-      (runGitExecT . use')
+  generalBracket acquire release use' =
+    GitExecT $
+      generalBracket
+        (runGitExecT acquire)
+        (\resource exitCase -> runGitExecT (release resource exitCase))
+        (runGitExecT . use')
 
 instance (MonadIO m) => MonadIO (GitExecT m) where
   liftIO = liftGitExecT . liftIO

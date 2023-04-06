@@ -1,15 +1,17 @@
 {-# LANGUAGE QuasiQuotes #-}
+
 module Elegit.Cli.Parser.AcquireRepositorySpec where
 
-import           Data.String.QQ
-import           Elegit.Cli.Command     (ElegitCommand (..))
-import           Elegit.Cli.Parser.Util as P
-import           Test.Hspec
-import           Universum
-
+import Data.String.QQ
+import Elegit.Cli.Command (ElegitCommand (..))
+import Elegit.Cli.Parser.Util as P
+import Test.Hspec
+import Universum
 
 helpText :: Text
-helpText = "Usage: git elegant acquire-repository \n" <> [s|
+helpText =
+  "Usage: git elegant acquire-repository \n"
+    <> [s|
 
   Configures the current local Git repository.
 
@@ -29,10 +31,13 @@ To find out what will be configured, please visit
 placeholder/en/latest/configuration/|]
 
 invalidArgumentHelp :: Text
-invalidArgumentHelp = [s|
+invalidArgumentHelp =
+  [s|
 Invalid argument `test-arg'
 
-|] <> "Usage: git elegant acquire-repository \n" <> [s|
+|]
+    <> "Usage: git elegant acquire-repository \n"
+    <> [s|
 
   Configures the current local Git repository.
 
@@ -52,10 +57,13 @@ To find out what will be configured, please visit
 placeholder/en/latest/configuration/|]
 
 invalidOptionHelp :: Text
-invalidOptionHelp = [s|
+invalidOptionHelp =
+  [s|
 Invalid option `--test-arg'
 
-|] <> "Usage: git elegant acquire-repository \n" <> [s|
+|]
+    <> "Usage: git elegant acquire-repository \n"
+    <> [s|
 
   Configures the current local Git repository.
 
