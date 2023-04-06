@@ -68,9 +68,17 @@ jobs:
           tar -xf /tmp/hlint-${{ env.HLINT_VERSION }}.tar.gz -C /tmp
           cp /tmp/hlint-${{ env.HLINT_VERSION }}/hlint ~/.ghcup/bin/hlint
         fi
+    - name: Install fourmolu
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        stack install fourmolu
+        fourmolu --version
     - name: Run hlint
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: hlint .
+    - name: Run fourmolu
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: fourmolu -m check src app test
     - name: Build dependencies
       run: stack build --no-haddock --only-dependencies --fast --pedantic
     - name: Run tests
