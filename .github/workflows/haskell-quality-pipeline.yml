@@ -56,18 +56,6 @@ jobs:
           stack config set system-ghc --global true
           stack config set install-ghc --global false
         fi
-    - name: Install stylish-haskell
-      if: ${{ matrix.os == 'ubuntu-latest' }}
-      run: |
-        if [ -f "$HOME/.ghcup/bin/stylish-haskell" ] && [[ $(~/.ghcup/bin/stylish-haskell --version) == *"${{ env.STYLISH_HASKELL_VERSION }}"* ]]; then
-          echo "Requested stylish-haskell is already installed"
-          stylish-haskell --version
-        else
-          echo "Installing stylish-haskell v${{ env.STYLISH_HASKELL_VERSION }}"
-          wget -O /tmp/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}.tar.gz https://github.com/haskell/stylish-haskell/releases/download/${{ env.STYLISH_HASKELL_VERSION }}/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}-linux-x86_64.tar.gz
-          tar -xf /tmp/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}.tar.gz -C /tmp
-          cp /tmp/stylish-haskell-${{ env.STYLISH_HASKELL_VERSION }}-linux-x86_64/stylish-haskell ~/.ghcup/bin/stylish-haskell
-        fi
     - name: Install hlint
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
@@ -80,9 +68,6 @@ jobs:
           tar -xf /tmp/hlint-${{ env.HLINT_VERSION }}.tar.gz -C /tmp
           cp /tmp/hlint-${{ env.HLINT_VERSION }}/hlint ~/.ghcup/bin/hlint
         fi
-    - name: Run stylish-haskell
-      if: ${{ matrix.os == 'ubuntu-latest' }}
-      run: stylish-haskell src app test/Elegit/* -r > /dev/null
     - name: Run hlint
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: hlint .
