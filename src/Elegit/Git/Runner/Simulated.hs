@@ -146,6 +146,7 @@ collectImpureCommandsF cmd = case cmd of
   GA.InitRepository _ next -> do
     gRepository .= Just newRepository
     return next
+
   GA.AddInitialCommit (GA.GInitialCommitData message) next -> do
     localRepository . branchWithName "master" . gbCommit %= (GCommit {_gcName = "Initial Commit", _gcMessage = message}:)
     return next
@@ -162,6 +163,7 @@ collectImpureCommandsF cmd = case cmd of
   GA.CurrentBranch GA.GCurrentBranchData next -> do
     mCurrentBranchName <- preuse $ localRepository . grCurrentBranch
     return $ next mCurrentBranchName
+
   GA.BranchUpstream (GA.GBranchUpstreamData branch) next -> do
     branchM <- preuse $ localRepository . branchWithName branch
     return $ next (branchM >>= _gbUpstream)

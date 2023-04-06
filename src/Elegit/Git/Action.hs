@@ -343,6 +343,9 @@ show sTarget = liftF $ Show (GShowData sTarget) id
 
 -- Derived actions
 
+emptyLine :: MonadFree GitF m => m ()
+emptyLine = print ""
+
 formatGitCommand :: (RenderGitCommand gc, MonadFree GitF m) => gc -> m Text
 formatGitCommand gc = formatCommand (renderGC gc)
 

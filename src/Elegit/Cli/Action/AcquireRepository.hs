@@ -38,9 +38,9 @@ To find out what will be configured, please visit
 
 cli :: Mod CommandFields ElegitCommand
 cli = command "acquire-repository" $ info (pure AcquireRepositoryCommand) $
-    mconcat [ progDescDoc (Just purpose )
-            , footerDoc (Just description )
-            ]
+  mconcat [ progDescDoc (Just purpose )
+          , footerDoc (Just description )
+          ]
 
 
 data ConfigKey
@@ -69,131 +69,130 @@ configPrompt ProtectedBranchesKey = "What are protected branches (split with spa
 
 configDefault :: (MonadFree GA.GitF m) => ConfigKey -> m (Maybe Text)
 configDefault cKey = case cKey of
-    UserNameKey          -> getFromConfig
-    UserEmailKey         -> getFromConfig
-    CoreEditorKey        -> getFromConfig
-    DefaultBranchKey     -> return $ Just "master"
-    ProtectedBranchesKey -> return $ Just "master"
+  UserNameKey          -> getFromConfig
+  UserEmailKey         -> getFromConfig
+  CoreEditorKey        -> getFromConfig
+  DefaultBranchKey     -> return $ Just "master"
+  ProtectedBranchesKey -> return $ Just "master"
 
-    where
-        getFromConfig :: (MonadFree GA.GitF m) => m (Maybe Text)
-        getFromConfig = GA.readConfig GA.AutoConfig (configName cKey)
+  where
+    getFromConfig :: (MonadFree GA.GitF m) => m (Maybe Text)
+    getFromConfig = GA.readConfig GA.AutoConfig (configName cKey)
 
 
 configureBasics :: (MonadFree GA.GitF m) => GA.ConfigScope -> m ()
 configureBasics cScope = do
-    for_ basicConfigs $ \cKey -> do
-        mKeyDefault <- configDefault cKey
-        newValue <- GA.promptDefault (configPrompt cKey) mKeyDefault
-        GA.setConfigVerbose cScope (configName cKey) newValue
+  for_ basicConfigs $ \cKey -> do
+    mKeyDefault <- configDefault cKey
+    newValue <- GA.promptDefault (configPrompt cKey) mKeyDefault
+    GA.setConfigVerbose cScope (configName cKey) newValue
 
-    where
-        basicConfigs :: [ConfigKey]
-        basicConfigs =
-            [ UserNameKey
-            , UserEmailKey
-            , CoreEditorKey
-            , DefaultBranchKey
-            , ProtectedBranchesKey
-            ]
+  where
+    basicConfigs :: [ConfigKey]
+    basicConfigs =
+      [ UserNameKey
+      , UserEmailKey
+      , CoreEditorKey
+      , DefaultBranchKey
+      , ProtectedBranchesKey
+      ]
 
 
 configureStandards :: (MonadFree GA.GitF m) => GA.ConfigScope -> m ()
 configureStandards cScope =
-    for_ standardConfigs $ \(cKey,cValue) -> do
-        GA.setConfigVerbose cScope cKey cValue
-    where
-        standardConfigs :: [(Text, Text)]
-        standardConfigs =
-            [ ("core.commentChar", "|")
-            , ("apply.whitespace", "fix")
-            , ("fetch.prune", "true")
-            , ("fetch.pruneTags", "false")
-            , ("core.autocrlf", "input")
-            , ("pull.rebase", "true")
-            , ("rebase.autoStash", "false")
-            , ("credential.helper", "osxkeychain")
-            ]
+  for_ standardConfigs $ \(cKey,cValue) -> do
+    GA.setConfigVerbose cScope cKey cValue
+  where
+    standardConfigs :: [(Text, Text)]
+    standardConfigs =
+      [ ("core.commentChar", "|")
+      , ("apply.whitespace", "fix")
+      , ("fetch.prune", "true")
+      , ("fetch.pruneTags", "false")
+      , ("core.autocrlf", "input")
+      , ("pull.rebase", "true")
+      , ("rebase.autoStash", "false")
+      , ("credential.helper", "osxkeychain")
+      ]
 
 
 configureAliases :: (MonadFree GA.GitF m) => GA.ConfigScope -> m ()
 configureAliases cScope = do
-    forM_ elegantCommands $ \elegantCommand -> do
-        let
-            alias = "alias."+|elegantCommand|+""
-            origin = "elegant "+|elegantCommand|+""
-        GA.setConfigVerbose cScope alias origin
-    where
-        -- TODO: Think if there is a way to make it centralised
-        elegantCommands :: [Text]
-        elegantCommands =
-            [ "accept-work"
-            , "acquire-git"
-            , "acquire-repository"
-            , "actualize-work"
-            , "amend-work"
-            , "clone-repository"
-            , "deliver-work"
-            , "init-repository"
-            , "make-workflow"
-            , "obtain-work"
-            , "polish-work"
-            , "polish-workflow"
-            , "prune-repository"
-            , "release-work"
-            , "save-work"
-            , "show-commands"
-            , "show-release-notes"
-            , "show-work"
-            , "show-workflows"
-            , "start-work"
-            ]
+  forM_ elegantCommands $ \elegantCommand -> do
+    let
+      alias = "alias."+|elegantCommand|+""
+      origin = "elegant "+|elegantCommand|+""
+    GA.setConfigVerbose cScope alias origin
+  where
+    -- TODO: Think if there is a way to make it centralised
+    elegantCommands :: [Text]
+    elegantCommands =
+      [ "accept-work"
+      , "acquire-git"
+      , "acquire-repository"
+      , "actualize-work"
+      , "amend-work"
+      , "clone-repository"
+      , "deliver-work"
+      , "init-repository"
+      , "make-workflow"
+      , "obtain-work"
+      , "polish-work"
+      , "polish-workflow"
+      , "prune-repository"
+      , "release-work"
+      , "save-work"
+      , "show-commands"
+      , "show-release-notes"
+      , "show-work"
+      , "show-workflows"
+      , "start-work"
+      ]
 
 
--- TODO: This could be improved syntastically if we use `mdo` instead of plain `do`
 setupGPGSignature :: (MonadFree GA.GitF m) => m ()
-setupGPGSignature = do
-    whenJustM (GA.readConfig GA.LocalConfig (configName UserEmailKey)) $ \userEmail -> do
-        whenJustM (GA.pathToTool "gpg") $ \pathToGPG -> do
-            GA.gpgListKeysVerbose userEmail >>= \case
-                Nothing -> do
-                    GA.print =<< GA.formatInfo "There is no gpg key for the given email."
-                    GA.print =<< GA.formatInfo "A signature is not configured."
-                Just gpgKeysOutput -> do
-                    mapM_ GA.print gpgKeysOutput
-                    GA.print ""
-                    GA.print =<< GA.formatInfo "From the list of GPG keys above, copy the GPG key ID you'd like to use."
-                    GA.print =<< GA.formatInfo "It will be"
-                    GA.print =<< GA.formatInfo "    3AA5C34371567BD2"
-                    GA.print =<< GA.formatInfo "for the output like this"
-                    GA.print =<< GA.formatInfo "    sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]"
-                    GA.print =<< GA.formatInfo "    A330C91F8EC4BC7AECFA63E03AA5C34371567BD2"
-                    GA.print =<< GA.formatInfo "    uid                          Hubot"
-                    GA.print =<< GA.formatInfo ""
-                    GA.print =<< GA.formatInfo "If you don't want to configure signature, just hit Enter button."
-                    -- TODO: We could parse IDs out of the gpg output.
-                    -- Then could ask for the index into list of keys instead?
-                    key <- GA.promptOneTime "Please pass a key that has to sign objects of the current repository"
-                    if null key
-                       then GA.print =<< GA.formatInfo "The signature is not configured as the empty key is provided."
-                       else do
-                           GA.setConfigVerbose GA.LocalConfig "user.signingkey" key
-                           GA.setConfigVerbose GA.LocalConfig "gpg.program" pathToGPG
-                           GA.setConfigVerbose GA.LocalConfig "commit.gpgsign" "true"
-                           GA.setConfigVerbose GA.LocalConfig "tag.forceSignAnnotated" "true"
-                           GA.setConfigVerbose GA.LocalConfig "tag.gpgSign" "true"
+setupGPGSignature = void $ runMaybeT $ do
+  userEmail <- MaybeT $ GA.readConfig GA.LocalConfig (configName UserEmailKey)
+  pathToGPG <- MaybeT $ GA.pathToTool "gpg"
+  GA.gpgListKeysVerbose userEmail >>= \case
+    Nothing -> do
+      GA.print =<< GA.formatInfo "There is no gpg key for the given email."
+      GA.print =<< GA.formatInfo "A signature is not configured."
+    Just gpgKeysOutput -> do
+      mapM_ GA.print gpgKeysOutput
+      GA.print ""
+      GA.print =<< GA.formatInfo "From the list of GPG keys above, copy the GPG key ID you'd like to use."
+      GA.print =<< GA.formatInfo "It will be"
+      GA.print =<< GA.formatInfo "    3AA5C34371567BD2"
+      GA.print =<< GA.formatInfo "for the output like this"
+      GA.print =<< GA.formatInfo "    sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]"
+      GA.print =<< GA.formatInfo "    A330C91F8EC4BC7AECFA63E03AA5C34371567BD2"
+      GA.print =<< GA.formatInfo "    uid                          Hubot"
+      GA.print =<< GA.formatInfo ""
+      GA.print =<< GA.formatInfo "If you don't want to configure signature, just hit Enter button."
+      -- TODO: We could parse IDs out of the gpg output.
+      -- Then could ask for the index into list of keys instead?
+      key <- GA.promptOneTime "Please pass a key that has to sign objects of the current repository"
+      if null key
+         then GA.print =<< GA.formatInfo "The signature is not configured as the empty key is provided."
+         else do
+           GA.setConfigVerbose GA.LocalConfig "user.signingkey" key
+           GA.setConfigVerbose GA.LocalConfig "gpg.program" pathToGPG
+           GA.setConfigVerbose GA.LocalConfig "commit.gpgsign" "true"
+           GA.setConfigVerbose GA.LocalConfig "tag.forceSignAnnotated" "true"
+           GA.setConfigVerbose GA.LocalConfig "tag.gpgSign" "true"
 
 
 -- | Execution description of the AcquireRepository action
 cmd :: (MonadFree GA.GitF m) => m ()
 cmd = do
-    GA.removeObsoleteConfiguration GA.LocalConfig
-    GA.print =<< GA.formatInfoBox "Configuring basics..."
-    configureBasics GA.LocalConfig
-    unlessM GA.isGitAcquired $ do
-        GA.print =<< GA.formatInfoBox "Configuring standards..."
-        configureStandards GA.LocalConfig
-        GA.print =<< GA.formatInfoBox "Configuring aliases..."
-        configureAliases GA.LocalConfig
-    GA.print =<< GA.formatInfoBox "Configuring signature..."
-    setupGPGSignature
+  GA.removeObsoleteConfiguration GA.LocalConfig
+  GA.print =<< GA.formatInfoBox "Configuring basics..."
+  configureBasics GA.LocalConfig
+  unlessM GA.isGitAcquired $ do
+    GA.print =<< GA.formatInfoBox "Configuring standards..."
+    configureStandards GA.LocalConfig
+    GA.print =<< GA.formatInfoBox "Configuring aliases..."
+    configureAliases GA.LocalConfig
+  GA.print =<< GA.formatInfoBox "Configuring signature..."
+  setupGPGSignature
