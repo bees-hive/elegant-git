@@ -13,7 +13,7 @@ env:
   GHCUP_VERSION: 0.1.18.0
   STACK_VERSION: 2.9.1
   HLINT_VERSION: 3.3.6
-  STYLISH_HASKELL_VERSION: v0.14.3.0
+  FOURMOLU_VERSION: 0.9.0.0
 
 jobs:
   tests:
@@ -71,7 +71,9 @@ jobs:
     - name: Install fourmolu
       if: ${{ matrix.os == 'ubuntu-latest' }}
       run: |
-        stack install fourmolu
+        echo "Installing fourmolu v${{ env.FOURMOLU }}"
+        wget -O ~/.ghcup/bin/fourmolu https://github.com/fourmolu/fourmolu/releases/download/v${{ env.FOURMOLU_VERSION }}/fourmolu-${{ env.FOURMOLU_VERSION }}-linux-x86_64
+        sudo chmod +x ~/.ghcup/bin/fourmolu
         fourmolu --version
     - name: Run hlint
       if: ${{ matrix.os == 'ubuntu-latest' }}

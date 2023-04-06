@@ -11,6 +11,9 @@ import Lens.Micro
 import Test.Hspec
 import Universum hiding (view, (%~), (.~), (^.))
 
+prompt___ :: Text -> GitCommand
+prompt___ = Prompt
+
 defaultGit :: InMemoryGit
 defaultGit =
   imGit
@@ -80,7 +83,7 @@ signatureOutputBlock =
   , PrintText [s|    uid                          Hubot|]
   , PrintText [s||]
   , PrintText [s|If you don't want to configure signature, just hit Enter button.|]
-  , Prompt [s|Please pass a key that has to sign objects of the current repository: test|]
+  , prompt___ [s|Please pass a key that has to sign objects of the current repository: test|]
   , PrintText [s|==>> git config --local user.signingkey test|]
   , PrintText [s|==>> git config --local gpg.program /usr/bin/gpg|]
   , PrintText [s|==>> git config --local commit.gpgsign true|]
@@ -176,15 +179,15 @@ spec = do
                      , PrintText [s|===========================|]
                      , PrintText [s|== Configuring basics... ==|]
                      , PrintText [s|===========================|]
-                     , Prompt [s|What is your user name?: test|]
+                     , prompt___ [s|What is your user name?: test|]
                      , PrintText [s|==>> git config --local user.name test|]
-                     , Prompt [s|What is your email?: test|]
+                     , prompt___ [s|What is your email?: test|]
                      , PrintText [s|==>> git config --local user.email test|]
-                     , Prompt [s|What is the command to launching an editor?: test|]
+                     , prompt___ [s|What is the command to launching an editor?: test|]
                      , PrintText [s|==>> git config --local core.editor test|]
-                     , Prompt [s|What is the default branch? {master}: test|]
+                     , prompt___ [s|What is the default branch? {master}: test|]
                      , PrintText [s|==>> git config --local elegant-git.default-branch test|]
-                     , Prompt [s|What are protected branches (split with space) {master}: test|]
+                     , prompt___ [s|What are protected branches (split with space) {master}: test|]
                      , PrintText [s|==>> git config --local elegant-git.protected-branches test|]
                      ]
                       ++ standardsOutputBlock
