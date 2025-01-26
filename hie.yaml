@@ -4,10 +4,10 @@ cradle:
       component: "elegant-git:lib"
 
     - path: "./app/Main.hs"
-      component: "elegant-git:exe:git-elegant"
+      component: "elegant-git:exe:elegant-git"
 
     - path: "./app/Paths_elegant_git.hs"
-      component: "elegant-git:exe:git-elegant"
+      component: "elegant-git:exe:elegant-git"
 
     - path: "./test"
       component: "elegant-git:test:elegant-git-test"

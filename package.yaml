@@ -63,7 +63,7 @@ library:
   source-dirs: src
 
 executables:
-  git-elegant:
+  elegant-git:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
